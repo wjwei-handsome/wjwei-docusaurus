@@ -36,7 +36,7 @@ const config = {
                     sidebarPath: require.resolve('./sidebars.js'),
                     // Please change this to your repo.
                     // Remove this to remove the "edit this page" links.
-                    editUrl: 'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+                    editUrl: 'https://github.com/wjwei-handsome/wjwei-docusaurus/tree/main/',
                 },
                 blog: {
                     showReadingTime: true,
@@ -44,7 +44,7 @@ const config = {
                         defaultReadingTime({ content, options: { wordsPerMinute: 300 } }),
                     // Please change this to your repo.
                     // Remove this to remove the "edit this page" links.
-                    editUrl: 'https://github.com/facebook/docusaurus/tree/main/packages/create-docusaurus/templates/shared/',
+                    editUrl: 'https://github.com/wjwei-handsome/wjwei-docusaurus/tree/main/',
                     blogSidebarTitle: 'All our posts',
                     blogDescription: 'This is a blog description',
                     blogTitle: 'My Site Blog',
@@ -93,10 +93,10 @@ const config = {
                 },
                 {
                     href: 'https://github.com/wjwei-handsome/wjwei-docusaurus/',
-                    label: 'GitHub',
+                    // label: 'GitHub',
                     position: 'right',
                     className: 'header-github-link',
-                    'aria-label': 'GitHub repository',
+                    'aria-label': 'Github repository',
                 },
                 {
                     type: 'dropdown',
@@ -127,22 +127,22 @@ const config = {
             links: [{
                     title: 'Docs',
                     items: [{
-                        label: 'Tutorial',
+                        label: 'Introduction',
                         to: '/docs/intro',
                     }, ],
                 },
                 {
                     title: 'Community',
                     items: [{
-                            label: 'Stack Overflow',
-                            href: 'https://stackoverflow.com/questions/tagged/docusaurus',
+                            label: 'Github',
+                            href: 'https://github.com/wjwei-handsome/wjwei-docusaurus/',
                         },
                         {
                             label: 'Discord',
-                            href: 'https://discordapp.com/invite/docusaurus',
+                            href: 'https://discord.gg/dUyetKKSbv',
                         },
                         {
-                            label: 'Twitter',
+                            label: 'Google Scholar',
                             href: 'https://twitter.com/docusaurus',
                         },
                     ],
@@ -186,7 +186,7 @@ const config = {
         },
         announcementBar: {
             id: 'supportus', // Any value that will identify this message.
-            content: '⭐️ If you like Docusaurus, gssive it a star ',
+            content: 'If you like my blog, give me a star⭐️ on <a target="_blank" rel="noopener noreferrer" href="https://github.com/wjwei-handsome/wjwei-docusaurus/"',
             backgroundColor: '#fafbfc',
             textColor: '#091E42',
             isCloseable: false,
