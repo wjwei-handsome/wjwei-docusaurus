@@ -54,6 +54,12 @@ const config = {
                 theme: {
                     customCss: require.resolve('./src/css/custom.css'),
                 },
+                sitemap: {
+                    changefreq: 'weekly',
+                    priority: 0.5,
+                    ignorePatterns: ['/tags/**'],
+                    filename: 'sitemap.xml',
+                },
             }),
         ],
     ],
@@ -66,6 +72,8 @@ const config = {
             logo: {
                 alt: 'My Site Logo',
                 src: 'img/logo.svg',
+                width: 64,
+                height: 64
             },
             items: [{
                     type: 'doc',
@@ -87,8 +95,32 @@ const config = {
                     href: 'https://github.com/wjwei-handsome/wjwei-docusaurus/',
                     label: 'GitHub',
                     position: 'right',
+                    className: 'header-github-link',
+                    'aria-label': 'GitHub repository',
+                },
+                {
+                    type: 'dropdown',
+                    label: 'Community',
+                    position: 'left',
+                    items: [{
+                            label: 'Facebook',
+                            href: 'https://www.facebook.com',
+                        },
+                        {
+                            type: 'doc',
+                            label: 'my-first-docs/doc-A',
+                            docId: 'my-first-docs/doc-A',
+                        },
+                        // ... more items
+                    ],
+                },
+                {
+                    type: 'search',
+                    position: 'right',
                 },
             ],
+            hideOnScroll: true,
+            style: 'primary'
         },
         footer: {
             style: 'dark',
@@ -151,7 +183,37 @@ const config = {
                 hideable: true,
                 // autoCollapseCategories: true,
             }
-        }
+        },
+        announcementBar: {
+            id: 'supportus', // Any value that will identify this message.
+            content: '⭐️ If you like Docusaurus, gssive it a star ',
+            backgroundColor: '#fafbfc',
+            textColor: '#091E42',
+            isCloseable: false,
+        },
+        algolia: {
+            // The application ID provided by Algolia
+            appId: 'UDL4N93TYZ',
+
+            // Public API key: it is safe to commit it
+            apiKey: '46b0f0f9d509a7b4f13d960776190df0',
+
+            indexName: 'wwj-blog',
+
+            // Optional: see doc section below
+            contextualSearch: true,
+
+            // Optional: Specify domains where the navigation should occur through window.location instead on history.push. Useful when our Algolia config crawls multiple documentation sites and we want to navigate with window.location.href to them.
+            externalUrlRegex: 'external\\.com|domain\\.com',
+
+            // Optional: Algolia search parameters
+            searchParameters: {},
+
+            // Optional: path for search page that enabled by default (`false` to disable it)
+            searchPagePath: 'search',
+
+            //... other Algolia params
+        },
     }),
 };
 
