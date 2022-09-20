@@ -1,0 +1,143 @@
+---
+title: doc-A
+description: this is docA it's greet!
+tags: [demo, handsome, kanye]
+---
+
+// import Highlight from "@site/src/components/Highlight";
+
+# 来自 Docusaurus 的问候
+
+您准备好为您的开源项目创建文档站点了吗？
+
+## 标题
+
+标题将显示在右上方的目录中
+
+以便用户无需向下滚动，甚至无需阅读更多内容，便可了解此页的梗概。
+
+## Only h2 and h3 will be in the TOC by default.
+
+You can configure the TOC heading levels either per-document or in the theme configuration.
+
+良好的标题间距，让文章结构更清晰。
+
+- lists will help you
+- present the key points
+- that you want your users to remember
+  - and you may nest them
+    - multiple times
+
+## Custom ID headers {#6}
+
+With `{#custom-id}` syntax you can set your own header ID.
+
+![img alt](./pic.jpeg)
+
+> Thiis a quote
+
+<details>
+  <summary>clike me?</summary>
+  <h1>hello</h1>
+</details>
+I can conveniently use <highlight color="#25c2a0">Docusaurus green</highlight> everywhere!
+
+I can write **Markdown** alongside my _JSX_!
+
+```python title="example.py"
+for i in range(10):
+    print(i)
+```
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+<Tabs defaultValue="orange" className="unique-tabs">
+  <TabItem value="apple" label="Apple">
+    This is an apple 🍎
+  </TabItem>
+  <TabItem value="orange" label="Orange">
+    This is an orange 🍊
+  </TabItem>
+  <TabItem value="banana" label="Banana">
+    This is a banana 🍌
+  </TabItem>
+</Tabs>
+
+<Tabs className="unique-tabs">
+  <TabItem value="Apple">This is an apple 🍎</TabItem>
+  <TabItem value="Orange">This is an orange 🍊</TabItem>
+  <TabItem value="Banana">This is a banana 🍌</TabItem>
+</Tabs>
+
+```python {1,3-5,6} title="class.py" showLineNumbers
+class Student:
+
++    def __init__(self, name, age):
+-        self.__name = name
+        self.__age = age
+
+    @property
+    def study(self, course_name):
+        print(f'{self.__name}正在学习{course_name}.')
+
+
+stu = Student('王大锤', 20)
+stu.study('Python程序设计')
+print(stu.__name)
+```
+
+In JavaScript, trying to access properties on `null` will error.
+
+```js showLineNumbers
+const name = null;
+// This will error
+console.log(name.toUpperCase());
+// Uncaught TypeError: Cannot read properties of null (reading 'toUpperCase')
+```
+
+:::note
+
+Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
+
+:::
+
+:::tip
+
+Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
+
+:::
+
+:::info
+
+Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
+
+:::
+
+:::caution
+
+Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
+
+:::
+
+:::danger DANGER_TITLE
+
+Some **content** with _Markdown_ `syntax`. Check [this `api`](#).
+
+:::
+
+:::tip title="Use tabs in admonitions" icon="💡"
+
+<Tabs>
+  <TabItem value="apple" label="Apple">
+    This is an apple 🍎
+  </TabItem>
+  <TabItem value="orange" label="Orange">
+    This is an orange 🍊
+  </TabItem>
+  <TabItem value="banana" label="Banana">
+    This is a banana 🍌
+  </TabItem>
+</Tabs>
+
+:::
