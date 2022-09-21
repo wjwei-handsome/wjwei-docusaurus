@@ -106,11 +106,11 @@ const config = {
                             label: 'Facebook',
                             href: 'https://www.facebook.com',
                         },
-                        {
-                            type: 'doc',
-                            label: 'my-first-docs/doc-A',
-                            docId: 'my-first-docs/doc-A',
-                        },
+                        // {
+                        //     type: 'doc',
+                        //     label: 'my-first-docs/doc-A',
+                        //     docId: 'my-first-docs/doc-A',
+                        // },
                         // ... more items
                     ],
                 },
@@ -186,7 +186,7 @@ const config = {
         },
         announcementBar: {
             id: 'supportus', // Any value that will identify this message.
-            content: 'If you like my blog, give me a star⭐️ on <a target="_blank" rel="noopener noreferrer" href="https://github.com/wjwei-handsome/wjwei-docusaurus/"',
+            content: "If you like my blog, give me a <a target='_blank' rel='noopener noreferrer' href='https://github.com/wjwei-handsome/wjwei-docusaurus/'>Star🌟</a>",
             backgroundColor: '#fafbfc',
             textColor: '#091E42',
             isCloseable: false,

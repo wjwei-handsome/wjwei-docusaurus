@@ -1,8 +1,8 @@
 {
     "label": "Python - Basics",
-    "position": 3,
+    "position": 2,
     "link": {
         "type": "generated-index",
-        "description": "5 minutes to learn the most important Docusaurus concepts."
+        "description": "Python的一些基本使用"
     }
 }
