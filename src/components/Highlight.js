@@ -6,7 +6,7 @@ export default function Highlight({ children, color }) {
                 backgroundColor: color,
                 borderRadius: '2px',
                 color: '#fff',
-                padding: '.5rem',
+                padding: '.1rem',
             }
         } > { children } </span>);
     }
