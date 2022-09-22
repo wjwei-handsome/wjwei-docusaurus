@@ -31,7 +31,7 @@ function BlogPostPageContent({sidebar, children}) {
     s.setAttribute("data-reactions-enabled", "1");
     s.setAttribute("data-emit-metadata", "0");
     s.setAttribute("data-input-position", "bottom");
-    s.setAttribute("data-theme", "light");
+    s.setAttribute("data-theme", "transparent_dark");
     s.setAttribute("data-lang", "en");
     s.setAttribute("crossorigin", "anonymous");
     s.async = true;
