@@ -59,3 +59,8 @@
     height: 36px;
     width: 36px;
 }
+
+.navbar__title {
+    flex: 1 1 auto;
+    font-size: 25px;
+}
