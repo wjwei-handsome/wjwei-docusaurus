@@ -54,7 +54,7 @@ const slides = [
           className={clsx(
             "button button--outline button--secondary button--lg",
           )}
-          to="/hello-wwj/">
+          to="/about-me/">
           About me
         </Link>
       </div>

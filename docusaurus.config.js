@@ -89,7 +89,7 @@ const config = {
                     position: 'left'
                 },
                 {
-                    to: '/hello-wwj',
+                    to: '/about-me',
                     label: 'About Me',
                     position: 'left'
                 },
