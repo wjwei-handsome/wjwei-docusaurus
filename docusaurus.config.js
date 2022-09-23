@@ -7,7 +7,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 /** @type {import('@docusaurus/types').Config} */
 const config = {
     title: 'WjWei | Blog',
-    tagline: 'wjwei is a cooool guy!',
+    tagline: '&quot;My Beatuifal Dark Twisted Fantsty&quot;',
     url: 'https://wjwei.vercel.app',
     baseUrl: '/',
     onBrokenLinks: 'throw',
@@ -122,7 +122,7 @@ const config = {
                 },
             ],
             hideOnScroll: true,
-            style: 'primary'
+            // style: 'primary'
         },
         footer: {
             style: 'dark',
