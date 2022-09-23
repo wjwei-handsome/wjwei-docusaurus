@@ -63,88 +63,16 @@ const slides = [
   <div className={clsx(styles.heroBanner, styles.slide)}>
     <div className="container">
       <h2>Change the World with Rules of the Garage</h2>
-      <ol>
-        <li>Believe you can change the world.</li>
-        <li>Work quickly, keep the tools unlocked, work whenever.</li>
-        <li>Know when to work alone and when to work together.</li>
-        <li>Share — tools, ideas. Trust your colleagues.</li>
-        <li>
-          No Politics. No bureaucracy. (These are ridiculous in a garage.)
-        </li>
-        <li>The customer defines a job well done.</li>
-        <li>Radical ideas are not bad ideas.</li>
-        <li>Invent different ways of working.</li>
-        <li>
-          Make a contribution every day. If it doesn’t contribute, it doesn’t
-          leave the garage.
-        </li>
-        <li>Believe that together we can do anything.</li>
-        <li>Invent.</li>
-      </ol>
-      <div className={styles.caption}>
-        By{" "}
-        <a href="https://en.wikipedia.org/wiki/Rules_of_the_garage">
-          Bill Hewlett and David Packard
-        </a>
-      </div>
     </div>
   </div>,
   <div className={clsx(styles.heroBanner, styles.slide)}>
   <div className="container">
     <h2>Change the World with Rules of the Garage</h2>
-    <ol>
-      <li>Believe you can change the world.</li>
-      <li>Work quickly, keep the tools unlocked, work whenever.</li>
-      <li>Know when to work alone and when to work together.</li>
-      <li>Share — tools, ideas. Trust your colleagues.</li>
-      <li>
-        No Politics. No bureaucracy. (These are ridiculous in a garage.)
-      </li>
-      <li>The customer defines a job well done.</li>
-      <li>Radical ideas are not bad ideas.</li>
-      <li>Invent different ways of working.</li>
-      <li>
-        Make a contribution every day. If it doesn’t contribute, it doesn’t
-        leave the garage.
-      </li>
-      <li>Believe that together we can do anything.</li>
-      <li>Invent.</li>
-    </ol>
-    <div className={styles.caption}>
-      By{" "}
-      <a href="https://en.wikipedia.org/wiki/Rules_of_the_garage">
-        Bill Hewlett and David Packard
-      </a>
-    </div>
   </div>
 </div>,
   <div className={clsx(styles.heroBanner, styles.slide)}>
   <div className="container">
     <h2>Change the World with Rules of the Garage</h2>
-    <ol>
-      <li>Believe you can change the world.</li>
-      <li>Work quickly, keep the tools unlocked, work whenever.</li>
-      <li>Know when to work alone and when to work together.</li>
-      <li>Share — tools, ideas. Trust your colleagues.</li>
-      <li>
-        No Politics. No bureaucracy. (These are ridiculous in a garage.)
-      </li>
-      <li>The customer defines a job well done.</li>
-      <li>Radical ideas are not bad ideas.</li>
-      <li>Invent different ways of working.</li>
-      <li>
-        Make a contribution every day. If it doesn’t contribute, it doesn’t
-        leave the garage.
-      </li>
-      <li>Believe that together we can do anything.</li>
-      <li>Invent.</li>
-    </ol>
-    <div className={styles.caption}>
-      By{" "}
-      <a href="https://en.wikipedia.org/wiki/Rules_of_the_garage">
-        Bill Hewlett and David Packard
-      </a>
-    </div>
   </div>
 </div>,
 ];
