@@ -188,10 +188,10 @@ const config = {
         },
         announcementBar: {
             id: 'supportus', // Any value that will identify this message.
-            content: "If you like my blog, give me a <a target='_blank' rel='noopener noreferrer' href='https://github.com/wjwei-handsome/wjwei-docusaurus/'>Star🌟</a>",
+            content: "If you like my blog, give me a <a target='_blank' rel='noopener noreferrer' href='https://github.com/wjwei-handsome/wjwei-docusaurus/'>star🌟</a>",
             backgroundColor: '#fafbfc',
             textColor: '#091E42',
-            isCloseable: false,
+            isCloseable: true,
         },
         algolia: {
             // The application ID provided by Algolia
