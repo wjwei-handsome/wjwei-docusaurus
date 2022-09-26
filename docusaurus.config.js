@@ -3,6 +3,26 @@
 
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+// const mdxMermaid = require('mdx-mermaid');
+const mdxMermaid = [
+    require("mdx-mermaid"),
+    {
+        mermaid: {
+            theme: "dark",
+            themeVariables: {
+                fontFamily: "Helvetica",
+            },
+            sequence: {
+                actorFontFamily: "Helvetica",
+                noteFontFamily: "Helvetica",
+                messageFontFamily: "Helvetica",
+            },
+            journey: {
+                taskFontFamily: "Helvetica",
+            },
+        },
+    },
+]
 
 /** @type {import('@docusaurus/types').Config} */
 const config = {
@@ -38,6 +58,7 @@ const config = {
                     // Remove this to remove the "edit this page" links.
                     editUrl: 'https://github.com/wjwei-handsome/wjwei-docusaurus/tree/main/',
                     // docTagsListComponent: '@theme/DocTagsList',
+                    remarkPlugins: [mdxMermaid],
 
                 },
                 blog: {
