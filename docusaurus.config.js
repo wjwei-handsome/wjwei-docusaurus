@@ -102,7 +102,8 @@ async function CreateConfig() {
                 title: 'WjWei Blog',
                 logo: {
                     alt: 'My Site Logo',
-                    src: 'img/logo.svg',
+                    src: 'img/Avatar.png',
+                    srcDark: 'img/Avatar-dark.png',
                     width: 64,
                     height: 64
                 },

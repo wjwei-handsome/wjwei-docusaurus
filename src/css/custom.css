@@ -78,3 +78,7 @@
     .Badges {
         display: inline-block !important;
     }
+    
+    .navbar__logo {
+        height: 3rem;
+    }
