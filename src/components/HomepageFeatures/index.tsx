@@ -84,8 +84,8 @@ export const features: feature[] = [
   {
     title: "Addicted To CS",
     sources: {
-      light: "/img/langs.svg",
-      dark: "/img/langs-dark.svg",
+      light: "/img/programming.svg",
+      dark: "/img/programming.svg",
     },
     description: (
       <>
@@ -98,8 +98,8 @@ export const features: feature[] = [
   {
     title: "Love My Life",
     sources: {
-      light: "/img/life.svg",
-      dark: "/img/life-dark.svg",
+      light: "/img/trip.svg",
+      dark: "/img/trip.svg",
     },
     description: (
       <>
@@ -112,8 +112,8 @@ export const features: feature[] = [
   {
     title: "Bland Graduatestudent",
     sources: {
-      light: "/img/maize.gif",
-      dark: "/img/maize.gif",
+      light: "/img/scientist.svg",
+      dark: "/img/scientist.svg",
     },
     description: (
       <>
