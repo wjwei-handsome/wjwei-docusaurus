@@ -86,6 +86,11 @@ async function CreateConfig() {
                         ignorePatterns: ['/tags/**'],
                         filename: 'sitemap.xml',
                     },
+                    gtag: {
+                        trackingID: 'G-MMW29HLBNX',
+                        // Optional fields.
+                        anonymizeIP: true, // Should IPs be anonymized?
+                    },
                 }),
             ],
         ],
@@ -240,6 +245,7 @@ async function CreateConfig() {
 
                 //... other Algolia params
             },
+            metadata: [{ name: 'keywords', content: 'wjwei, blog, bioinfomatics' }]
         }),
     };
     return config;
