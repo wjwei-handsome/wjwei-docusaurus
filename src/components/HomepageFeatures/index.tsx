@@ -89,9 +89,12 @@ export const features: feature[] = [
     },
     description: (
       <>
-        Fluent with both front-end and back-end programming languages.
-        Experienced with graphics language Asymptote and typesetting language
-        LaTeX.
+        😎Fluent with "Hello World" in programming languages. <br />
+        ⭐️Some experiences in Python and Django for back-end. <br />
+        📊Use R as my drawing board. <br />
+        🐧With Linux/Shell everyday, but only use currently. <br />
+        😘My new love: Rust, but it doesn't😅. <br />
+        ⛽️I will always be a novice.
       </>
     ),
   },
@@ -103,9 +106,13 @@ export const features: feature[] = [
     },
     description: (
       <>
-        {
-          "Gold medalist in physics, chemistry, and biology olympiads. Did extensive research in STEM-related fields. Read more about my STEM experience in the {section}."
-        }
+        🙌Work hard, play harder<br />
+        🏞For my trip, COVID, F**K off！ <br />
+        🏀Old fan of Thunder and Westbrook0 <br />
+        ☕️A coffee a day keeps the burden at bay. <br />
+        🎥Since the invention of the movie, human life has been extended at least three times.<br />
+        🎵Music is a universal language, now prefer JayChou and Kanye.<br />
+        🏋️Enjoy the endorphins secreted by exercise.  <br />
       </>
     ),
   },
@@ -117,10 +124,14 @@ export const features: feature[] = [
     },
     description: (
       <>
-        Started public forum debating in 8th grade. Debated on topics including
-        gene editing, CJS, poverty alleviation, etc. Won regional &amp; national
-        championships, as well as multiple outstanding speakers. Currently doing
-        World Schools.
+        A graduate student of Crop genomics in the National Key Laboratory of Crop Genetic Improvement, Huazhong Agricultural University. <br />
+        My research interests include:
+        <ul>
+          <li>Bio-database architecture and development</li>
+          <li>Graphic genomics</li>
+          <li>Bioinfomatic kits development</li>
+          <li>🥱</li>
+        </ul>
       </>
     ),
   },
@@ -143,10 +154,10 @@ function Feature({
           style={{ height: "320px" }}
         />
       </div>
-      <h3 style={{textAlign: "center"}}>
+      <h2 style={{textAlign: "center"}}>
         {title}
-      </h3>
-      <p>{description}</p>
+      </h2>
+      <p style={{fontSize: "20px",fontWeight: "500"}}>{description}</p>
     </div>
   );
 }

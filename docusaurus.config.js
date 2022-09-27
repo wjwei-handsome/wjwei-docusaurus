@@ -110,16 +110,16 @@ async function CreateConfig() {
                         type: 'doc',
                         docId: 'intro',
                         position: 'left',
-                        label: 'Docs',
+                        label: '📗Docs',
                     },
                     {
                         to: '/blog',
-                        label: 'Blog',
+                        label: '👨🏻‍💻Blog',
                         position: 'left'
                     },
                     {
                         to: '/about-me',
-                        label: 'About Me',
+                        label: '🏡About Me',
                         position: 'left'
                     },
                     {
@@ -155,42 +155,42 @@ async function CreateConfig() {
             },
             footer: {
                 style: 'dark',
-                links: [{
-                        title: 'Docs',
-                        items: [{
-                            label: 'Introduction',
-                            to: '/docs/intro',
-                        }, ],
-                    },
-                    {
-                        title: 'Community',
-                        items: [{
-                                label: 'Github',
-                                href: 'https://github.com/wjwei-handsome/wjwei-docusaurus/',
-                            },
-                            {
-                                label: 'Discord',
-                                href: 'https://discord.gg/dUyetKKSbv',
-                            },
-                            {
-                                label: 'Google Scholar',
-                                href: 'https://twitter.com/docusaurus',
-                            },
-                        ],
-                    },
-                    {
-                        title: 'More',
-                        items: [{
-                                label: 'Blog',
-                                to: '/blog',
-                            },
-                            {
-                                label: 'GitHub',
-                                href: 'https://github.com/facebook/docusaurus',
-                            },
-                        ],
-                    },
-                ],
+                // links: [{
+                //         title: 'Docs',
+                //         items: [{
+                //             label: 'my docs',
+                //             to: '/docs/intro',
+                //         }, ],
+                //     },
+                //     {
+                //         title: 'Community',
+                //         items: [{
+                //                 label: 'Github',
+                //                 href: 'https://github.com/wjwei-handsome/wjwei-docusaurus/',
+                //             },
+                //             {
+                //                 label: 'Discord',
+                //                 href: 'https://discord.gg/dUyetKKSbv',
+                //             },
+                //             {
+                //                 label: 'Google Scholar',
+                //                 href: 'https://twitter.com/docusaurus',
+                //             },
+                //         ],
+                //     },
+                //     {
+                //         title: 'More',
+                //         items: [{
+                //                 label: 'Blog',
+                //                 to: '/blog',
+                //             },
+                //             {
+                //                 label: 'GitHub',
+                //                 href: 'https://github.com/facebook/docusaurus',
+                //             },
+                //         ],
+                //     },
+                // ],
                 copyright: `Copyright © ${new Date().getFullYear()} WenjieWei, Inc. Built with Docusaurus.`,
             },
             prism: {
