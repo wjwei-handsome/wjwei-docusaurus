@@ -131,12 +131,20 @@ async function CreateConfig() {
                     },
                     {
                         type: 'dropdown',
-                        label: 'Community',
+                        label: '🎉Community',
                         position: 'left',
                         items: [{
-                                label: 'Facebook',
-                                href: 'https://www.facebook.com',
+                                label: 'Google Scholar',
+                                href: 'https://scholar.google.com/citations?user=AO4Qqk4AAAAJ&',
                             },
+                            {
+                                label: 'Discord',
+                                href: 'https://discord.gg/dUyetKKSbv',
+                            },
+                            {
+                                label: "🔞SongtaoGui's Blog",
+                                href: 'https://songtaogui.github.io/',
+                            }
                             // {
                             //     type: 'doc',
                             //     label: 'my-first-docs/doc-A',
