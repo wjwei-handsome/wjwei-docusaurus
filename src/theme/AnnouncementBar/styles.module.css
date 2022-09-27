@@ -11,7 +11,7 @@
     box-shadow: var(--ifm-global-shadow-lw);
     z-index: calc(var(--ifm-z-index-fixed) + 1);
     /* just above the navbar */
-    background-image: linear-gradient(to top, #a8edea 0%, #fed6e3 100%);
+    background-image: linear-gradient(90 deg, #a8edea 0%, #fed6e3 100%);
 }
 
 html[data-announcement-bar-initially-dismissed='true'] .announcementBar {
