@@ -100,5 +100,13 @@
     }
     
     .navbar__logo {
-        height: 3rem;
+        /* height: 3.75rem; */
+        height: 48px;
+    }
+    
+    .navbar {
+        padding-top: 6px;
+        padding-bottom: 6px;
+        /* height: 3.75rem; */
+        height: 60px;
     }

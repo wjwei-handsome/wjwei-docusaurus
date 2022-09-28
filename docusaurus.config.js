@@ -102,10 +102,10 @@ async function CreateConfig() {
                 title: 'WjWei Blog',
                 logo: {
                     alt: 'My Site Logo',
-                    src: 'img/Avatar.png',
-                    srcDark: 'img/Avatar-dark.png',
-                    width: 64,
-                    height: 64
+                    src: 'img/Avatar-s.png',
+                    srcDark: 'img/Avatar-dark-s.png',
+                    width: 48,
+                    height: 48
                 },
                 items: [{
                         type: 'doc',
@@ -254,7 +254,11 @@ async function CreateConfig() {
 
                 //... other Algolia params
             },
-            metadata: [{ name: 'keywords', content: 'wjwei, blog, bioinfomatics' }]
+            metadata: [
+                { name: 'keywords', content: 'wjwei, blog, bioinfomatics' },
+                { name: 'theme-color', content: "#1972F8", media: "(prefers-color-scheme: light)" },
+                { name: 'theme-color', content: "#1C4D98", media: "(prefers-color-scheme: dark)" }
+            ]
         }),
     };
     return config;
