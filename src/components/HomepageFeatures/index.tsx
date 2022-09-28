@@ -82,7 +82,7 @@ export type feature = {
 
 export const features: feature[] = [
   {
-    title: "Addicted To CS",
+    title: "Enthused To CS",
     sources: {
       light: "/img/programming.svg",
       dark: "/img/programming.svg",

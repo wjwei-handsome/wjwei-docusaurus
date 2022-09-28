@@ -1,0 +1,68 @@
+.listWrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.cardWrapper {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 128px;
+    border-radius: 1.5rem;
+    margin: 1rem;
+    padding: 0 1rem;
+    cursor: pointer;
+    background-image: linear-gradient( 25deg, var(--ifm-color-primary), var(--ifm-color-primary-light), var(--ifm-color-primary-lighter), var(--ifm-color-primary-lightest));
+}
+
+.cardWrapper:hover {
+    background-color: var(--ifm-color-primary-lightest);
+    box-shadow: black 0px 0px 10px;
+}
+
+[data-theme="dark"] .cardWrapper:hover {
+    box-shadow: white 0px 0px 10px;
+}
+
+.image {
+    width: 96px;
+    height: 96px;
+    padding: 8px;
+    max-width: 100%;
+}
+
+.title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 2px;
+    line-height: 1.5rem;
+    white-space: nowrap;
+    vertical-align: bottom;
+}
+
+.title_sm {
+    font-size: 0.6rem;
+}
+
+.title_md {
+    font-size: 0.8rem;
+}
+
+@media screen and (min-width: 576px) {
+    .cardWrapper:hover .image {
+        opacity: 1;
+        transition: ease-in 0.4s;
+        transform-style: preserve-3d;
+        transform: rotateZ(1turn);
+        -webkit-transform: rotateZ(1turn);
+        -moz-transform: rotateZ(1turn);
+        -o-transform: rotateZ(1turn);
+        -ms-transform: rotateZ(1turn);
+        cursor: pointer;
+    }
+}
