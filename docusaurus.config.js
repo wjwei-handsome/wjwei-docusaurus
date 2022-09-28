@@ -3,6 +3,7 @@
 
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+
 // const mdxMermaid = require('mdx-mermaid');
 // const mdxMermaid = [
 //     require("mdx-mermaid"),
@@ -25,6 +26,7 @@ const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 // ]
 
 async function CreateConfig() {
+    const primaryColor = '#5391ba';
     const mdxMermaid = await
     import ('mdx-mermaid')
     /** @type {import('@docusaurus/types').Config} */
@@ -233,10 +235,10 @@ async function CreateConfig() {
             },
             algolia: {
                 // The application ID provided by Algolia
-                appId: 'UDL4N93TYZ',
+                appId: 'NZ1SNA604X',
 
                 // Public API key: it is safe to commit it
-                apiKey: '46b0f0f9d509a7b4f13d960776190df0',
+                apiKey: 'a212e7276d322dbd37ddb204c81190c3',
 
                 indexName: 'wwj-blog',
 
@@ -256,8 +258,8 @@ async function CreateConfig() {
             },
             metadata: [
                 { name: 'keywords', content: 'wjwei, blog, bioinfomatics' },
-                { name: 'theme-color', content: "#1972F8", media: "(prefers-color-scheme: light)" },
-                { name: 'theme-color', content: "#1C4D98", media: "(prefers-color-scheme: dark)" }
+                { name: 'theme-color', content: primaryColor, media: "(prefers-color-scheme: light)" },
+                { name: 'theme-color', content: primaryColor, media: "(prefers-color-scheme: dark)" }
             ]
         }),
     };
