@@ -8,7 +8,7 @@ import react from "@site/static/img/icon/react.png";
 import python from "@site/static/img/icon/python.png";
 import linux from "@site/static/img/icon/linux.png";
 import rlang from "@site/static/img/icon/r.png";
-import bioinfo from "@site/static/img/icon/biology.png";
+import bioinfo from "@site/static/img/icon/bioinformatics.png";
 import django from "@site/static/img/icon/django.png";
 import rust from "@site/static/img/icon/rust.png";
 import algorithm from "@site/static/img/icon/algorithm2.png";

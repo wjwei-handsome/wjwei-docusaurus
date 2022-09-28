@@ -1,0 +1,45 @@
+.featureIconArea {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.featureIconArea > img {
+  height: 96px;
+  width: 96px;
+}
+
+.title {
+  font-size: 1.3rem;
+  font-weight: bold;
+}
+
+@media screen and (min-width: 576px) {
+  .featureIconArea > img {
+    height: 128px;
+    width: 128px;
+    transition: ease 1s;
+    -webkit-transition: ease 1s;
+    -moz-transition: ease 1s;
+    -o-transition: ease 1s;
+    -ms-transition: ease 1s;
+  }
+  .featureIconArea > img:hover {
+    cursor: pointer;
+    transform-style: preserve-3d;
+    transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    -moz-transform: rotate(360deg);
+    -o-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+  }
+
+  .title {
+    margin-top: 6px;
+    font-size: 1.5rem;
+  }
+
+  .title::selection {
+    color: var(--ifm-color-primary);
+  }
+}

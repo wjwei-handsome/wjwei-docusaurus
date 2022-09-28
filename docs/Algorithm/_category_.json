@@ -3,6 +3,7 @@
     "position": 8,
     "link": {
         "type": "generated-index",
-        "description": "Algorithm!"
+        "description": "Algorithm!",
+        "image": "/img/icon/algorithm.png"
     }
 }

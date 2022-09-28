@@ -219,6 +219,7 @@ async function CreateConfig() {
                         line: 'This will error',
                     },
                 ],
+                additionalLanguages: ['rust', 'r'],
             },
             docs: {
                 sidebar: {

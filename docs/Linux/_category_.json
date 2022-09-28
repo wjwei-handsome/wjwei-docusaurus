@@ -1,8 +1,9 @@
 {
-    "label": "Linux/Shell",
+    "label": "Linux",
     "position": 3,
     "link": {
         "type": "generated-index",
-        "description": "About Linux and Shell"
+        "description": "About Linux and Shell",
+        "image": "/img/icon/linux.png"
     }
 }
