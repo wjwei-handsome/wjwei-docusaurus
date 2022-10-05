@@ -5,9 +5,15 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/3.6.0/css/reveal.min.css" integrity="sha512-V5fKCVKOFy36w8zJmLzPH5R6zU6KvuHOvxfMRczx2ZeqTjKRGSBO9yiZjCKEJS3n6EmENwrH/xvSwXqxje+VVA==" crossorigin="anonymous" referrerpolicy="no-referrer"
     /> -->
     <link rel="stylesheet" href="dist/reveal.css">
-    <link rel="stylesheet" href="dist/theme/moon.css">
+    <link rel="stylesheet" href="dist/theme/white.css">
     <script src="dist/reveal.js"></script>
     <script src="plugin/markdown/markdown.js"></script>
+    <script src="plugin/chalkboard/plugin.js"></script>
+    <script src="plugin/customcontrols/plugin.js"></script>
+    <link rel="stylesheet" href="plugin/chalkboard/style.css">
+    <link rel="stylesheet" href="plugin/customcontrols/style.css">
+    <!-- <link rel="stylesheet" href="dist/fontawesome.css"> -->
+    <link rel="stylesheet" href="https://cdn.staticfile.org/font-awesome/4.7.0/css/font-awesome.css">
     <!-- <script src="plugin/zoom/zoom.js"></script> -->
 </head>
 
@@ -353,7 +359,23 @@
     <script>
         Reveal.initialize({
             slideNumber: true,
-            plugins: [RevealMarkdown]
+            plugins: [RevealMarkdown, RevealChalkboard, RevealCustomControls],
+            customcontrols: {
+                controls: [{
+                    id: 'toggle-overview',
+                    title: 'Toggle overview (O)',
+                    icon: '<i class="fa fa-pencil"></i>',
+                    action: 'Reveal.toggleOverview();'
+                }, {
+                    icon: '<i class="fa fa-pencil"></i>',
+                    title: 'Toggle chalkboard (B)',
+                    action: 'RevealChalkboard.toggleChalkboard();'
+                }, {
+                    icon: '<i class="fa fa-pencil"></i>',
+                    title: 'Toggle notes canvas (C)',
+                    action: 'RevealChalkboard.toggleNotesCanvas();'
+                }]
+            }
         });
     </script>
 </body>
