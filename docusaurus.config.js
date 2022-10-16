@@ -33,7 +33,7 @@ async function CreateConfig() {
     const config = {
         title: 'WjWei | Blog',
         tagline: '&quot;My Beatuifal Dark Twisted Fantsty&quot;',
-        url: 'https://wjwei.vercel.app',
+        url: 'https://www.wjwei.blog',
         baseUrl: '/',
         onBrokenLinks: 'throw',
         onBrokenMarkdownLinks: 'warn',
@@ -234,35 +234,51 @@ async function CreateConfig() {
                 textColor: '#091E42',
                 isCloseable: true,
             },
-            algolia: {
-                // The application ID provided by Algolia
-                appId: 'NZ1SNA604X',
+            // algolia: {
+            //     // The application ID provided by Algolia
+            //     appId: 'NZ1SNA604X',
 
-                // Public API key: it is safe to commit it
-                apiKey: 'a212e7276d322dbd37ddb204c81190c3',
+            //     // Public API key: it is safe to commit it
+            //     apiKey: 'a212e7276d322dbd37ddb204c81190c3',
 
-                indexName: 'wwj-blog',
+            //     indexName: 'wwj-blog',
 
-                // Optional: see doc section below
-                contextualSearch: true,
+            //     // Optional: see doc section below
+            //     contextualSearch: true,
 
-                // Optional: Specify domains where the navigation should occur through window.location instead on history.push. Useful when our Algolia config crawls multiple documentation sites and we want to navigate with window.location.href to them.
-                externalUrlRegex: 'external\\.com|domain\\.com',
+            //     // Optional: Specify domains where the navigation should occur through window.location instead on history.push. Useful when our Algolia config crawls multiple documentation sites and we want to navigate with window.location.href to them.
+            //     externalUrlRegex: 'external\\.com|domain\\.com',
 
-                // Optional: Algolia search parameters
-                searchParameters: {},
+            //     // Optional: Algolia search parameters
+            //     searchParameters: {},
 
-                // Optional: path for search page that enabled by default (`false` to disable it)
-                searchPagePath: 'search',
+            //     // Optional: path for search page that enabled by default (`false` to disable it)
+            //     searchPagePath: 'search',
 
-                //... other Algolia params
-            },
+            //     //... other Algolia params
+            // },
             metadata: [
                 { name: 'keywords', content: 'wjwei, blog, bioinfomatics' },
                 { name: 'theme-color', content: primaryColor, media: "(prefers-color-scheme: light)" },
                 { name: 'theme-color', content: primaryColor, media: "(prefers-color-scheme: dark)" }
             ]
         }),
+        themes: [
+            // ... Your other themes.
+            [
+                require.resolve("@easyops-cn/docusaurus-search-local"),
+                {
+                    // ... Your options.
+                    // `hashed` is recommended as long-term-cache of index file is possible.
+                    hashed: true,
+                    // For Docs using Chinese, The `language` is recommended to set to:
+                    // ```
+                    language: ["en", "zh"],
+                    indexPages: true,
+                    // ```
+                },
+            ],
+        ],
     };
     return config;
 }
