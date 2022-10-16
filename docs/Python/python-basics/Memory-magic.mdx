@@ -5,6 +5,10 @@ tags: [python, memory]
 sidebar_position: 1
 ---
 
+import ReferenceList from "@site/src/components/ReferenceList";
+import npm from "@site/static/img/icon/npm.png";
+import python from "@site/static/img/icon/python.png";
+
 <img
   className="Badges"
   src="https://img.shields.io/badge/Author-WenjieWei-ff69b4?style=for-the-badge&logo=appveyor"
@@ -412,7 +416,132 @@ class MyClass:
 当我们有一个指向某个实例的指针，那么这个实例就有了一个**引用**，对于该实例，CPython 会跟踪有多少引用指向它，如果计数器为 0，那么这个实例就可以被销毁了。在创建上面那个类的前提下，举如下例子：
 
 ```python showLineNumbers
->>>wwj = MyClass('wwj')
->>>del wwj
+>>> wwj = MyClass('wwj')
+>>> del wwj
 Deleting wwj!
 ```
+
+这个例子中，我们实例化了一个新对象`MyCLass('wwj')`，并创建了指向它的指针`wwj`。当我们`del wwj`时，我们是删掉了该引用，所有该实例的引用计数为 0，所以 CPython 解释器决定从内存中删除它。在此之前，我们自定义的`__del__`方法会被调用，即打印出我们看见的消息。
+当然这个例子中，我们只创建了一个引用，如果我们创建了多个引用呢？瞅瞅
+
+```python showLineNumbers
+>>> wwj = MyClass('wwj')
+>>> wwj_bro = wwj
+>>> del wwj
+>>> del wwj_bro
+Deleting wwj!
+```
+
+不多解释了，显而易见。再来点复杂的？我们给对象赋予一个属性，这个属性也是一个对象
+
+```python showLineNumbers
+>>> wwj = MyClass('wwj')
+>>> xh = MyClass('xh')
+>>> wwj.love = xh
+>>> xh.love = wwj # 有点肉麻，忍忍
+>>> del wwj
+>>> del xh
+```
+
+本来预计的是，`wwj`，`xh` 两个实例都会被删除，但是并没有，因为我们给`wwj`和`xh`都赋予了一个属性，这个属性也是一个对象，而这个对象也有一个引用（套娃 🪆），所以这两个实例并没有被删除，即不会打印出消息。如果有些迷茫，可以看看下面的图：
+
+![cyclic-isolate-1](./assets/cyclic-islote-1.svg)
+
+在删除`wwj`和`xh`后，变成了下图，我们删除了两个对象的命名空间中的指针，但却没有删除该对象包含的另一个对象的指针，此时两个对象无法从命名空间中访问，并且引用计数不为 0。
+
+![cyclic-isolate-2](./assets/cyclic-islote-2.svg)
+
+所以这也是引用计数方法的局限性，那么 Python 的设计者又不傻，所以有了大名鼎鼎的垃圾回收机制，`Carbage Collection`。
+
+### 垃圾回收 Garbage Collection
+
+当然了，垃圾回收器 GC，是 Python 的内置方式，通常情况下我们无需手动调用。但是我们也可以将其从标准库中作为模块导入，这样我们就能看看它是如何工作的了。
+
+#### 检测嵌套对象
+
+GC 会跟踪内存中存在的各种对象，但并不是所有对象，举几个例子：
+
+```python showLineNumbers
+>>> import gc
+>>> gc.is_tracked(1)
+False
+>>> gc.is_tracked('wwj')
+False
+>>> gc.is_tracked([1, 2, 3])
+True
+>>> gc.is_tracked({'a': 1, 'b': 2})
+True
+```
+
+可以发现，被追踪的对象是需要包含指针的。所以我们自己定义的实例化对象是可以被追踪的，因为可以对其添加属性（指针）。
+
+```python showLineNumbers
+>>> wwj = MyClass('wwj')
+>>> gc.is_tracked(wwj)
+True
+```
+
+那么我们回到[引用计数](#引用计数-reference-counting)无法解决的问题上来：GC 是如何知道嵌套对象形成的？其`get_reference`方法之后，可以返回一个对象的所有引用，我们来看看：
+
+```python showLineNumbers
+>>> a_list = [1, 2, 3, 'wwj']
+>>> gc.get_referents(a_list)
+[1, 2, 3, 'wwj']
+
+>>> wwj = MyClass('wwj')
+>>> xh = MyClass('xh')
+>>> wwj.love = xh
+>>> xh.love = wwj
+>>> gc.get_referents(wwj)
+[{'name': 'wwj', 'love': <__main__.MyClass object at 0x106d133d0>}, <class '__main__.MyClass'>]
+
+```
+
+我们可以看到`wwj`对象包含以下内容的指针，第一个是其属性的字典，第二个是其类对象本身的指针。其中第一个包含两个，第一个是`name`属性，第二个是`love`属性，而`love`属性的值是指向`xh`实例的指针。很明显的嵌套对象。
+那么，当 GC 运作时，它会检查所有可被追踪的对象，是否能从`namespace`中访问：即寻找指向该对象的所有指针，以及这些指针指向的对象中的指针，有点绕口，可以理解为创建一个全局的引用树，具体更细节讲解请看[python 官方文档对其描述](https://devguide.python.org/internals/garbage-collector/index.html#identifying-reference-cycles)。
+之后，GC 发现存在无法从命名空间访问的对象，那么它可以清除这些对象。
+再回到上一个例子：
+
+```python showLineNumbers
+>>> wwj = MyClass('wwj')
+>>> xh = MyClass('xh')
+>>> wwj.love = xh
+>>> xh.love = wwj
+>>> del wwj
+>>> del xh
+>>> gc.collect() # 手动调用 GC
+Deleting wwj!
+Deleting xh!
+4
+```
+
+在输出中，我们终于看到了两个自定义的打印消息，和一个数字 4，这个数字是 GC 清除的对象的数量。
+
+:::tip 为什么是 4？
+
+又有点奇怪了，为什么是 4 个，不是删除了两个实例对象？其实每个实例对象也指向一个字符串对象，也就是`name`，所以是 4 个。
+
+:::
+
+浅谈就到这吧，再深究下去我就不会了，等我再学学，再来补充。
+
+## 最后的话
+
+实际上，上述内容，我在日常 coding 中基本不会用到，我知道这些或者不知道这些，对我业务上的开发也基本没有影响。但是我既然学了 Python，如果只会写点小脚本和 CRUD，也挺没面子的，哪有脸皮说自己是写代码的 😅，还是那句话吧，知道总比不知道好。
+
+## 参考资料
+
+<ReferenceList
+  data={[
+    {
+      title: "simulating-pointers-in-python",
+      link: "https://realpython.com/pointers-in-python/#simulating-pointers-in-python",
+      src: python,
+    },
+    {
+      title: "identifying-reference-cycles",
+      link: "https://devguide.python.org/internals/garbage-collector/index.html#identifying-reference-cycles",
+      src: python,
+    },
+  ]}
+/>
