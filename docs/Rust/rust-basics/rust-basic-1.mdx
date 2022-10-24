@@ -1,0 +1,147 @@
+---
+title: Rust基础入门-1
+description: Rust基础入门-1
+tags: [rust, code]
+sidebar_position: 1
+---
+
+## 为什么学 Rust
+
+- 连续七年获评全世界最受欢迎的语言
+- 没有 GC，无需手动内存管理
+- 性能比肩 C/C++，但是安全性比 C/C++更高
+- 全世界最好的包管理器 Cargo
+
+但是，用的人是在是太少了，目前最多的评价就是**Rust 太难了，学了也没用**。
+很好玩的是，这句话前面半句没人质疑，但是后面半句持保留意见，因为就找工作而言，Rust 确实没啥用，因为国内环境一般。但是我又不找工作，想成为一个更优秀的或者学点真东西，Rust 是个不错的选择。
+至于前半句话，我就先学着吧，如果很久没更新了，就是我太菜了，学不会。
+
+## 开干！配置环境
+
+介绍这个没啥意思，想学 rust 的人，不会在配置环境上遇到啥问题，按照官网介绍来就行。
+
+```shell
+$ curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf | sh
+```
+
+```shell
+$ rustc -V
+rustc 1.61.0 (fe5b13d68 2022-05-18)
+```
+
+VSCODE 插件：`rust-analyze`
+
+## 包管理器`Cargo`
+
+**再挑剔的开发者，都对`Cargo`赞不绝口**
+
+### 创建新项目
+
+```shell
+$ cargo new bull_shit
+$ cd bull_shit
+```
+
+我就是不用`hello_world`！
+项目结构如下所示：
+
+```shell
+$ tree
+.
+├── .git
+├── .gitignore
+├── Cargo.toml
+└── src
+    └── main.rs
+
+```
+
+多贴心啊，连 git 和 gitignore 都给你写好了。
+
+### 运行项目
+
+有两种方式：
+
+1. `cargo run`
+2. 手动编译后运行
+
+第一种：
+
+```shell
+$ cargo run
+   Compiling bull_shit v0.1.0 (/Users/wjwei/code/learn-rust/bull_shit)
+    Finished dev [unoptimized + debuginfo] target(s) in 2.02s
+     Running `target/debug/bull_shit`
+Hello, world!
+```
+
+第二种：
+
+```shell
+$ cargo build
+    Finished dev [unoptimized + debuginfo] target(s) in 0.00s
+$ ./target/debug/bull_shit
+Hello, world!
+```
+
+### cargo check
+
+项目复杂之后，不需要每次都`run`或者`build`，可以使用`cargo check`，它只检查代码能否通过编译，省流。
+
+```shell
+$ cargo check
+    Checking bull_shit v0.1.0 (/Users/wjwei/code/learn-rust/bull_shit)
+    Finished dev [unoptimized + debuginfo] target(s) in 0.82s
+```
+
+### Cargo.toml ｜ Cargo.lock
+
+这两个是 cargo 项目的核心文件
+
+- `Cargo.toml` 是 `cargo` 特有的项目数据描述文件。它存储了项目的所有元配置信息，如果 Rust 开发者希望项目能够按照期望的方式进行构建、测试和运行，那么必须按照合理的方式构建 `Cargo.toml`
+- `Cargo.lock` 是 `cargo` 生成的锁文件，它记录了当前项目依赖的所有依赖包的确切版本号，以及这些依赖包的依赖关系。当项目依赖的依赖包有更新时，`cargo` 会自动更新 `Cargo.lock` 文件，以确保项目依赖的依赖包的版本号一致。
+
+:::tip toml 是什么
+
+<highlight color="#25c2a0">T</highlight>om's <highlight color="#25c2a0">
+  O
+</highlight>bvious, <highlight color="#25c2a0">M</highlight>inimal <highlight color="#25c2a0">
+  L
+</highlight>anguage
+
+作者就叫 Tom Preston-Werner，还有 Pradyun Gedam
+是一个语义明显的、最小化配置文件格式
+:::
+
+#### Cargo.toml
+
+```toml
+[package]
+name = "bull_shit"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+```
+
+`package`是项目的基本信息，`dependencies`是项目依赖的包。
+`package`中，`name`定义项目名称，`version`定义当前版本号，`edition`定义了 Rust 大版本，详情见[Rust 版本详解](https://course.rs/appendix/rust-version.html)。
+`dependencies`中，主要通过各种依赖段落来描述该项目的各种依赖项：
+
+- 基于 Rust 官方仓库 crates.io，通过版本说明来描述
+- 基于项目源代码的 git 仓库地址，通过 URL 来描述
+- 基于本地项目的绝对路径或者相对路径，通过类 Unix 模式的路径来描述
+
+如下述例子：
+
+```toml
+[dependencies]
+rand = "0.3"
+hammer = { version = "0.5.0"}
+color = { git = "https://github.com/bjz/color-rs" }
+geometry = { path = "crates/geometry" }
+```
+
+等项目进行下去，就会更加清晰。
