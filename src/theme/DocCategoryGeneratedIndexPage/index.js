@@ -26,26 +26,6 @@ function DocCategoryGeneratedIndexPageMetadata({categoryGeneratedIndex}) {
   );
 }
 
-
-
-function isHasImg(pathImg){
-    var ImgObj=new Image();
-    ImgObj.src= pathImg;
-     if(ImgObj.fileSize > 0 || (ImgObj.width > 0 && ImgObj.height > 0))
-     {
-       return true;
-     } else {
-       return false;
-    }
-}
-
-
-function getDarkModeImage(imageLight) {
-  const imageDark = imageLight.replace(/\.png$/, "-dark.png");
-  const returnImage = isHasImg(imageDark) ? imageDark : imageLight;
-  return returnImage;
-}
-
 function DocCategoryGeneratedIndexPageContent({categoryGeneratedIndex}) {
   const category = useCurrentSidebarCategory();
   return (
@@ -59,7 +39,7 @@ function DocCategoryGeneratedIndexPageContent({categoryGeneratedIndex}) {
         </Heading>
         {/* // add FeatureIcon if image exists */}
         {categoryGeneratedIndex.image && (
-          <FeatureIcon src={useBaseUrl(categoryGeneratedIndex.image)} srcDark={getDarkModeImage(categoryGeneratedIndex.image)} title={categoryGeneratedIndex.title} />
+          <FeatureIcon src={useBaseUrl(categoryGeneratedIndex.image)} title={categoryGeneratedIndex.title} />
         )}
         {categoryGeneratedIndex.description && (
           <p>{categoryGeneratedIndex.description}</p>
