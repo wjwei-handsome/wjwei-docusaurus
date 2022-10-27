@@ -60,19 +60,25 @@ const slides = [
       </div>
     </div>
   </header>,
-  <div className={clsx(styles.heroBanner, styles.slide)}>
-    <div className="container">
-      <h2>Change the World with Rules of the Garage</h2>
-    </div>
-  </div>,
-  <div className={clsx(styles.heroBanner, styles.slide)}>
-  <div className="container">
-    <h2>Change the World with Rules of the Garage</h2>
-  </div>
-</div>,
-  <div className={clsx(styles.heroBanner, styles.slide)}>
-  <div className="container">
-    <h2>Change the World with Rules of the Garage</h2>
+  <div
+  className={clsx(styles.heroBanner, styles.slide)}
+  style={{
+    backgroundImage: "linear-gradient(135deg,#4071BE, #ABCBE3)",
+  }}>
+  {/* <h2 className={styles.slideHeading} style={{ color: "white" }}>
+    ZEAMAP
+  </h2>
+  <h3 className={styles.slideHeading} style={{ color: "white" }}>
+  A comprehensive database adapted to the maize multi-omics era
+  </h3> */}
+  <img src="/img/zeamap.png" className={styles.bkgimg} />
+  <div className={clsx(styles.button, styles.readMore)}>
+    <Link
+      className="button button--outline button--lg"
+      style={{ color: "white" }}
+      href="https://www.zeamap.com">
+      <h1 className="hero__title">ZEAMAP</h1>
+    </Link>
   </div>
 </div>,
 ];

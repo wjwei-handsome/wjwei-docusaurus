@@ -1,0 +1,243 @@
+---
+title: Rust基础入门-第一章
+description: Rust变量、基本类型
+tags: [rust, code]
+sidebar_position: 2
+---
+
+import ReferenceList from "@site/src/components/ReferenceList";
+import rust from "@site/static/img/icon/rust.png";
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+<img
+  className="Badges"
+  src="https://img.shields.io/badge/Author-WenjieWei-ff69b4?style=for-the-badge&logo=appveyor"
+/>
+
+## 变量绑定
+
+啥叫变量就不谈了，都学 rust 了。
+
+### 可变还是不可变？
+
+在编程语言设计中，若支持声明可变的变量：灵活性。若只支持声明不可变的变量：安全性。那么 Rust 则说：“我全都要！”
+
+### 变量命名
+
+大部分语言的命名规范都类似，这里遵循[Rust 命名规范](https://course.rs/practice/naming.html)。
+
+:::tip
+
+Rust 中也存在关键字`keywords`，需要避免其作为变或函数的名称。
+
+<details>
+  <summary>目前正在使用的关键字</summary>
+  <ul>
+    <li>
+      <code>as</code> - 强制类型转换，或
+      <code>use</code> 和 <code>extern crate</code>
+      包和模块引入语句中的重命名
+    </li>
+    <li>
+      <code>break</code> - 立刻退出循环
+    </li>
+    <li>
+      <code>const</code> - 定义常量或原生常量指针（constant raw pointer）
+    </li>
+    <li>
+      <code>continue</code> - 继续进入下一次循环迭代
+    </li>
+    <li>
+      <code>crate</code> - 链接外部包
+    </li>
+    <li>
+      <code>dyn</code> - 动态分发特征对象
+    </li>
+    <li>
+      <code>else</code> - 作为 <code>if</code> 和 <code>if let</code>{" "}
+      控制流结构的 fallback
+    </li>
+    <li>
+      <code>enum</code> - 定义一个枚举类型
+    </li>
+    <li>
+      <code>extern</code> -
+      链接一个外部包,或者一个宏变量(该变量定义在另外一个包中)
+    </li>
+    <li>
+      <code>false</code> - 布尔值 <code>false</code>
+    </li>
+    <li>
+      <code>fn</code> - 定义一个函数或 <strong>函数指针类型</strong> (
+      <em>function pointer type</em>)
+    </li>
+    <li>
+      <code>for</code> - 遍历一个迭代器或实现一个 trait
+      或者指定一个更高级的生命周期
+    </li>
+    <li>
+      <code>if</code> - 基于条件表达式的结果来执行相应的分支
+    </li>
+    <li>
+      <code>impl</code> - 为结构体或者特征实现具体功能
+    </li>
+    <li>
+      <code>in</code> - <code>for</code> 循环语法的一部分
+    </li>
+    <li>
+      <code>let</code> - 绑定一个变量
+    </li>
+    <li>
+      <code>loop</code> - 无条件循环
+    </li>
+    <li>
+      <code>match</code> - 模式匹配
+    </li>
+    <li>
+      <code>mod</code> - 定义一个模块
+    </li>
+    <li>
+      <code>move</code> - 使闭包获取其所捕获项的所有权
+    </li>
+    <li>
+      <code>mut</code> - 在引用、裸指针或模式绑定中使用，表明变量是可变的
+    </li>
+    <li>
+      <code>pub</code> - 表示结构体字段、
+      <code>impl</code> 块或模块的公共可见性
+    </li>
+    <li>
+      <code>ref</code> - 通过引用绑定
+    </li>
+    <li>
+      <code>return</code> - 从函数中返回
+    </li>
+    <li>
+      <code>Self</code> - 实现特征类型的类型别名
+    </li>
+    <li>
+      <code>self</code> - 表示方法本身或当前模块
+    </li>
+    <li>
+      <code>static</code> - 表示全局变量或在整个程序执行期间保持其生命周期
+    </li>
+    <li>
+      <code>struct</code> - 定义一个结构体
+    </li>
+    <li>
+      <code>super</code> - 表示当前模块的父模块
+    </li>
+    <li>
+      <code>trait</code> - 定义一个特征
+    </li>
+    <li>
+      <code>true</code> - 布尔值 <code>true</code>
+    </li>
+    <li>
+      <code>type</code> - 定义一个类型别名或关联类型
+    </li>
+    <li>
+      <code>unsafe</code> - 表示不安全的代码、函数、特征或实现
+    </li>
+    <li>
+      <code>use</code> - 在当前代码范围内(模块或者花括号对)引入外部的包、模块等
+    </li>
+    <li>
+      <code>where</code> - 表示一个约束类型的从句
+    </li>
+    <li>
+      <code>while</code> - 基于一个表达式的结果判断是否继续循环
+    </li>
+  </ul>
+</details>
+
+<details>
+  <summary>保留做将来使用的关键字</summary>
+  <ul>
+    <li>
+      <code>abstract</code>
+    </li>
+    <li>
+      <code>async</code>
+    </li>
+    <li>
+      <code>await</code>
+    </li>
+    <li>
+      <code>become</code>
+    </li>
+    <li>
+      <code>box</code>
+    </li>
+    <li>
+      <code>do</code>
+    </li>
+    <li>
+      <code>final</code>
+    </li>
+    <li>
+      <code>macro</code>
+    </li>
+    <li>
+      <code>override</code>
+    </li>
+    <li>
+      <code>priv</code>
+    </li>
+    <li>
+      <code>try</code>
+    </li>
+    <li>
+      <code>typeof</code>
+    </li>
+    <li>
+      <code>unsized</code>
+    </li>
+    <li>
+      <code>virtual</code>
+    </li>
+    <li>
+      <code>yield</code>
+    </li>
+  </ul>
+</details>
+:::
+
+### 变量绑定
+
+在其他语言中，有很多赋值的操作，比如：
+
+<Tabs>
+  <TabItem value="python" label="Python" default>
+    <code>a = 3</code>
+  </TabItem>
+  <TabItem value="js" label="JavaScript">
+    <code>var a = "hello"</code>
+  </TabItem>
+  <TabItem value="shell" label="Shell">
+    <code>a="linux"</code>
+  </TabItem>
+</Tabs>
+
+虽然形式多变，但就是把等式右边的值赋给左边的变量。在 Rust 中，我们这样写：
+
+```rust
+let a = "hello";
+```
+
+这个过程叫做变量的绑定。
+这有啥区别？这就设计到 Rust 最核心的原则--所有权，即任何内存对象都有一个所有者，并完全属于该所有者，绑定就是把这个对象绑定给一个变量。
+具体细节，以及为何要有所有权，后续再讲。
+
+## 参考资料
+
+<ReferenceList
+  data={[
+    {
+      title: "Rust语言圣经",
+      link: "https://course.rs",
+      src: rust,
+    },
+  ]}
+/>

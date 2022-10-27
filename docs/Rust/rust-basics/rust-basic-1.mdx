@@ -1,9 +1,17 @@
 ---
-title: Rust基础入门-1
-description: Rust基础入门-1
+title: Rust基础入门-简介
+description: Rust简介、安装、环境配置
 tags: [rust, code]
 sidebar_position: 1
 ---
+
+import ReferenceList from "@site/src/components/ReferenceList";
+import rust from "@site/static/img/icon/rust.png";
+
+<img
+  className="Badges"
+  src="https://img.shields.io/badge/Author-WenjieWei-ff69b4?style=for-the-badge&logo=appveyor"
+/>
 
 ## 为什么学 Rust
 
@@ -145,3 +153,42 @@ geometry = { path = "crates/geometry" }
 ```
 
 等项目进行下去，就会更加清晰。
+
+## 从入门到放弃？
+
+如何坚持下去？看看官方给的一些建议吧。
+
+> Rust 是一门全新的语言，它会带给你前所未有的体验，提升你的通用编程水平，甚至于赋予你全新的编程思想。在此时此刻，大家可能还半信半疑，但是当学完它再回头看时，可能你也会认同这些貌似浮夸的赞美。
+
+### 避免试一试的心态
+
+之前在学 python、R、shell 的时候，多爽啊，边做边学。但是 Rust 的学习曲线比较陡峭，从一开始就要认真对待。
+人总要坚持一些事情的，给自己一个机会。
+
+### 深入看一本好书
+
+如果拿一些现成的 demo 上手做一个，要么放弃，要么重造，花费的时间和精力也就浪费了。
+
+### 仔细阅读编译错误
+
+强大的编译器是 rust 的一大特点，绝大多数情况下，编译器可以提示你如何解决问题。
+
+### 不强制使用其他语言的最佳实践
+
+Rust 不是一门专门的面对对象或函数式语言，需要遵循 Rust 应有的实践。
+
+## 总结
+
+开始认真学 Rust，给自己一个机会。
+
+## 参考资料
+
+<ReferenceList
+  data={[
+    {
+      title: "Rust语言圣经",
+      link: "https://course.rs",
+      src: rust,
+    },
+  ]}
+/>
