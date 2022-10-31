@@ -95,6 +95,12 @@ super 方法是调用父类的方法。
 
 在 Django 和 DRF 框架中，应用较多，比如有两个接口，一个接口 A 需要返回表格展示所需数据，一个接口 B 需要返回这些数据的文件下载流，在业务逻辑上，两个接口是一样的，那么就可以用混合类的方法，接口 B 继承一个混合类 C 和 A，其中混合类重写`get`方法，来返回文件流，并继承 A 的数据获取。
 
+:::note
+
+在 VSCode 中，如果混合类的类名后缀没有包含 Mixin，编辑器会给波浪线，但似乎并不影响代码运行。
+
+:::
+
 Here's a simple footnote,[^1] and here's a longer one.[^bignote]
 
 [^1]: This is the first footnote.
