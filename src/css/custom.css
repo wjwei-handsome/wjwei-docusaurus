@@ -110,3 +110,19 @@
         /* height: 3.75rem; */
         height: 60px;
     }
+    
+    kbd {
+        margin: 0px 0.2em;
+        padding: 0.1em 0.6em;
+        border-radius: 3px;
+        border: 1px solid #ccc;
+        color: rgb(51, 51, 51);
+        font-weight: bolder;
+        display: inline-block;
+        box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 0 2px #fff inset;
+        background-color: rgb(247, 247, 247);
+        -moz-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 0 2px #fff inset;
+        -webkit-box-shadow: 0 1px 0px rgba(0, 0, 0, 0.2), 0 0 0 2px #fff inset;
+        -moz-border-radius: 3px;
+        -webkit-border-radius: 3px;
+    }
