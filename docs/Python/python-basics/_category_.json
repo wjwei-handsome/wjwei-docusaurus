@@ -1,8 +1,8 @@
 {
-    "label": "Python - Basics",
+    "label": "Python半进阶",
     "position": 1,
     "link": {
         "type": "generated-index",
-        "description": "Python的一些基本使用"
+        "description": "Python中不那么基础的基础"
     }
 }
