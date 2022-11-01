@@ -147,6 +147,10 @@ async function CreateConfig() {
                             {
                                 label: "🔞SongtaoGui's Blog",
                                 href: 'https://songtaogui.github.io/',
+                            },
+                            {
+                                label: "💃JingyunLuo's Blog",
+                                href: 'https://jingyunluo.github.io/',
                             }
                             // {
                             //     type: 'doc',
