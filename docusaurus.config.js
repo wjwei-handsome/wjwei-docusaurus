@@ -265,7 +265,11 @@ async function CreateConfig() {
                 { name: 'keywords', content: 'wjwei, blog, bioinfomatics' },
                 { name: 'theme-color', content: primaryColor, media: "(prefers-color-scheme: light)" },
                 { name: 'theme-color', content: primaryColor, media: "(prefers-color-scheme: dark)" }
-            ]
+            ],
+            tableOfContents: {
+                minHeadingLevel: 2,
+                maxHeadingLevel: 4,
+            }
         }),
         themes: [
             // ... Your other themes.
