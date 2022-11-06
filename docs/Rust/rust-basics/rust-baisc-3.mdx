@@ -119,7 +119,459 @@ let s2 = s1;
 
 刚才提到，`i32`是基本数据类型，大小是固定的，但是`String`类型的值是在堆上分配的，大小是不固定的，因此不会使用自动拷贝来赋值给`s2`。
 
-实际上，`String`类型是一个复杂类型，包含了**存储在栈上的堆指针**、**字符串长度**、\*字符串容量\*\*，其中堆指针指向堆上的字符串数据，容量是指堆上分配的内存大小，长度是指已使用的字符串长度。
+实际上，`String`类型是一个复杂类型，包含了**存储在栈上的堆指针**、**字符串长度**、**字符串容量**，其中堆指针指向堆上的字符串数据，容量是指堆上分配的内存大小，长度是指已使用的字符串长度。
+
+在这个例子中的第一行，s1 是是一个指向堆上数据的指针，这个指针指向的数据是`hello`字符串
+
+第二行`let s2 = s1`，可以分成两种情况考虑：
+
+- 同时拷贝指针和数据到`s2`上
+- 只拷贝指针`s1`本身，因为这个很快。但是根据我们上文提到的[所有权原则](#所有权原则)， **一个值只有一个所有者**，而拷贝指针的行为使得这个字符串数据有了两个所有者，`s1`和`s2`
+
+这个[所有权原则](#所有权原则)这么麻烦，先不管它，来看看会怎么样：
+
+在这个例子中，`s1`和`s2`离开作用域后，都会释放相同的内存，这样就会出现**双重释放（double free）**的问题，导致潜在的内存安全问题。
+
+因此，[所有权原则](#所有权原则)规定，当`s1`赋予`s2`的时候，`s1`就不再有效了。如果只会再使用该变量，就直接报错咯：
+
+```rust
+fn main() {
+let s1 = String::from("hello");
+let s2 = s1;
+
+println!("{}, world!", s1);
+}
+```
+
+```shell
+error[E0382]: borrow of moved value: `s1`
+ --> src/main.rs:5:28
+  |
+2 |     let s1 = String::from("hello");
+  |         -- move occurs because `s1` has type `String`, which does not implement the `Copy` trait
+3 |     let s2 = s1;
+  |              -- value moved here
+4 |
+5 |     println!("{}, world!", s1);
+  |                            ^^ value borrowed here after move
+```
+
+其实这部分的概念，和 Python 或其他语言中的[深浅拷贝](../../Python/python-basics/Memory-magic#浅拷贝与深拷贝-copy)有点类似: 只拷贝指针，听起来很像浅拷贝，但是被浅拷贝的对象会失效，所以 Rust 中的这个行为叫做**move**，用下面这张图可以说明：
+
+![rust-move](https://pic1.zhimg.com/80/v2-3ec77951de6a17584b5eb4a3838b4b61_1440w.jpg)
+
+`s1`被**move**后就被释放了，也无法使用。
+
+### 深拷贝
+
+从上面两个分别拷贝`i32`类型和`String`类型的例子中，我们可以看到 Rust 不会自动进行深拷贝，但是如果我们需要拷贝堆上的数据，而不只是指针，可以使用`clone`方法：
+
+```rust
+fn main() {
+let s1 = String::from("hello");
+let s2 = s1.clone();
+
+println!("s1 = {}, s2 = {}", s1, s2);
+}
+```
+
+这样的话，这几行代码是可以正常编译运行并打印两个 hello 的。
+
+:::caution
+
+对于频繁使用的变量，需要谨慎使用`clone`，可能会导致性能问题。
+
+:::
+
+### 浅拷贝
+
+对于整数类型，已经说过，在编译时大小已知，存储在栈上，拷贝的成本很低，所有没有深浅拷贝的区别。
+
+在 Rust 中，有一个叫做`Copy`的特性，可以用于类似`i32`这样可以存在栈上的类型。即若一个类型拥有`Copy`特性，那么一个变量被赋值给另一个新变量后依然可以访问到。
+
+### 函数传值与返回
+
+将参数值传递给函数时，也会发生`move`所有权转移。如以下这个例子：
+
+```rust showLineNumbers title="main.rs" {5,10}
+fn main() {
+    let s = String::from("hello");  // s 进入作用域
+
+    takes_ownership(s);             // s 的值移动到函数里 ...
+                                    // ... 所以到这里不再有效
+
+    let x = 5;                      // x 进入作用域
+
+    makes_copy(x);                  // x 移动函数里，
+                                    // 但 i32 是 Copy 的，所以在后面可继续使用 x
+
+} // 这里, x 先移出了作用域，然后是 s。但因为 s 的值已被移走，
+  // 所以不会有特殊操作
+
+fn takes_ownership(some_string: String) { // some_string 进入作用域
+    println!("{}", some_string);
+} // 这里，some_string 移出作用域并调用 `drop` 方法。占用的内存被释放
+
+fn makes_copy(some_integer: i32) { // some_integer 进入作用域
+    println!("{}", some_integer);
+} // 这里，some_integer 移出作用域。不会有特殊操作
+```
+
+在这个例子中，若在第 5 行继续使用`s`，则会报错，但在第 10 行继续使用`x`，则相安无事。
+
+虽然这样可以保证内存的安全性，但是总是把值击鼓传花很麻烦，所以 Rust 也提供了方法来获取某个变量的指针或引用。
+
+## 引用
+
+上文提到，Rust 中提供了获取变量指针引用的方法，一个称之为**借用(borrowing)**的概念，即有借有还。
+
+### 引用与解引用
+
+常规引用是一个指针，指向对象存储的内存地址。指针可以被解引用，获得指向的值，如下例所示：
+
+```rust showLineNumbers {6}
+fn main() {
+    let x = 8;  // 变量 x 绑定值 8
+    let y = &x;  // 获得变量 x 的引用，并将其绑定到变量 y
+
+    assert_eq!(8, x);  // 对
+    assert_eq!(8, y); // 不行，因为不能将引用与值进行比较
+    assert_eq!(8, *y); //对，因为 *y 是 x 的值
+}
+```
+
+其中第六行是不行的。
+
+### 不可变引用
+
+引用可以作为函数的参数传入函数，这样的好处就是可以不用转移变量的所有权，如下例：
+
+```rust showLineNumbers {4,6,9}
+fn main() {
+    let s1 = String::from("hello");
+
+    let len = calculate_length(&s1);
+
+    println!("The length of '{}' is {}.", s1, len);
+}
+
+fn calculate_length(s: &String) -> usize {
+    s.len()
+}
+```
+
+其中第九行定义的函数`calculate_length`接受一个`&String`类型的参数，即一个指向`String`类型的引用。这样，函数内部就可以直接使用这个引用，而不用担心变量`s`的所有权会被转移。无需像上一个[例子](#函数传值与返回)一样，先将所有权转移给函数，然后再传出所有权。
+
+在第四行中，我们创建了一个指向`s1`的引用，但是并没有拥有这个值，所以离开作用域后，其指向的值不会被丢弃，依然可以在第六行中使用。
+
+但是如果我们想对引用的值进行修改，是不行的：
+
+```rust showLineNumbers {4,8}
+fn main() {
+    let s = String::from("hello");
+
+    change(&s);
+}
+
+fn change(some_string: &String) {
+    some_string.push_str(", world");  // error
+}
+```
+
+和变量一样，引用的值也是默认**不可变**的，但是我们有`mut`关键字！
+
+### 可变引用
+
+`mut`整上：
+
+```rust showLineNumbers {2,4,7}
+fn main() {
+    let mut s = String::from("hello");
+
+    change(&mut s);
+}
+
+fn change(some_string: &mut String) {
+    some_string.push_str(", world");
+}
+```
+
+我们分别在第二行，声明了`s`是可变类型；在第四行创建并传入了一个可变引用；在第七行，声明函数接受的参数为可变引用。
+
+#### 可变引同时用只能存在一个
+
+可变引用看起来很爽，但是存在限制：
+
+**在同一作用域中，特定数据只能存在一个可变引用**：
+
+```rust
+fn main() {
+let mut s = String::from("hello");
+
+let r1 = &mut s;
+let r2 = &mut s;
+
+println!("{}, {}", r1, r2);
+}
+```
+
+这段代码是会报错的，因为在`r1`消失之前，创建了第二个可变引用`r2`，这是不被允许的。
+
+这种限制可以使在编译期避免数据竞争，这可能会导致某些行为超出预期，尽管我现在还不知道怎么会导致的 😅。
+
+#### 可变引用和不可变引用不能同时存在
+
+```rust
+fn main() {
+let mut s = String::from("hello");
+
+let r1 = &s; // 创建第一个引用，不出错
+let r2 = &s; // 创建第二个引用，允许，不出错
+let r3 = &mut s; // 创建一个可变引用，不允许，出错
+
+println!("{}, {}, and {}", r1, r2, r3);
+}
+```
+
+这里也比较好理解，我都创建了两个引用`r1`和`r2`了，然后又创建了一个可变引用`r3`，那万一值变了，那`r1` `r2`岂不是危险。
+所有 Rust 编译是不允许这种情况的。
+
+:::caution
+
+需要注意的是，引用的作用域和变量的作用域**目前而言**是不同的，在早期版本的 Rust 中，这两者是一致的：
+
+```rust showLineNumbers {6,11}
+fn main() {
+   let mut s = String::from("hello");
+
+    let r1 = &s;
+    let r2 = &s;
+    println!("{} and {}", r1, r2);
+    // 新编译器中，r1,r2作用域在这里结束，被使用后结束
+
+    let r3 = &mut s;
+    println!("{}", r3);
+} // 老编译器中，r1、r2、r3作用域在这里结束
+  // 新编译器中，r3作用域在这里结束
+```
+
+在老版本的编译器中（Rust 1.31 前），将会报错，因为`r1`和`r2`的作用域在第 11 行花括号 } 处结束，那么`r3`的可变引用就会触发**无法同时借用可变和不可变**的规则。
+
+但是在新的编译器中，该代码将顺利通过，因为引用作用域的结束位置从花括号变成最后一次使用的位置（第 6 行），因此 r1 借用和 r2 借用在`println!`后，就结束了，此时`r3`可以顺利借用到可变引用。
+
+对于这种编译器优化，Rust 称之为**Non-Lexical Lifetimes(NLL)**，专门用于找到某个引用在作用域(})结束前就不再被使用的代码位置。
+
+:::
+
+### 悬垂引用(Dangling References)
+
+当指向某个值的引用在其值被删除后，指针仍然存在，这就是悬垂引用。Rust 编译器保证了不会出现悬垂引用。试一下：
+
+```rust
+fn main() {
+    let reference_to_nothing = dangle();  // 报错咯，因为这里返回的引用，指向了一个不存在的值
+}
+
+fn dangle() -> &String {
+    let s = String::from("hello"); // 创建一个字符串String
+
+    &s // 返回s的引用
+} // s离开作用域并被丢弃。其内存被释放。
+  // 引用指向的内存也被释放，这就是悬垂引用。
+```
+
+## 复合类型
+
+已经学了[基本类型](../rust-basics/rust-basic-2#变量基本类型)，复合类型是由基本类型组成的。
+
+### 字符串
+
+字符串在前面已经简单介绍过了，有如下操作和特性：
+
+#### 字符串切片
+
+学 Python 的时候，就有过这个概念了，可以获取字符串中的部分连续元素。
+
+在 Rust 中，切片是对`String`某一部分的引用：
+
+```rust showLineNumbers {4,5}
+fn main() {
+let s = String::from("hello world");
+
+let hello = &s[0..5];
+let world = &s[6..11];
+}
+```
+
+其中第 4、5 行，分别引用了`s`的部分内容，通过`[0..5]`和`[6..11]`来指定。这种语法用来创建`slice`，方括号左边界闭区间，右边界开区间。
+
+对于第 4 行来说，`let world = &s[6..11];`创建了一个指向`s`的第 7 个字节到第 11 个字节的切片（注意是 0-based），该切片的长度为 5 个字节：
+
+![slice](https://pic1.zhimg.com/80/v2-69da917741b2c610732d8526a9cc86f5_1440w.jpg)
+
+:::tip
+
+- 如果想从第一个元素开始切，左边界可以不写：
+
+```rust
+fn main() {
+let s = String::from("hello");
+
+let slice = &s[0..2];
+let slice = &s[..2];
+}
+```
+
+- 如果想包含最后一个元素，右边界可以不写：
+
+```rust
+fn main() {
+let s = String::from("hello");
+
+let len = s.len();
+
+let slice = &s[4..len];
+let slice = &s[4..];
+}
+```
+
+:::
+
+:::danger 索引需落边界
+
+需要格外注意的是，切片的索引一定要落在字符串的边界位置，也就是 UTF-8 编码的边界位置，比如中文汉字在 UTF-8 中占用**三**个字节，那么索引落在第**二**个位置上就会报错。
+
+:::
+
+#### 字符串类型
+
+顾名思义，字符串是由**字符**组成的连续集合。
+
+字符是 Rust 的基本类型，是 Unicode 编码类型，每个字符占用 4 个字节。但是字符串是 UTF-8 编码，字符串中的每个字符可能占用 1 ～ 4 个字节，是变化的，这样可以降低字符串所占用空间。
+
+Rust 在语言级别，只有一种字符串类型：`str`，通常以引用方式出现：`&str`:
+
+```rust
+fn main() {
+let s: &str = "Hello, world!";
+}
+```
+
+其实就是一个字符串切片。
+
+虽然语言级别上只有一个`str`，但是标准库里还有很多其他类型，最常见的就是一直提到的`String`，这两者的区别在于：
+
+- `str`类型被编译成了固定大小的字符串，长度不可变，也无法被修改；
+- `String`类型是可变的
+
+#### String 和 &str 的转换
+
+##### &str 转 String
+
+两种方式：
+
+1. `to_string()`方法： `let s = "hello".to_string();`
+2. `String::from()`方法： `let s = String::from("hello");`
+
+##### String 转 &str
+
+取引用就行：
+
+```rust
+fn main() {
+    let s = String::from("hello,world!");
+    say_hello(&s);
+    say_hello(&s[..]);
+    say_hello(s.as_str()); // as_str()方法，就是Extracts a string slice containing the entire String.
+
+}
+
+fn say_hello(s: &str) {
+    println!("{}",s);
+}
+```
+
+#### 字符串索引
+
+在 Python 中，字符串的索引是一件再平常不过的事情了：
+
+```Python title="slice.py"
+a = 'Stranger Things'
+a_slice = a[6:8]
+```
+
+若在 Rust 中，我们尝试对字符串进行索引：
+
+```rust
+fn main() {
+    let s1 = String::from("hello");
+    let h = s1[0];
+}
+```
+
+这段代码编译是不会通过的，告诉我们`String`类型不支持索引，这么坑？为啥呢：
+
+##### 字符串内部表现
+
+实际上，`String`是一个`Vec<u8>`的封装，也就是说，`String`是一个字节的集合，每个字节都是`u8`类型。
+
+第一个例子：
+
+```rust
+let hello = String::from("Hola");
+```
+
+在这里，len 的值是 4 ，这意味着储存字符串 “Hola” 的`Vec`的长度是四个字节：这里每一个字母的 UTF-8 编码都占用一个字节。
+
+但是世界上不止有英语，还有中文、俄文、藏话。这些语言的 UTF-8 编码所需要的字节数，是不一样的。
+
+比如中文的“你好”，它的 UTF-8 编码是`E4 B8 AD E5 A5 BD`，占用 6 个字节。那如果我对`String`索引，取第一个"你"的话，是不能这样写的：
+
+```rust
+let hello = String::from("你好");
+let h = hello[0]; // 错错错
+```
+
+这样写，是无法返回我的预期的。所以为了避免返回意外的值并造成不能立刻发现的 bug，Rust 根本不会编译这些代码，并在开发过程中及早杜绝了误会的发生。这对我一个用惯了 Python 的人来说，真是小刀拉屁股，开了眼了。
+
+##### 切片
+
+不过在之前说了，字符串[切片](#字符串切片)是可以的，只不过要注意区间，一定要落在边界！
+
+### 字符串操作
+
+由于`String`是可变类型，所以可以有多种操作：
+
+#### 追加(Push)
+
+直接上代码就懂了：
+
+```rust
+fn main() {
+    let mut s = String::from("Hello ");  // mut关键字声明可变
+    s.push('r'); // push()方法，追加单个字符
+    println!("追加字符 push() -> {}", s);
+
+    s.push_str("ust!"); // push_str()方法，追加字符串
+    println!("追加字符串 push_str() -> {}", s);
+}
+```
+
+那么，这两个追加的方法，都不会返回新的`String`，而是直接在原来的`String`上进行修改。
+
+#### 插入(Insert)
+
+和追加唯一不同的地方就是需要第二个参数，来指定插入的位置。位置是 0-based，而且不能越界。
+
+```rust
+fn main() {
+    let mut s = String::from("Hello rust!");
+    s.insert(5, ',');
+    println!("插入字符 insert() -> {}", s);
+    s.insert_str(6, " I like");
+    println!("插入字符串 insert_str() -> {}", s);
+}
+```
 
 ## 参考资料
 
@@ -130,6 +582,10 @@ let s2 = s1;
       link: "https://course.rs",
       src: rust,
     },
+    {
+      title: "Rust程序设计语言",
+      link: "https://kaisery.github.io/trpl-zh-cn/",
+      src: rust,
+    },
   ]}
 />
-```
