@@ -76,7 +76,7 @@ const slides = [
     <Link
       className="button button--outline button--lg"
       style={{ color: "white" }}
-      href="https://www.zeamap.com">
+      href="https://zeamap.com">
       <h1 className="hero__title">ZEAMAP</h1>
     </Link>
   </div>
