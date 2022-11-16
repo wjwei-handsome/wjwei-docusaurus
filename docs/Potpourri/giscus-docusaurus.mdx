@@ -1,0 +1,224 @@
+---
+title: 在Docusaurus上配置Giscus评论系统
+description: 简单介绍如何在Docusaurus上配置Giscus评论系统，并解决更新后的bug
+tags: [giscus, docusaurus]
+sidebar_position: 2
+---
+
+import ReferenceList from "@site/src/components/ReferenceList";
+// import vscode from "@site/static/img/icon/vscode.png";
+
+## 背景
+
+Docusaurus 自己没有带评论系统，而且现在官方插件也比较少，所以可以利用[Giscus](https://giscus.app/)来实现评论功能。
+
+### 其他评论系统
+
+其他还有一些评论系统，比如[utterances](https://utteranc.es/)，[Disqus](https://disqus.com/)，但是出于网络稳定和账号登陆的考虑，还是选择了 Giscus。
+
+## Giscus 获取
+
+去官网按照步骤配置就行，要链接到一个公开的 repo，那么我是直接用了我 docusaurus 的 repo。
+
+## 安装到 Docusaurus
+
+安装依赖包
+
+```shell
+npm install @giscus/react
+```
+
+## 封装组件
+
+都用了 react，那么就封装一个组件，方便调用。
+
+我是放在了`src/components`目录下：
+
+```js title="src/components/GiscusComponent.js"
+import React from "react";
+import Giscus from "@giscus/react";
+import { useColorMode } from "@docusaurus/theme-common"; // 导入当前主题API
+
+export default function GiscusComponent() {
+  const { colorMode } = useColorMode(); // 获取当前主题
+  return (
+    // 前面放一个带margin的div，美观
+    <div style={{ marginTop: "30px" }}>
+      <Giscus
+        repo="name/repo"
+        repoId="XXXXXXX"
+        category="General"
+        categoryId="XXXXXXX"
+        mapping="pathname"
+        term="Welcome to @giscus/react component!"
+        strict="0"
+        reactionsEnabled="1"
+        emitMetadata="0"
+        inputPosition="bottom"
+        theme={colorMode} // 根据当前主题设置
+        lang="en"
+        loading="lazy"
+        crossorigin="anonymous"
+        async
+      />
+    </div>
+  );
+}
+```
+
+:::danger
+
+这里的配置信息是我个人的，所有我隐蔽掉了，需要自己替换
+
+:::
+
+整体而言比较简单，就只有根据当前主题设置 Giscus 的主题这个动态变化的地方。其实后面计划可以讲是否展示评论的开关放在 mdx 文件的头部，这样就可以根据需要来展示评论了。
+
+## 插入组件
+
+那么看一下评论系统应该是要放在**文档页面区域**的倒数第二个区域，也就是翻页区域和文档内容之间。
+
+这样的话就是要 swizzle 出对应的组件，然后在里面插入我们的组件。
+
+```shell
+npx docusaurus swizzle @docusaurus/theme-classic DocItem
+```
+
+找到对应的文件，然后在`<MDXContent/>`后面插入我们的组件。
+
+```js title="src/theme/DocItem/Content/index.js" showLineNumbers {7,39}
+import React from "react";
+import clsx from "clsx";
+import { ThemeClassNames } from "@docusaurus/theme-common";
+import { useDoc } from "@docusaurus/theme-common/internal";
+import Heading from "@theme/Heading";
+import MDXContent from "@theme/MDXContent";
+import GiscusComponent from "@site/src/components/GiscusComponent";
+/**
+ Title can be declared inside md content or declared through
+ front matter and added manually. To make both cases consistent,
+ the added title is added under the same div.markdown block
+ See https://github.com/facebook/docusaurus/pull/4882#issuecomment-853021120
+
+ We render a "synthetic title" if:
+ - user doesn't ask to hide it with front matter
+ - the markdown content does not already contain a top-level h1 heading
+*/
+function useSyntheticTitle() {
+  const { metadata, frontMatter, contentTitle } = useDoc();
+  const shouldRender =
+    !frontMatter.hide_title && typeof contentTitle === "undefined";
+  if (!shouldRender) {
+    return null;
+  }
+  return metadata.title;
+}
+export default function DocItemContent({ children }) {
+  const syntheticTitle = useSyntheticTitle();
+
+  return (
+    <div className={clsx(ThemeClassNames.docs.docMarkdown, "markdown")}>
+      {syntheticTitle && (
+        <header>
+          <Heading as="h1">{syntheticTitle}</Heading>
+        </header>
+      )}
+      <MDXContent>{children}</MDXContent>
+      {/* <div style={{marginTop:'20px'}} ref={commentElement}></div> */}
+      <GiscusComponent />
+    </div>
+  );
+}
+```
+
+这里就是在第 7 行，导入了我们的组件，然后在第 39 行插入了组件。
+
+:::tip
+
+对于博客页面也是一样的操作，只不过是 swizzle 出的组件不一样。
+
+```shell
+npx docusaurus swizzle @docusaurus/theme-classic BlogPostPage
+```
+
+:::
+
+:::caution
+
+要注意的是，在 swizzle 之后，要重新开启 docusaurus 服务才能生效
+
+:::
+
+## 后续优化计划
+
+- [ ] 将评论开关放到 mdx 文档的头信息，根据需要来展示评论
+- [ ] 把 giscus 的配置信息放到`docusaurus.config.js`中，符合规范，在封装的组件中就利用 API 去获取配置信息
+
+## 后面的大坑
+
+2022 年 11 月 16 日，我突然发现我的评论系统的主题颜色错误了，在 gicsus-react 的 github 下也找到了同样的问题，具体就看[这个](https://github.com/giscus/giscus-component/issues/778)吧
+
+我出现这个 BUG 的环境是 MacOS Montery 12.6 和 ios 16.0 下的 safari 浏览器和 chrome 浏览器。
+
+作者很快给出了修复的版本，我兴冲冲升级到最新的 2.2.3。结果居然 TM 报错了：
+
+```shell
+Module not found: Error: Can't resolve 'react/jsx-runtime' in '/.../node_modules/@giscus/react/dist'
+```
+
+把我这种前端业余选手给整不会了，用微薄的前端知识，大概定位到了是 webpack 的问题。
+
+在这个[issue](https://github.com/webpack/webpack.js.org/issues/3975#issue-701021807)里，人家说在 webpack 5 版本后面，import 的时候，可以通过设置`resolve.fullySpecified`为`false`来解决。但我也不会啊，抄了一下看到了那个提出问题的老哥的[解决方案](https://github.com/webpack/webpack/issues/11467#issuecomment-691873586)，人家是专业的。
+
+半懂不懂的情况下，按照别人的说法，自己创建了一个 plugin，然后在`docusaurus.config.js`中配置了一下，具体步骤如下：
+
+### 1. 创建一个 plugin
+
+在主目录下创建`plugins/my-loaders`目录，然后在`my-loaders`目录下创建`index.js`文件，内容如下：
+
+```js title="/plugins/my-loaders/index.js"
+module.exports = function (context, options) {
+  return {
+    name: "my-loaders",
+    configureWebpack(config, isServer) {
+      return {
+        module: {
+          rules: [
+            {
+              test: /\.m?js/,
+              resolve: {
+                fullySpecified: false,
+              },
+            },
+          ],
+        },
+      };
+    },
+  };
+};
+```
+
+再创建一个`package.json`文件，内容如下：
+
+```json title="/plugins/my-loaders/package.json"
+{
+  "name": "my-loaders",
+  "version": "0.0.0",
+  "private": true,
+  "dependencies": {
+    "my-loaders": "file:plugins/my-loaders"
+  }
+}
+```
+
+### 2. 在`docusaurus.config.js`中配置
+
+按照 docusaurus 官网使用插件的[说明](https://docusaurus.io/docs/using-plugins#installing-a-plugin)，将相对路径配置到`plugins`中即可。
+
+```js title="/docusaurus.config.js"
+// ...
+plugins: ["./plugins/my-loaders"];
+// ...
+```
+
+这样应该就是 OK 的，但是很丢人的是，我不知道为什么要这么做。菜就多学吧！

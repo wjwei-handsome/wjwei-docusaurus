@@ -1,6 +1,6 @@
 import React from 'react';
 import clsx from 'clsx';
-import {ThemeClassNames, useColorMode} from '@docusaurus/theme-common';
+import {ThemeClassNames} from '@docusaurus/theme-common';
 import {useDoc} from '@docusaurus/theme-common/internal';
 import Heading from '@theme/Heading';
 import MDXContent from '@theme/MDXContent';
