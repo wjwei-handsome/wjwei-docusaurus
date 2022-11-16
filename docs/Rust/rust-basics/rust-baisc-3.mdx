@@ -464,6 +464,20 @@ let s: &str = "Hello, world!";
 - `str`类型被编译成了固定大小的字符串，长度不可变，也无法被修改；
 - `String`类型是可变的
 
+:::info 为什么`String`可变，`str`不可变？
+
+就字符串字面值`str`来说，我们在编译时，该值就被直接硬编码进可执行文件中，快速且高效，这主要得益于字符串字面值的不可变性。
+
+但是前提是值是不可变的，所以我们不可能把一个在编译时大小未知的文本都放进内存中（因为有的字符串是在程序运行得过程中动态生成的）。
+
+对于 String 类型，为了支持一个可变、可增长的文本片段，需要在堆上分配一块在编译时未知大小的内存来存放内容，这些都是在程序运行时完成的：
+
+- 首先向操作系统请求内存来存放 String 对象
+- 在使用完成后，将内存释放，归还给操作系统
+  其中第一部分由 String::from 完成，它创建了一个全新的 String。
+
+:::
+
 #### String 和 &str 的转换
 
 ##### &str 转 String
@@ -572,6 +586,416 @@ fn main() {
     println!("插入字符串 insert_str() -> {}", s);
 }
 ```
+
+#### 替换(Replace)
+
+把字符串中的某个子串替换成另一个子串，有三种方法：
+
+1. `replace()`
+
+适用于`String`和`&str`类型。接受两个参数，第一个为被替换字符串，第二个为替换的字符串。
+
+:::caution
+
+该方法会替换所有匹配的字符串
+
+:::
+
+返回一个**新的字符串**，而不是操作原来的字符串。
+
+```rust
+fn main() {
+    let string_replace = String::from("I like rust. Learning rust is my favorite!");
+    let new_string_replace = string_replace.replace("rust", "RUST");
+    dbg!(new_string_replace);  // "I like RUST. Learning RUST is my favorite!"
+}
+```
+
+2. `replacen()`
+
+该方法多了一个字母`n`，可以接受第三个参数，来指定替换的个数。同样返回一个新的字符串。
+
+```rust
+fn main() {
+    let string_replace = "I like rust. Learning rust is my favorite!";
+    let new_string_replacen = string_replace.replacen("rust", "RUST", 1);
+    dbg!(new_string_replacen);  // I like RUST. Learning rust is my favorite!
+}
+```
+
+3. `replace_range()`
+
+该方法仅适用于`String`类型，接受两个参数，第一个为被替换的范围，第二个为替换的字符串。
+
+该方法直接操作原来字符串，不返回新字符串，所有被替换的字符串需要用`mut`关键字修饰。
+
+```rust
+fn main() {
+    let mut string_replace_range = String::from("I like rust!");
+    string_replace_range.replace_range(7..8, "R");
+    dbg!(string_replace_range); // I like Rust!
+}
+```
+
+#### 删除(Delete)
+
+与字符串删除相关有四个方法，都**仅适用**于`String`类型：
+
+1. `pop()`
+
+**直接操作**原来的字符串，删除最后一个字符，并返回被删除的字符。
+
+尽管是直接操作原字符串，但是存在返回值，返回的是`Option`类型，如果字符串为空，则返回`None`。
+
+```rust
+fn main() {
+    let mut string_pop = String::from("rust pop 中文!");
+    let p1 = string_pop.pop();
+    let p2 = string_pop.pop();
+    dbg!(p1);
+    dbg!(p2);
+    dbg!(string_pop);
+}
+```
+
+结果为：
+
+```shell
+p1 = Some(
+   '!',
+)
+p2 = Some(
+   '文',
+)
+string_pop = "rust pop 中"
+```
+
+2. `remove()`
+
+**直接操作**原来的字符串，接受一个参数，指定删除位置，并返回被删除的字符。
+
+:::caution
+
+该方法是按照字节来处理字符串的，所以位置参数要落在合法的字符边界
+
+```rust
+fn main() {
+    let mut string_remove = String::from("测试remove方法");
+    println!(
+        "string_remove 占 {} 个字节",
+        std::mem::size_of_val(string_remove.as_str())
+    );
+    // 删除第一个汉字
+    string_remove.remove(0);
+    // 下面代码会发生错误
+    // string_remove.remove(1);
+    // 直接删除第二个汉字
+    // string_remove.remove(3);
+    dbg!(string_remove);  // string_remove = "试remove方法"
+}
+```
+
+这个例子中，这个字符串共占 18 个字节，4 个中文占 12 个，6 个字母占 6 个。所以第一个中文的合法边界是 0，第二个中文的合法边界是 3，如果落在 1 或者 2，就会报错。
+
+:::
+
+3. `truncate()`
+
+**直接操作**原来的字符串，接受一个参数，指定删除位置，删除从指定位置开始到字符串末尾的所有字符。
+
+```rust
+fn main() {
+    let mut string_truncate = String::from("测试truncate");
+    string_truncate.truncate(3);
+    dbg!(string_truncate); // string_truncate = "测"
+}
+```
+
+4. `clear()`
+
+**直接操作**原来的字符串，删除所有字符。
+
+```rust
+fn main() {
+    let mut string_clear = String::from("string clear");
+    string_clear.clear();
+    dbg!(string_clear);  // string_clear = ""
+}
+```
+
+#### 连接(Concatenate)
+
+1. 使用`+`或`+=`运算符
+
+使用这两个操作符时，实际上调用了`String`类型的`add()`方法，那么这个方法的第二个参数，是一个引用类型，所以我们在`+`的右边，应该传递一个切片引用类型，而不是传递`String`类型。
+
+**`+`和`+=`都返回一个新字符串**
+
+```rust
+fn main() {
+    let string_append = String::from("hello ");
+    let string_rust = String::from("rust");
+    // &string_rust会自动解引用为&str
+    let result = string_append + &string_rust;
+    let mut result = result + "!";
+    result += "!!!"; // 等价于 result = result + "!!!";
+
+    println!("连接字符串 + -> {}", result);
+}
+```
+
+关于这个方法，结合[所有权转移](#转移所有权)的概念，如下例子：
+
+```rust
+fn main() {
+    let s1 = String::from("hello,");
+    let s2 = String::from("world!");
+    let s3 = s1 + &s2; // 调用了String::add()方法，s1的所有权被转移走了，因此后面不能再使用s1
+    assert_eq!(s3,"hello,world!");
+    // 下面的语句如果去掉注释，就会报错
+    // println!("{}",s1);
+}
+```
+
+2. 使用`format!()`方法
+
+`format!()`方法和 Python 中的`f-string`类似，可以将多个字符串拼接成一个字符串，但是和`+`不同的是，`format!()`不会获取任何参数的所有权。
+
+```rust
+fn main() {
+    let s1 = "hello";
+    let s2 = String::from("rust");
+    let s = format!("{} {}!", s1, s2);
+    println!("{} + {} = {}", s1, s2, s); // 这里可以正常使用s1和s2
+}
+```
+
+### 操作 UTF-8 字符串
+
+上面简单介绍了[UTF-8 字节和字符的概念](#字符串内部表现)，那么该如何操作呢？
+
+#### 字符串
+
+以 Unicdoe 字符的方式操作字符串，可以使用`chars()`方法，该方法返回一个迭代器，可以遍历字符串中的每一个字符。
+
+```rust
+fn main() {
+    let s = String::from("华中农业大学");
+    for c in s.chars() {
+        println!("{}", c);
+    }
+}
+```
+
+#### 字节
+
+以字节的方式操作字符串，可以使用`bytes()`方法，该方法返回一个迭代器，可以遍历字符串中的每一个字节。
+
+```rust
+fn main() {
+    let s = String::from("农业");
+    for c in s.bytes() {
+        println!("{}", c);
+    }
+}
+```
+
+输出：
+
+- 229
+- 134
+- 156
+- 228
+- 184
+- 154
+
+也就是每个中文字符占用了 3 个字节。
+
+#### 子串
+
+上文说到，要从 UTF-8 字符串中获取子串，由于要注意字符边界，所以相对复杂，所幸有一些第三方库可以帮助我们，比如[utf8_slice](https://crates.io/crates/utf8_slice)。
+
+### 元组(Tuple)
+
+元组`tuple`由多种类型组合到一起，其长度是固定的，其中元素的顺序也是固定的。
+
+创建语法如下：
+
+```rust
+fn main() {
+    let tup: (i32, f64, u8) = (500, 6.4, 1);
+}
+```
+
+将一个元组绑定给`tup`变量，该元组包含三个元素，类型分别为`i32`、`f64`和`u8`。
+
+#### 解构
+
+上代码就懂了：
+
+```rust
+fn main() {
+    let tup = (500, 6.4, 1);
+
+    let (x, y, z) = tup;
+
+    println!("The value of y is: {}", y);
+}
+
+```
+
+#### 访问元组
+
+可以使用点号`.`加上索引来访问元组中的元素，索引 0-baesd。
+
+```rust
+fn main() {
+    let x: (i32, f64, u8) = (500, 6.4, 1);
+
+    let five_hundred = x.0;
+
+    let six_point_four = x.1;
+
+    let one = x.2;
+}
+```
+
+### 结构体(Struct)
+
+这位更是重量级，结构体是一种自定义的数据类型，可以将多个字段组合到一起，每个字段都有自己的类型。
+
+#### 定义结构体
+
+通过关键字`struct`定义，需要一个结构体名称，其中需要 N 个字段，和 Python 的类的概念类似：
+
+```rust
+struct Student {  // 结构体名称为Student，拥有如下四个字段
+    active: bool, // 是否在校，布尔值类型
+    name: String, // 名字, `String`类型
+    age: u8, // 年龄，u8类型
+    score: i32, // 分数，i32类型
+}
+```
+
+#### 创建结构体实例
+
+和 Python 类似，需要创建结构体的实例：
+
+```rust
+let wjwei = Student {
+        active: true,
+        name: String::from("wjwei"),
+        age: 18,
+        score: 100,
+    };
+```
+
+在初始化实例时，**每个字段**都需要初始化，但是字段的顺序**不需要**和定义结构体时的顺序一样。
+
+#### 访问结构体字段
+
+通过`.`关键字可以访问到结构体的字段：
+
+```rust
+fn main() {
+    let wjwei = Student {
+        active: true,
+        name: String::from("wjwei"),
+        age: 18,
+        score: 100,
+    };
+    println!("wjwei'name: {:?}", wjwei.name);  // wjwei'name: "wjwei"
+}
+```
+
+#### 修改结构体字段
+
+声明结构体实例为可变的，就可以修改结构体的字段：
+
+```rust
+fn main() {
+    let mut wjwei = Student {  // 声明结构体实例为可变的
+        active: true,
+        name: String::from("wjwei"),
+        age: 18,
+        score: 100,
+    };
+    println!("wjwei'name: {:?}", wjwei.name); // wjwei'name: "wjwei"
+    wjwei.name = String::from("wjwei2");
+    println!("wjwei'name: {:?}", wjwei.name);  // wjwei'name: "wjwei2"
+}
+```
+
+#### 结构体更新
+
+在部分场景中，需要根据已有的实例，创建新的实例，这时可以使用结构体更新语法：
+
+```rust
+let wjwei = Student {  // 创建第一个实例
+        active: true,
+        name: String::from("wjwei"),
+        age: 18,
+        score: 100,
+    };
+let wjwei2 = Student {  // 创建第二个实例，除了name，其他字段都和wjwei相同
+    active: wjwei.active,
+    name: String::from("wjwei2"),
+    age: wjwei.age,
+    score: wjwei.score,
+};
+let wjwei3 = Student {  // 创建第三个实例，可以使用结构体更新语法..wjwei
+    age: 20,  // 这个实例的age改为20，其余不变
+    ..wjwei  // 需要在尾部使用
+};
+```
+
+:::danger
+
+在上面这个例子中，`wjwei`的`name`字段所有权被转移到了`wjwei3`中，所以`wjwei`的`name`字段和`wjwei`实例就不能再使用了：
+
+```rust
+fn main() {
+    let wjwei = Student {
+        active: true,
+        name: String::from("wjwei"),
+        age: 18,
+        score: 100,
+    };
+
+    let wjwei3 = Student { age: 20, ..wjwei };
+    println!("wjwei3-name: {}", wjwei3.name);
+    println!("wjwei-score: {}", wjwei.score) // 没报错
+    println!("wjwei-name: {}", wjwei.name); // error[E0382]: borrow of moved value: `wjwei.name`
+    println!("wjwei: {:?}", wjwei); // error[E0382]: borrow of moved value: `wjwei`
+}
+```
+
+有意思的是，明明`active`和`score`字段也被赋值给了`wjwei3`, 那为啥这两个字段还能用呢？
+
+在[所有权](#浅拷贝)的介绍中，我们说过可以实现`Copy`特征的类型，是可以在赋值时进行数据拷贝的，而这两个字段的类型就实现了`Copy`特征。
+
+所以，`wjwei3`的`active`和`score`字段，是通过数据拷贝的方式赋值的，而`name`字段是通过所有权转移的方式赋值的。
+
+:::
+
+### 元组结构体(Tuple Struct)
+
+定义一个结构体必须要用名称，但是其中的字段可以没有名称，这种结构体叫做元组结构体：
+
+```rust
+fn main() {
+    struct Color(i32, i32, i32);
+    struct Point(i32, i32, i32);
+
+    let black = Color(0, 0, 0);
+    let origin = Point(0, 0, 0);
+    println!("black-r = {:}", black.1);
+}
+```
+
+在不关心字段名称时，这种元组结构体很适合。访问字段时，就用下标索引。
+
+###
 
 ## 参考资料
 
