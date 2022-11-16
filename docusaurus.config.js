@@ -287,6 +287,9 @@ async function CreateConfig() {
                 },
             ],
         ],
+        plugins: [
+            './plugins/my-loaders',
+        ]
     };
     return config;
 }

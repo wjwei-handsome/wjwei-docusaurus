@@ -4,7 +4,6 @@ import { useColorMode } from '@docusaurus/theme-common';
 
 export default function GiscusComponent() {
   const { colorMode } = useColorMode();
-
   return (
     <div style={{marginTop:'30px'}}>
     <Giscus
@@ -16,7 +15,7 @@ export default function GiscusComponent() {
       term="Welcome to @giscus/react component!"
       strict="0"
       reactionsEnabled="1"
-      emitMetadata="1"
+      emitMetadata="0"
       inputPosition="bottom"
       theme={colorMode}
       lang="en"
