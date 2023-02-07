@@ -93,6 +93,20 @@
         border-left: var(--ifm-color-primary-darker) 4px solid;
         border-radius: 1px;
     }
+    
+    .markdown>h4 {
+        padding-left: 10px;
+        line-height: 100%;
+        border-left: var(--ifm-color-primary-darker) 4px solid;
+        border-radius: 1px;
+    }
+    
+    .markdown>h5 {
+        padding-left: 10px;
+        line-height: 100%;
+        border-left: var(--ifm-color-primary-darker) 4px solid;
+        border-radius: 1px;
+    }
     /* 徽章居左 */
     
     .Badges {

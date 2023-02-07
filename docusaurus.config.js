@@ -145,7 +145,7 @@ async function CreateConfig() {
                                 href: 'https://discord.gg/dUyetKKSbv',
                             },
                             {
-                                label: "🔞SongtaoGui's Blog",
+                                label: "🧑‍🏫SongtaoGui's Blog",
                                 href: 'https://songtaogui.github.io/',
                             },
                             {

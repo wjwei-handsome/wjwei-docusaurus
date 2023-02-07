@@ -93,8 +93,8 @@ export const features: feature[] = [
         ⭐️Some experiences in Python and Django for back-end. <br />
         📊Use R as my drawing board. <br />
         🐧With Linux/Shell everyday, but only use currently. <br />
-        😘My new love: Rust, but it doesn't😅. <br />
-        ⛽️I will always be a novice.
+        😘My new love: Rust, but it doesn't love me. <br />
+        ⛽️Always be a novice.
       </>
     ),
   },
@@ -107,7 +107,7 @@ export const features: feature[] = [
     description: (
       <>
         🙌Work hard, play harder<br />
-        🏞For my trip, COVID, F**K off！ <br />
+        {/* 🏞For my trip, COVID, F**K off！ <br /> */}
         🏀Old fan of Thunder and Westbrook0 <br />
         ☕️A coffee a day keeps the burden at bay. <br />
         🎥Since the invention of the movie, human life has been extended at least three times.<br />
