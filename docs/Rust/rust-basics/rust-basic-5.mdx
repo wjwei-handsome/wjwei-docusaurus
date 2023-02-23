@@ -1,0 +1,68 @@
+---
+title: Rust基础入门-第四章
+description: Rust中的流程控制
+tags: [rust, code]
+sidebar_position: 5
+---
+
+import ReferenceList from "@site/src/components/ReferenceList";
+import rust from "@site/static/img/icon/rust.png";
+import ide from "@site/static/img/icon/ide.png";
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+<img
+  className="Badges"
+  src="https://img.shields.io/badge/Author-WenjieWei-ff69b4?style=for-the-badge&logo=appveyor"
+/>
+
+流程控制的地位不多说，Rust 中是从上而下执行的。
+
+## IF-分支控制
+
+if-else 语句的语法如下：
+
+```rust
+
+fn main() {
+    let condition = true;
+    let number = if condition {
+        5
+    } else {
+        6
+    };
+
+    println!("The value of number is: {}", number);
+}
+
+```
+
+有两个注意点：
+
+1. if-else 语句的返回值是一个表达式，所以可以直接赋值给一个变量。
+2. if-else 语句的返回值必须是相同的类型，否则会报错。
+
+## ELSE-IF 多重条件分支
+
+不多上，直接上：
+
+```rust
+fn main() {
+    let n = 6;
+
+    if n % 4 == 0 {
+        println!("number is divisible by 4");
+    } else if n % 3 == 0 {
+        println!("number is divisible by 3");
+    } else if n % 2 == 0 {
+        println!("number is divisible by 2");
+    } else {
+        println!("number is not divisible by 4, 3, or 2");
+    }
+}
+
+```
+
+很简单，自上而下判断分支，判断到满足条件的分支就执行，不再继续判断。
+
+## FOR 循环
