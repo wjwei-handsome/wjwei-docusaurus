@@ -4,9 +4,9 @@ import python from "@site/static/img/icon/python.png";
 import linux from "@site/static/img/icon/linux.png";
 import rlang from "@site/static/img/icon/r.png";
 import bioinfo from "@site/static/img/icon/bioinformatics.png";
-import django from "@site/static/img/icon/django.png";
+// import django from "@site/static/img/icon/django.png";
 import rust from "@site/static/img/icon/rust.png";
-import algorithm from "@site/static/img/icon/algorithm2.png";
+import algorithm from "@site/static/img/icon/algorithm.png";
 import potpourri from "@site/static/img/icon/tools.png";
 
 
@@ -40,7 +40,7 @@ const DocGridList: Array<GridItemType> = [
   gridItem("R", "/docs/category/r", rlang),
   gridItem("Bio-Info", "/docs/category/bioinformatics", bioinfo),
   gridItem("Rust", "/docs/category/rust", rust),
-  gridItem("Django", "/docs/category/django", django),
+  // gridItem("Django", "/docs/category/django", django),
   gridItem("Algorithm", "/docs/category/algorithm", algorithm),
 ];
 
