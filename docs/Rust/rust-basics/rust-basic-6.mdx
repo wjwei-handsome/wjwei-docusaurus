@@ -1,0 +1,412 @@
+---
+title: Rust基础入门-第五章
+description: Rust中的模式匹配：match、if let
+tags: [rust, code]
+sidebar_position: 6
+---
+
+import ReferenceList from "@site/src/components/ReferenceList";
+import rust from "@site/static/img/icon/rust.png";
+
+<img
+  className="Badges"
+  src="https://img.shields.io/badge/Author-WenjieWei-ff69b4?style=for-the-badge&logo=appveyor"
+/>
+
+## match 匹配
+
+通用形式如下：
+
+```rust
+
+fn main() {
+match target {
+    模式1 => 表达式1,
+    模式2 | 模式3 => {
+        语句1;
+        语句2;
+        表达式2
+    },
+    _ => 表达式3
+}
+}
+
+```
+
+其中，`target` 是要进行匹配的值，`模式` 是要匹配的模式，`表达式` 是要执行的代码。
+
+例子：
+
+```rust
+
+fn main() {
+enum Coin { // 定义枚举类型
+    Penny,
+    Nickel,
+    Dime,
+    Quarter,
+}
+
+fn value_in_cents(coin: Coin) -> u8 {
+    match coin {
+        Coin::Penny =>  {
+            println!("Lucky penny!");  // 语句
+            1 // 最后一行要是表达式
+        },
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+        Coin::Quarter => 25,
+    }
+}
+}
+
+```
+
+该函数`value_in_cents`接受一个`Coin`类型的参数，然后根据参数的值返回不同的美分数值。
+
+### match 表达式赋值
+
+`match`本身也是表达式，可以用于赋值：
+
+```rust
+enum IpAddr {
+   Ipv4,
+   Ipv6
+}
+
+fn main() {
+    let ip1 = IpAddr::Ipv6;
+    let ip_str = match ip1 {
+        IpAddr::Ipv4 => "127.0.0.1",
+        _ => "::1",
+    };
+
+    println!("{}", ip_str);
+}
+
+```
+
+### 模式绑定
+
+模式匹配中可以从模式中取出绑定的值，例子如下：
+
+```rust
+
+#![allow(unused)]
+fn main() {
+#[derive(Debug)]
+enum UsState {
+    Alabama,
+    Alaska,
+    // --skip--
+}
+
+enum Coin {
+    Penny,
+    Nickel,
+    Dime,
+    Quarter(UsState), // 25美分硬币中包含州名
+}
+}
+
+```
+
+在枚举类型`Coin`中，`Quarter`类型的值中包含一个`UsState`类型的值，我们可以从`Quarter`中取出`UsState`的值：
+
+```rust showLineNumbers {8}
+#![allow(unused)]
+fn main() {
+fn value_in_cents(coin: Coin) -> u8 {
+    match coin {
+        Coin::Penny => 1,
+        Coin::Nickel => 5,
+        Coin::Dime => 10,
+        Coin::Quarter(state) => {  // 从Quarter中取出state
+            println!("State quarter from {:?}!", state);
+            25
+        },
+    }
+}
+}
+```
+
+如上代码中，在第八行，当匹配到`Coin::Quarter(state)`时，会将`state`绑定到`Coin::Quarter`中的`UsState`类型的值。
+
+### 穷尽匹配
+
+`match`的匹配必须要穷尽所有情况，不然不能通过编译，如下代码：
+
+```rust
+
+enum Direction {
+    East,
+    West,
+    North,
+    South,
+}
+
+fn main() {
+    let dire = Direction::South;
+    match dire {
+        Direction::East => println!("East"),
+        Direction::North | Direction::South => {
+            println!("South or North");
+        },
+    };
+}
+
+```
+
+这样严格的匹配，可以避免`null`陷阱。
+
+### \_通配符
+
+当不想列出所有的匹配情况时，可以使用`_`通配符，如下代码：
+
+```rust
+#![allow(unused)]
+fn main() {
+let some_u8_value = 0u8;
+match some_u8_value {
+    1 => println!("one"),
+    3 => println!("three"),
+    5 => println!("five"),
+    7 => println!("seven"),
+    _ => (),
+}
+}
+```
+
+将`_`放置于所有匹配模式的最后，可以匹配遗漏的模式。在这个例子中，`()`返回单元类型，即不做任何事。
+
+## if let 匹配
+
+对于只有一种模式需要处理的场景，用`match`会显得有些冗余，这时可以使用`if let`来简化代码。
+
+`match`的通用形式如下：
+
+```rust
+#![allow(unused)]
+fn main() {
+    let v = Some(3u8);
+    match v {
+        Some(3) => println!("three"),
+        _ => (),
+    }
+}
+```
+
+这里最后的`_`匹配多多少少有些冗余，可以使用`if let`来简化：
+
+```rust
+#![allow(unused)]
+fn main() {
+    let v = Some(3u8);
+    if let Some(3) = v {
+        println!("three");
+}
+}
+```
+
+## matches! 宏
+
+在 Rust 标准库中，有一个很实用的宏`matches!`，可以将一个表达式跟模式进行匹配，然后返回匹配的结果 `true` or `false`。
+
+比如我们想要判断一个字符是否是英文字母，可以用`match`这样写：
+
+```rust
+fn main() {
+    let foo = 'f';
+    println!("{}", get_foo(foo));
+}
+
+fn get_foo(c: char) -> bool {
+    match c {
+        'A'..='Z' => true,
+        'a'..='z' => true,
+        _ => false,
+    }
+}
+```
+
+但是这种返回布尔值的情况，可以用`matches!`宏来简化：
+
+```rust
+fn main() {
+    let foo = 'f';
+    println!("{}", get_foo(foo));
+}
+
+fn get_foo(c: char) -> bool {
+    matches!(c, 'a'..='z' | 'A'..='Z')
+}
+```
+
+## Option 用法
+
+`Option`是一个枚举类型，它的定义如下：
+
+```rust
+enum Option<T> {
+    Some(T),
+    None,
+}
+```
+
+简单来说，一个变量要么是`Some`类型，要么是`None`类型，`Some`类型中包含一个值，`None`类型中不包含任何值。
+
+那么可以用`match`来判断`Option`类型的值：
+
+```rust
+#![allow(unused)]
+fn main() {
+fn plus_one(x: Option<i32>) -> Option<i32> {
+    match x {
+        None => None,
+        Some(i) => Some(i + 1),
+    }
+}
+
+let five = Some(5);
+let six = plus_one(five);
+let none = plus_one(None);
+}
+```
+
+在这个模式匹配中，`None`类型的值不会被处理，而`Some(5)`和`Some(i)`属于相同的成员，并绑定值后加一。
+
+:::note
+
+因为 Option，Some，None 都包含在 prelude 中，因此你可以直接通过名称来使用它们，而无需以 Option::Some 这种形式去使用。
+
+:::
+
+## 模式
+
+说了这么多模式匹配，何为模式？
+
+模式是 Rust 中的特殊语法，它用来匹配类型中的结构和数据，它往往和 match 表达式联用，以实现强大的模式匹配能力。模式一般由以下内容组合而成：
+
+- 字面值
+- 解构的数组、枚举、结构体或者元组
+- 变量
+- 通配符
+- 占位符
+
+有如下用到模式的地方：
+
+### match 分支
+
+```rust
+match VALUE {
+    PATTERN => EXPRESSION,
+    PATTERN => EXPRESSION,
+    _ => EXPRESSION,
+}
+```
+
+### if let 分支
+
+```rust
+if let PATTERN = SOME_VALUE {
+    /// do something
+}
+```
+
+### while let 循环
+
+```rust
+fn main() {
+// Vec是动态数组
+let mut stack = Vec::new();
+
+// 向数组尾部插入元素
+stack.push(1);
+stack.push(2);
+stack.push(3);
+
+// stack.pop从数组尾部弹出元素
+while let Some(top) = stack.pop() {
+    println!("{}", top);
+}
+}
+```
+
+`pop`方法取出动态数组的最后一个元素并返回`Some(value)`，如果动态数组是空的，将返回`None`，对`while`来说，只要`pop`返回`Some`就会一直不停的循环。一旦其返回`None`，`while` 循环停止。我们可以使用 `while let` 来弹出栈中的每一个元素
+
+### for 循环
+
+```rust
+fn main() {
+let v = vec!['a', 'b', 'c'];
+
+for (index, value) in v.iter().enumerate() {
+    println!("{} is at index {}", value, index);
+}
+}
+```
+
+这里使用 `enumerate` 方法产生一个迭代器，该迭代器每次迭代会返回一个 (索引，值) 形式的元组，然后用 (index,value) 来匹配
+
+### let 语句
+
+```rust
+let (x, y, z) = (1, 2, 3);
+```
+
+其实这里也是一种模式匹配，将一个元组解构成三个变量。
+
+### 函数参数
+
+```rust
+fn print_coordinates(&(x, y): &(i32, i32)) {
+    println!("Current location: ({}, {})", x, y);
+}
+
+fn main() {
+    let point = (3, 5);
+    print_coordinates(&point);
+}
+```
+
+`&(3, 5)` 会匹配模式 `&(x, y)`，因此 `x` 得到了 `3`，`y` 得到了 `5`。
+
+## 全模式列表
+
+如下罗列所有模式语法：
+
+### 匹配字面值
+
+```rust
+let x = 1;
+
+match x {
+    1 => println!("one"),
+    2 => println!("two"),
+    3 => println!("three"),
+    _ => println!("anything"),
+}
+```
+
+这种最常用。
+
+### 匹配命名变量
+
+```rust
+fn main() {
+    let x = Some(5);
+    let y = 10;
+
+    match x {
+        Some(50) => println!("Got 50"),
+        Some(y) => println!("Matched, y = {:?}", y),
+        _ => println!("Default case, x = {:?}", x),
+    }
+
+    println!("at the end: x = {:?}, y = {:?}", x, y);
+}
+```
+
+这个例子中，变量`x`不符合第一个分支，跳过，在第二个分支中，引入了一个新的变量`y`，但是它在`match`的作用域中，和上面的那个`y`不是同一个变量，因此这个新绑定的`y`的值是`5`，而不是`10`。
+
+### 单分支多模式

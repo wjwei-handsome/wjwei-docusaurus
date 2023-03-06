@@ -1,15 +1,12 @@
 ---
 title: Rust基础入门-第四章
-description: Rust中的流程控制
+description: Rust中的流程控制：if-else、for、while、loop、break
 tags: [rust, code]
 sidebar_position: 5
 ---
 
 import ReferenceList from "@site/src/components/ReferenceList";
 import rust from "@site/static/img/icon/rust.png";
-import ide from "@site/static/img/icon/ide.png";
-import Tabs from "@theme/Tabs";
-import TabItem from "@theme/TabItem";
 
 <img
   className="Badges"
@@ -66,3 +63,148 @@ fn main() {
 很简单，自上而下判断分支，判断到满足条件的分支就执行，不再继续判断。
 
 ## FOR 循环
+
+简明的语法，和 JS 有点像：
+
+```rust
+
+//1.
+for item in collection {
+    // do something
+}
+
+//2.
+
+for item in IntoIterator::into_iter(collection) {
+    // do something
+}
+
+// 1和2 两种方式等价
+```
+
+对于集合对象，一般使用引用形式，如果不是的话，所有权就会被`move`到循环体内，导致循环体外的对象无法使用。
+
+```rust
+//1.
+for item in &collection {
+  // ...
+}
+//2.
+for item in collection.iter() {
+  // ...
+}
+
+// 1和2 两种方式等价
+```
+
+:::note
+
+不过对于实现了**拷贝**特征的对象，比如数组，可以直接使用值形式，并不会被转移所有权
+
+```rust
+fn main() {
+    let a = [1, 2, 3, 4];
+    for item in a {
+        println!("{}", item);
+    }
+    println!("{:#?}", a);
+}
+```
+
+:::
+
+如果要在循环中修改集合中的元素，可以使用`mut`关键字：
+
+```rust
+//1.
+for item in &mut collection {
+  // ...
+}
+//2.
+for item in collection.iter_mut() {
+  // ...
+}
+
+// 1和2 两种方式等价
+```
+
+在循环中获取索引，可以使用`enumerate`方法：
+
+```rust
+fn main() {
+    let a = [4, 3, 2, 1];
+    for (i, v) in a.iter().enumerate() {
+        println!("第{}个元素是{}", i + 1, v);
+    }
+}
+```
+
+对于不想在循环体中使用的变量，可以用`_`来代替，编译器会自动忽略：
+
+```rust
+for _ in 0..10 {
+    println!("Hello, world!");
+}
+```
+
+## WHILE 循环
+
+当条件为`true`时，一直执行循环体，直到条件为`false`时，退出循环。
+
+```rust
+
+fn main() {
+    let mut n = 0;
+
+    while n <= 5  {
+        println!("{}!", n);
+
+        n = n + 1;
+    }
+
+    println!("LIFTOFF!!!");
+}
+
+```
+
+## LOOP 和 BREAK
+
+`loop`是一个简单的无限循环，在内部实现逻辑中，可以使用`break`来跳出循环。
+
+```rust
+fn main() {
+    let mut counter = 0;
+
+    let result = loop {  // loop 返回值是一个表达式
+        counter += 1;
+
+        if counter == 10 {
+            break counter * 2;  // break 返回值
+        }
+    };
+
+    println!("The result is {}", result);
+}
+```
+
+逻辑很简单，注意点在于：
+
+1. `break`既可以跳出循环，也可以返回值。
+2. `loop`的返回值是一个表达式，所以可以直接赋值给一个变量。
+
+## 参考资料
+
+<ReferenceList
+  data={[
+    {
+      title: "Rust语言圣经",
+      link: "https://course.rs",
+      src: rust,
+    },
+    {
+      title: "Rust程序设计语言",
+      link: "https://kaisery.github.io/trpl-zh-cn/",
+      src: rust,
+    },
+  ]}
+/>
