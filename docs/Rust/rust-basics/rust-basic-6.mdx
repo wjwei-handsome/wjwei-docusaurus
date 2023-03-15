@@ -1,6 +1,6 @@
 ---
 title: Rust基础入门-第五章
-description: Rust中的模式匹配：match、if let
+description: Rust中的模式匹配：match、if let、matches!宏、解构
 tags: [rust, code]
 sidebar_position: 6
 ---
@@ -410,3 +410,378 @@ fn main() {
 这个例子中，变量`x`不符合第一个分支，跳过，在第二个分支中，引入了一个新的变量`y`，但是它在`match`的作用域中，和上面的那个`y`不是同一个变量，因此这个新绑定的`y`的值是`5`，而不是`10`。
 
 ### 单分支多模式
+
+可以用`|`来匹配多个模式，代表或的关系：
+
+```rust
+let x = 1;
+
+match x {
+    1 | 2 => println!("one or two"),
+    3 => println!("three"),
+    _ => println!("anything"),
+}
+```
+
+### 序列匹配范围
+
+`..=`表示闭区间，`..`表示开区间，可以用来匹配序列中的值，当模式匹配任何在此序列内的值时，该分支会执行：
+
+```rust
+let x = 5;
+
+match x {
+    1..=5 => println!("one through five"),
+    _ => println!("something else"),
+}
+```
+
+:::caution
+
+这里的序列只能用于数字或者字符类型，因为这两种类型都是可以连续的。同时编译器在编译期可以检查该序列是否为空。
+
+:::
+
+### 解构分解值
+
+也用模式来解构结构体、元组、枚举、数组和引用：
+
+#### 解构结构体
+
+```rust
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+fn main() {
+    let p = Point { x: 0, y: 7 };
+
+    let Point { x: a, y: b } = p;
+    assert_eq!(0, a);
+    assert_eq!(7, b);
+}
+```
+
+这里创建了一个结构体`Point`，然后创建了一个`p`的实例，然后使用模式匹配来解构`p`，将`x`和`y`的值分别赋值给`a`和`b`。
+
+也可以使用字面值作为结构体模式的一部分进行解构，而不是为所有的字段创建变量。这允许我们测试一些字段为特定值的同时创建其他字段的变量。
+
+```rust
+struct Point {
+    x: i32,
+    y: i32,
+}
+
+fn main() {
+    let p = Point { x: 0, y: 7 };
+
+    match p {
+        Point { x, y: 0 } => println!("On the x axis at {}", x),
+        Point { x: 0, y } => println!("On the y axis at {}", y),
+        Point { x, y } => println!("On neither axis: ({}, {})", x, y),
+    }
+}
+```
+
+这个例子中，值 `p` 因为其 `x` 包含 0 而匹配第二个分支。
+
+#### 解构枚举
+
+```rust
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(i32, i32, i32),
+}
+
+fn main() {
+    let msg = Message::ChangeColor(0, 160, 255);
+
+    match msg {
+        Message::Quit => {
+            println!("The Quit variant has no data to destructure.")
+        }
+        Message::Move { x, y } => {
+            println!(
+                "Move in the x direction {} and in the y direction {}",
+                x,
+                y
+            );
+        }
+        Message::Write(text) => println!("Text message: {}", text),
+        Message::ChangeColor(r, g, b) => {
+            println!(
+                "Change the color to red {}, green {}, and blue {}",
+                r,
+                g,
+                b
+            )
+        }
+    }
+}
+```
+
+模式匹配要类型相同。
+
+#### 解构嵌套的结构体和枚举
+
+```rust
+enum Color {
+   Rgb(i32, i32, i32),
+   Hsv(i32, i32, i32),
+}
+
+enum Message {
+    Quit,
+    Move { x: i32, y: i32 },
+    Write(String),
+    ChangeColor(Color),
+}
+
+fn main() {
+    let msg = Message::ChangeColor(Color::Hsv(0, 160, 255));
+
+    match msg {
+        Message::ChangeColor(Color::Rgb(r, g, b)) => {
+            println!(
+                "Change the color to red {}, green {}, and blue {}",
+                r,
+                g,
+                b
+            )
+        }
+        Message::ChangeColor(Color::Hsv(h, s, v)) => {
+            println!(
+                "Change the color to hue {}, saturation {}, and value {}",
+                h,
+                s,
+                v
+            )
+        }
+        _ => ()
+    }
+}
+```
+
+`match` 第二个分支的模式匹配一个 `Message::ChangeColor` 枚举成员，该枚举成员又包含了一个 `Color::Hsv` 的枚举成员，最终绑定了 3 个内部的 i32 值。
+
+#### 解构数组
+
+和元组类似：
+
+##### 固定长度数组
+
+```rust
+let arr: [u16; 2] = [114, 514];
+let [x, y] = arr;
+
+assert_eq!(x, 114);
+assert_eq!(y, 514);
+```
+
+##### 可变长度数组
+
+```rust
+let arr: &[u16] = &[114, 514];
+
+if let [x, ..] = arr {
+    assert_eq!(x, &114);
+}
+
+if let &[.., y] = arr {
+    assert_eq!(y, 514);
+}
+
+let arr: &[u16] = &[];
+
+assert!(matches!(arr, [..]));
+assert!(!matches!(arr, [x, ..]));
+```
+
+:::caution
+
+这个还不懂。可恶
+
+:::
+
+### 忽略模式中的值
+
+#### 使用下划线
+
+```rust
+fn foo(_: i32, y: i32) {
+    println!("This code only uses the y parameter: {}", y);
+}
+
+fn main() {
+    foo(3, 4);
+}
+```
+
+#### 使用嵌套的下划线忽略部分值
+
+```rust
+let mut setting_value = Some(5);
+let new_setting_value = Some(10);
+
+match (setting_value, new_setting_value) {
+    (Some(_), Some(_)) => {
+        println!("Can't overwrite an existing customized value");
+    }
+    _ => {
+        setting_value = new_setting_value;
+    }
+}
+
+println!("setting is {:?}", setting_value);
+```
+
+这个例子中，第一个匹配分支，只关心 `setting_value` 和 `new_setting_value` 是否都是 `Some` 值，所以使用了下划线忽略了它们的值。
+
+#### 使用下划线忽略未使用的变量
+
+这个之前提到过，就是为了消除编译器的警告。
+
+但是，只使用 _ 和使用以下划线开头的名称有些微妙的不同：比如 `_x` 仍会**将值绑定到变量**，而 `_` 则**完全不会绑定**。比如下面两个例子：
+
+```rust
+fn main() {
+let s = Some(String::from("Hello!"));
+
+if let Some(_s) = s {  // 这里的 _s 仍然会绑定到 s 的值，s的值会被移动到 _s 中
+    println!("found a string");
+}
+
+println!("{:?}", s); // s 的值已经被移动到 _s 中，所以这里报错
+}
+
+```
+
+在上面代码中，我们会得到一个错误，因为 `s` 的值会被转移给 `_s`。但是，如果我们使用 `_` 而不是 `_s`，则不会发生这种情况：
+
+````rust
+fn main() {
+let s = Some(String::from("Hello!"));
+
+if let Some(_) = s {
+    println!("found a string");
+}
+
+println!("{:?}", s);
+}
+```
+````
+
+#### 使用..忽略剩余的值
+
+对于有多个部分的值，可以使用`..`语法来只使用部分值而忽略其它值，这样也不用再为每一个被忽略的值都单独列出下划线。
+
+```rust
+fn main() {
+    let numbers = (2, 4, 8, 16, 32);
+
+    match numbers {
+        (first, .., last) => {
+            println!("Some numbers: {}, {}", first, last);
+        },
+    }
+}
+```
+
+主打一个优雅。但是同时要主要的是，`..`不能存在歧义，比如下面这个例子：
+
+```rust
+fn main() {
+    let numbers = (2, 4, 8, 16, 32);
+
+    match numbers {
+        (.., second, ..) => {
+            println!("Some numbers: {}", second) // only God knows which number this is
+        },
+    }
+}
+```
+
+### 匹配守卫
+
+匹配守卫，(match guards)允许我们在匹配模式的同时，加入额外的条件判断。如果这个条件判断为 `true`，则执行匹配分支，否则继续尝试下一个匹配分支。
+
+```rust
+let num = Some(4);
+
+match num {
+    Some(x) if x < 5 => println!("less than five: {}", x),
+    Some(x) => println!("{}", x),
+    None => (),
+}
+```
+
+在这个例子中，当 `num` 的值为 `Some(4)` 时，匹配守卫 `x < 5` 为 `true`，所以匹配分支会被执行。
+
+当一个匹配分支中，指定了多个模式，用 `|` 分隔，这时，匹配守卫的优先级是独立的，比如下面这个例子：
+
+```rust
+let x = 4;
+let y = false;
+
+match x {
+    4 | 5 | 6 if y => println!("yes"),
+    _ => println!("no"),
+}
+```
+
+优先级是这样的：
+
+```
+(4 | 5 | 6) if y => ...
+
+```
+
+### @ 绑定
+
+`@` 绑定，(at binding)允许我们将匹配的值绑定到一个变量，这个变量可以在匹配分支中使用。
+
+```rust
+fn main() {
+enum Message {
+    Hello { id: i32 },
+}
+
+let msg = Message::Hello { id: 5 };
+
+match msg {
+    Message::Hello { id: id_variable @ 3..=7 } => {
+        println!("Found an id in range: {}", id_variable)
+    },
+    Message::Hello { id: 10..=12 } => {
+        println!("Found an id in another range")
+    },
+    Message::Hello { id } => {
+        println!("Found some other id: {}", id)
+    },
+}
+}
+```
+
+在这个例子中，第一个分支中，测试 `id` 的值是否在 `3..=7` 范围内，如果是，则将 `id` 的值绑定到 `id_variable` 中，然后在匹配分支中打印出 `id_variable`。
+
+当你既想要限定分支范围，又想要使用分支的变量时，就可以用 `@` 来绑定到一个新的变量上，实现想要的功能。
+
+## 参考资料
+
+<ReferenceList
+  data={[
+    {
+      title: "Rust语言圣经",
+      link: "https://course.rs",
+      src: rust,
+    },
+    {
+      title: "Rust程序设计语言",
+      link: "https://kaisery.github.io/trpl-zh-cn/",
+      src: rust,
+    },
+  ]}
+/>
