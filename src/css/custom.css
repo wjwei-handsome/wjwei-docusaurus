@@ -39,7 +39,7 @@
 
     @font-face {
         font-family: 'LXGWenKaiScreenR';
-        src: url("LXGWWenKaiScreenR.ttf");
+        src: url("/static/LXGWWenKaiScreenR.ttf") format('truetype');
     }
      :root {
         --ifm-color-primary: #5391ba;
