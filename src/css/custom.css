@@ -36,13 +36,10 @@
         --ifm-color-primary-lightest: #4fddbf;
         --docusaurus-highlighted-code-line-bg: rgba(149, 200, 239, 0.3);
     } */
-    @font-face {
-        font-family: 'FusionG';
-        src: url("../font/FusionKaiG-Regular.ttf");
-    }
+
     @font-face {
         font-family: 'LXGWenKaiScreenR';
-        src: url("../font/LXGWWenKaiScreenR.ttf");
+        src: url("LXGWWenKaiScreenR.ttf");
     }
      :root {
         --ifm-color-primary: #5391ba;
