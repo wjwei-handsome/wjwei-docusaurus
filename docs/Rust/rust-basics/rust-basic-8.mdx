@@ -5,12 +5,404 @@ tags: [rust, code]
 sidebar_position: 8
 ---
 
-import ReferenceList from "@site/src/components/ReferenceList";
+import ReferenceList from "/src/components/ReferenceList"
 import rust from "@site/static/img/icon/rust.png";
+import python from "/static/img/icon/python.png";
 
 <img
   className="Badges"
   src="https://img.shields.io/badge/Author-WenjieWei-ff69b4?style=for-the-badge&logo=appveyor"
 />
 
-## 泛型 Generics
+## 泛型 Generic
+
+有时候我们需要使用同一个函数来处理不同类型的数据，比如一个简单的加法函数，两个参数可能是整数，也可能是浮点数，甚至是字符串，这种时候我们不希望针对每一种类型都写一个函数，这时候就可以使用泛型。比如以下这个例子，如果不使用泛型，我们需要写两个函数，一个处理整数，一个处理浮点数。
+
+```rust
+fn add_i32 (a:i32, b:i32) -> i32 {
+    a + b
+}
+fn add_f64 (a:f64, b:f64) -> f64 {
+    a + b
+}
+```
+
+如果使用泛型，就会简单很多：
+
+```rust
+fn add<T>(a:T, b:T) -> T {
+    a + b
+}
+```
+
+上述代码中的 `T` 就是 ** 泛型参数 **，实际上，你可以随意起名字，但是 `T` 代表 `Type` 相对来说，是一个完美的字母。这个函数的意思就是，接受两个参数，类型都是 `T`，返回值也是 `T`。这样，我们就可以使用 `add` 函数来处理整数、浮点数、字符串等等。
+
+但是如果运行以上代码，依然会得到报错：
+
+```shell
+error [E0369]: cannot add `T` to `T`
+```
+
+给出的理由言简意赅，不是所有 T 类型都可以相加。因此，我们要对该函数的泛型参数进行约束，使得它只能接受可以相加的类型。这里我们使用 `std::ops::Add` 这个特征来约束，这个特征定义了 `+` 运算符的行为：
+
+```rust
+fn add<T: std::ops::Add<Output = T>>(a:T, b:T) -> T {
+    a + b
+}
+```
+
+### 结构体中的泛型
+
+同样的，结构体中的字段也可以用泛型，这里定义了一个坐标点的结构，它的 x 和 y 坐标都是泛型：
+
+```rust
+struct Point<T> {
+    x: T,
+    y: T,
+}
+
+fn main () {
+    let integer = Point { x: 5, y: 10 };
+    let float = Point { x: 1.0, y: 4.0 };
+}
+```
+
+但是需要注意的是，x 和 y 的类型必须是一致的，否则会报错，如果想要 x 和 y 的类型可以不一致，那么就要再声明一个泛型：
+
+```rust
+struct Point<T,U> {
+    x: T,
+    y: U,
+}
+fn main () {
+    let p = Point {x: 1, y :1.1};
+}
+```
+
+:::note
+
+如果当泛型参数过多的时候，会导致代码的可读性变差，这时候可以考虑拆分成多个结构体。
+
+:::
+
+### 枚举中的泛型
+
+在枚举中使用泛型很常见，比如 `Option` 枚举，它的 `Some` 可以是任意类型的值，也可以是 `None`：
+
+```rust
+enum Option<T> {
+    Some(T),
+    None,
+}
+```
+还有它的好兄弟 `Result` 枚举，它的 `Ok` 和 `Err` 也可以是任意类型的值：
+
+```rust
+enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+```
+
+## 特征 Trait
+Rust中特征Trait的概念和其他语言中的接口很相似，它定义了一些方法，如果一个类型实现了某个特征，那么它就可以调用这些方法。
+
+既定义了**一组可以被共享的行为，只要实现了特征，就可以使用这些行为**
+
+### 定义特征
+例如，我们有两个结构体，一个是新闻，一个是微博这两种内容载体，我们想对这两者都实现一个共享的 `summarize` 方法，用来返回一个摘要，那么我们可以定义一个特征 `Summary`，然后在两个结构体中实现这个特征：
+
+```rust
+pub trait Summary {
+    fn summarize(&self) -> String;
+}
+```
+这里我们使用 `trait` 关键字定义了一个名为 `Summary` 的特征，它有一个 `summarize` 方法，返回一个字符串。
+
+定义这样一个特征，只是定义了一组行为，但是并没有具体实现，我们需要在结构体中定义实现这个特征的**具体方法**：
+
+### 实现特征
+还是上面这个例子，为两个结构体实现 `Summary` 特征：
+
+```rust showLineNumbers
+pub trait Summary {
+    fn summarize(&self) -> String;
+}
+pub struct News {
+    pub title: String, // 标题
+    pub author: String, // 作者
+    pub content: String, // 内容
+}
+
+impl Summary for News {
+    fn summarize(&self) -> String {
+        format!("文章{}, 作者是{}", self.title, self.author)
+    }
+}
+
+pub struct Weibo {
+    pub username: String,
+    pub content: String
+}
+
+impl Summary for Weibo {
+    fn summarize(&self) -> String {
+        format!("{}发表了微博{}", self.username, self.content)
+    }
+}
+fn mian() {
+    let news = News{title: "title".to_string(),author: "wjwei".to_string(), content: "Rust棒极了!".to_string()};
+    let weibo = Weibo{username: "wjwei".to_string(),content: "好像微博没Tweet好用".to_string()};
+
+    println!("{}",post.summarize());
+    println!("{}",weibo.summarize());
+}
+
+```
+实现特征的方法和为结构体实现方法类似，只是在 `impl` 后面加上特征名，然后实现特征中定义的方法即可。
+
+乍一看，似乎没什么用，和在结构体中定义方法有什么区别呢？
+
+#### 特征定义和实现的位置（孤儿规则）
+关于特征定义和实现的位置，一个很重要的原则：
+
+**如果为类型 `A` 实现特征 `T` ，那么 `A` 和 `T` 至少一个需要在当前作用域中定义**
+
+也就是说：
+- 如果要实现外部的特征，要先将特征引入到当前作用域中
+- 不能对外部类型实现外部特征
+- 可以对外部类型实现自己定义的特征
+- 可以对自己定义的类型实现外部特征
+
+:::tip
+
+外部是指当前作用域之外，比如标准库、第三方库等
+
+:::
+
+这条规则被称为**孤儿规则**（Orphan Rule），可以保证代码之间不会相互破坏。
+
+#### 默认实现
+特征中的方法可以有默认实现，这样在实现特征的时候，就不需要再实现这个方法了，比如我们为 `Summary` 特征添加一个默认实现：
+
+```rust
+pub trait Summary {
+    fn summarize(&self) -> String {
+        String::from("Read more...")
+    }
+}
+```
+再来一个例子：
+
+```rust
+impl Summary for News {}
+
+impl Summary for Weibo {
+    fn summarize(&self) -> String {
+        format!("{}发表了微博{}", self.username, self.content)
+    }
+}
+```
+这样，`News` 结构体就会使用默认的 `summarize` 方法，而 `Weibo` 结构体会重载自己的 `summarize` 方法。
+
+### 特征作为函数参数
+特征可以作为函数参数，这样可以接受任意实现了特征的类型，比如：
+
+```rust
+pub fn notify(item: impl Summary) {
+    println!("Breaking news! {}", item.summarize());
+}
+```
+
+这里的 `item` 参数可以是任意实现了 `Summary` 特征的类型，比如 `News` 或者 `Weibo`。这个用法相当实用！
+
+### 特征约束 Trait Bound
+上面这种写法， 是一种语法糖🍬，真正完整的书写形式如下：
+
+```rust
+pub fn notify<T: Summary>(item: T) {
+    println!("Breaking news! {}", item.summarize());
+}
+```
+结合学过的泛型知识，形如 `<T: Summary>` 的写法被称为**特征约束**（Trait Bound），它表示泛型 `T` 必须实现 `Summary` 特征。
+
+在部分简单场景下，可以使用 `impl Trait` 的简写形式，但是在一些复杂场景下，特征约束可以提供更多的灵活性和语法表现能力，比如：
+
+```rust
+pub fn notify_1(item1: &impl Summary, item2: &impl Summary) {}
+pub fn notify_2<T: Summary>(item1: T, item2: T) {}
+```
+这两个函数的参数都是实现了 `Summary` 特征的类型，但是第一个函数的两个参数可以是不同的类型，而第二个函数的两个参数必须是相同的类型，并且这个类型必须实现了 `Summary` 特征。
+
+#### 多重约束
+可以指定多个约束，比如：
+
+```rust
+pub fn notify_1(item: impl Summary + Display) {}
+pub fn notify_2<T: Summary + Display>(item: T) {}
+```
+
+#### where 从句约束
+在一些复杂的场景下，特征约束可能会导致函数签名很长：
+
+```rust
+fn some_function<T: Display + Clone, U: Clone + Debug>(t: T, u: U) -> i32 {}
+```
+比如这里，两个泛型参数都有两个约束，可以使用 `where` 从句来简化：
+
+```rust
+fn some_function<T, U>(t: T, u: U) -> i32
+    where T: Display + Clone,
+          U: Clone + Debug
+{}
+```
+这样是把约束放到了函数签名之外，更加清晰。
+
+#### 使用特征约束有条件地实现方法和特征
+特征约束可以让我们有条件地实现方法和特征，比如：
+
+```rust showLineNumbers
+fn main() {
+use std::fmt::Display;
+
+struct Pair<T> {
+    x: T,
+    y: T,
+}
+
+impl<T> Pair<T> {
+    fn new(x: T, y: T) -> Self {
+        Self {
+            x,
+            y,
+        }
+    }
+}
+
+impl<T: Display + PartialOrd> Pair<T> {
+    fn cmp_display(&self) {
+        if self.x >= self.y {
+            println!("The largest member is x = {}", self.x);
+        } else {
+            println!("The largest member is y = {}", self.y);
+        }
+    }
+}
+}
+```
+最后一段代码，对 `Pair` 结构体实现了 `cmp_display` 方法，但是这个方法只有在 `T` 实现了 `Display` 和 `PartialOrd` 两个特征的时候才会被实现。
+
+这样的代码可读性更好，泛型、特征约束、返回值类型、方法体都在一起，更加清晰。
+
+### 函数返回值类型中使用特征约束
+函数返回值类型中也可以使用特征约束，比如：
+
+```rust
+fn returns_summarizable() -> impl Summary {
+    News {
+        headline: String::from("headline"),
+        location: String::from("location"),
+    }
+}
+```
+这里的返回值类型是 `impl Summary`，表示返回值类型必须实现 `Summary` 特征。对于第三方调用者而言，无需知道具体的返回值类型，只需要知道它实现了 `Summary` 特征即可。
+
+在某些场景中，返回类型相当复杂，可以使用特征约束来简化函数签名。
+
+但是这种形式也有局限性，只能有一个具体的类型，比如：
+
+```rust showLineNumbers
+fn returns_summarizable(switch: bool) -> impl Summary {
+    if switch {
+        News {
+            title: String::from(
+                "Lakers 0:3 Nuggets",
+            ),
+            author: String::from("NBA"),
+            content: String::from(
+                "The Lakers canot stop Jokic",
+            ),
+        }
+    } else {
+        Weibo {
+            username: String::from("wjwei"),
+            content: String::from(
+                "lalala",
+            ),
+        }
+    }
+}
+```
+上面这段代码不能通过编译，因为返回值类型有两个。
+
+### 通过 drive 宏派生特征
+Rust 提供了 `derive` 宏，可以自动实现一些特征，比如 `Debug`、`Clone` 等，被标记的对象会自动实现这些特征，继承相应的功能。
+
+比如 `Debug` 特征，标记后，可以使用 `{:?}` 打印对象。
+
+具体所有的特征可以参考 [Rust Reference](https://course.rs/appendix/derive.html)。
+
+### 特征对象
+对于之前那段[无法编译通过的代码](#函数返回值类型中使用特征约束)，可以使用特征对象来解决。
+
+比如这样一个场景，我们想要实现一系列 UI 组件，比如按钮、文本框等，我们无法知道所有的对象类型，只知道的是：
+- 每个 UI 组件都是不同的类型
+- 需要一个统一的类型来处理这些对象
+- 每个对象都需要实现 `Draw` 特征
+
+如果让我用 `Python` 来实现，我会定义一个抽象顶层的类，并定义一个 `draw` 方法，然后让所有的 UI 组件继承这个类，并重写 `draw` 方法。
+
+在 Rust 中，可以使用特征对象来实现这个功能。
+
+### 定义特征对象
+
+先对 UI 组件定义一个特征：
+
+```rust
+pub trait Draw {
+    fn draw(&self);
+}
+```
+然后定义几个组件：
+
+```rust
+pub struct Button {
+    pub width: u32,
+    pub height: u32,
+    pub label: String,
+}
+impl Draw for Button {
+    fn draw(&self) {
+        // 绘制按钮的代码
+    }
+}
+struct SelectBox {
+    width: u32,
+    height: u32,
+    options: Vec<String>,
+}
+impl Draw for SelectBox {
+    fn draw(&self) {
+        // 绘制SelectBox的代码
+    }
+}
+```
+
+
+
+## 参考资料
+
+<ReferenceList
+    data={[
+        {
+            title: "Rust语言圣经",
+            link: "https://course.rs",
+            src: rust,
+        },
+        {
+            title: "Rust程序设计语言",
+            link: "https://kaisery.github.io/trpl-zh-cn/",
+            src: rust,
+        },
+    ]}
+/>
