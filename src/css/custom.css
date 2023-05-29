@@ -36,9 +36,10 @@
         --ifm-color-primary-lightest: #4fddbf;
         --docusaurus-highlighted-code-line-bg: rgba(149, 200, 239, 0.3);
     } */
+    /*@import url('https://gw.alipayobjects.com/os/k/font/lxgwwenkaiscreenr.css');*/
     @font-face {
         font-family: 'LXGWenKaiScreenR';
-        src: url("./LXGWWenkaiScreenR.ttf") format('truetype');
+        src: url("../../static/fonts/LXGWWenKaiScreenR.ttf") format('truetype');
     }
      :root {
         --ifm-color-primary: #5391ba;
