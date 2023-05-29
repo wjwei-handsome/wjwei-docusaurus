@@ -17,7 +17,7 @@ export default function GiscusComponent() {
       reactionsEnabled="1"
       emitMetadata="0"
       inputPosition="bottom"
-      theme={colorMode}
+      theme="https://gw.alipayobjects.com/os/k/3gwxfz/comment.css"
       lang="en"
       loading="lazy"
       crossorigin="anonymous"
