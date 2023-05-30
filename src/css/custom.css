@@ -87,7 +87,9 @@
         flex: 1 1 auto;
         font-size: 25px;
     }
-    
+    .navbar__search-input {
+        font-family: "LXGW WenKai Screen R";
+    }
     .markdown>h2 {
         padding-left: 10px;
         line-height: 100%;
