@@ -4,6 +4,9 @@ import { useColorMode } from '@docusaurus/theme-common';
 
 export default function GiscusComponent() {
   const { colorMode } = useColorMode();
+  const light_url = 'https://cdn.jsdelivr.net/gh/wjwei-handsome/CDN@0.3/comment.css';
+  const dark_url = 'https://cdn.jsdelivr.net/gh/wjwei-handsome/CDN@0.3/comment-dark.css';
+  const theme_url = colorMode == 'dark' ? dark_url : light_url;
   return (
     <div style={{marginTop:'30px'}}>
     <Giscus
@@ -17,12 +20,11 @@ export default function GiscusComponent() {
       reactionsEnabled="1"
       emitMetadata="0"
       inputPosition="bottom"
-      theme="https://gw.alipayobjects.com/os/k/3gwxfz/comment.css"
+      theme={theme_url} // 弄两套css，判断colormode.
       lang="en"
       loading="lazy"
       crossorigin="anonymous"
       async
     />
     </div>
-  );
-}
+  );}

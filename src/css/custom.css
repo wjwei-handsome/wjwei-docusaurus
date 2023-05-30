@@ -53,7 +53,7 @@
          --font-fallback: LXGW WenKai Screen R, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
          --font-body: var(--font-fallback);
          --font-mono: 'SF Mono', Consolas, Monaco, 'Courier New', Courier, monospace;
-         --ifm-font-family-base: 'LXGWenKaiScreenR', sans-serif;
+         --ifm-font-family-base: 'LXGW WenKai Screen R', sans-serif;
     }
     
     [data-theme='dark'] {
