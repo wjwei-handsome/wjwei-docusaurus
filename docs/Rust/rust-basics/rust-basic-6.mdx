@@ -1,6 +1,6 @@
 ---
-title: Rust基础入门-第五章
-description: Rust中的模式匹配：match、if let、matches!宏、解构
+title: Rust 基础入门 - 第五章
+description: Rust 中的模式匹配：match、if let、matches! 宏、解构
 tags: [rust, code]
 sidebar_position: 6
 ---
@@ -21,19 +21,19 @@ import rust from "@site/static/img/icon/rust.png";
 
 fn main() {
 match target {
-    模式1 => 表达式1,
-    模式2 | 模式3 => {
-        语句1;
-        语句2;
-        表达式2
+    模式 1 => 表达式 1,
+    模式 2 | 模式 3 => {
+        语句 1;
+        语句 2;
+        表达式 2
     },
-    _ => 表达式3
+    _ => 表达式 3
 }
 }
 
 ```
 
-其中，`target` 是要进行匹配的值，`模式` 是要匹配的模式，`表达式` 是要执行的代码。
+其中，`target` 是要进行匹配的值，` 模式 ` 是要匹配的模式，` 表达式 ` 是要执行的代码。
 
 例子：
 
@@ -62,11 +62,11 @@ fn value_in_cents(coin: Coin) -> u8 {
 
 ```
 
-该函数`value_in_cents`接受一个`Coin`类型的参数，然后根据参数的值返回不同的美分数值。
+该函数 `value_in_cents` 接受一个 `Coin` 类型的参数，然后根据参数的值返回不同的美分数值。
 
 ### match 表达式赋值
 
-`match`本身也是表达式，可以用于赋值：
+`match` 本身也是表达式，可以用于赋值：
 
 ```rust
 enum IpAddr {
@@ -105,13 +105,13 @@ enum Coin {
     Penny,
     Nickel,
     Dime,
-    Quarter(UsState), // 25美分硬币中包含州名
+    Quarter(UsState), // 25 美分硬币中包含州名
 }
 }
 
 ```
 
-在枚举类型`Coin`中，`Quarter`类型的值中包含一个`UsState`类型的值，我们可以从`Quarter`中取出`UsState`的值：
+在枚举类型 `Coin` 中，`Quarter` 类型的值中包含一个 `UsState` 类型的值，我们可以从 `Quarter` 中取出 `UsState` 的值：
 
 ```rust showLineNumbers {8}
 #![allow(unused)]
@@ -121,7 +121,7 @@ fn value_in_cents(coin: Coin) -> u8 {
         Coin::Penny => 1,
         Coin::Nickel => 5,
         Coin::Dime => 10,
-        Coin::Quarter(state) => {  // 从Quarter中取出state
+        Coin::Quarter(state) => {  // 从 Quarter 中取出 state
             println!("State quarter from {:?}!", state);
             25
         },
@@ -130,11 +130,11 @@ fn value_in_cents(coin: Coin) -> u8 {
 }
 ```
 
-如上代码中，在第八行，当匹配到`Coin::Quarter(state)`时，会将`state`绑定到`Coin::Quarter`中的`UsState`类型的值。
+如上代码中，在第八行，当匹配到 `Coin::Quarter(state)` 时，会将 `state` 绑定到 `Coin::Quarter` 中的 `UsState` 类型的值。
 
 ### 穷尽匹配
 
-`match`的匹配必须要穷尽所有情况，不然不能通过编译，如下代码：
+`match` 的匹配必须要穷尽所有情况，不然不能通过编译，如下代码：
 
 ```rust
 
@@ -157,11 +157,11 @@ fn main() {
 
 ```
 
-这样严格的匹配，可以避免`null`陷阱。
+这样严格的匹配，可以避免 `null` 陷阱。
 
-### \_通配符
+### \_ 通配符
 
-当不想列出所有的匹配情况时，可以使用`_`通配符，如下代码：
+当不想列出所有的匹配情况时，可以使用 `_` 通配符，如下代码：
 
 ```rust
 #![allow(unused)]
@@ -177,13 +177,13 @@ match some_u8_value {
 }
 ```
 
-将`_`放置于所有匹配模式的最后，可以匹配遗漏的模式。在这个例子中，`()`返回单元类型，即不做任何事。
+将 `_` 放置于所有匹配模式的最后，可以匹配遗漏的模式。在这个例子中，`()` 返回单元类型，即不做任何事。
 
 ## if let 匹配
 
-对于只有一种模式需要处理的场景，用`match`会显得有些冗余，这时可以使用`if let`来简化代码。
+对于只有一种模式需要处理的场景，用 `match` 会显得有些冗余，这时可以使用 `if let` 来简化代码。
 
-`match`的通用形式如下：
+`match` 的通用形式如下：
 
 ```rust
 #![allow(unused)]
@@ -196,7 +196,7 @@ fn main() {
 }
 ```
 
-这里最后的`_`匹配多多少少有些冗余，可以使用`if let`来简化：
+这里最后的 `_` 匹配多多少少有些冗余，可以使用 `if let` 来简化：
 
 ```rust
 #![allow(unused)]
@@ -210,9 +210,9 @@ fn main() {
 
 ## matches! 宏
 
-在 Rust 标准库中，有一个很实用的宏`matches!`，可以将一个表达式跟模式进行匹配，然后返回匹配的结果 `true` or `false`。
+在 Rust 标准库中，有一个很实用的宏 `matches!`，可以将一个表达式跟模式进行匹配，然后返回匹配的结果 `true` or `false`。
 
-比如我们想要判断一个字符是否是英文字母，可以用`match`这样写：
+比如我们想要判断一个字符是否是英文字母，可以用 `match` 这样写：
 
 ```rust
 fn main() {
@@ -229,7 +229,7 @@ fn get_foo(c: char) -> bool {
 }
 ```
 
-但是这种返回布尔值的情况，可以用`matches!`宏来简化：
+但是这种返回布尔值的情况，可以用 `matches!` 宏来简化：
 
 ```rust
 fn main() {
@@ -244,7 +244,7 @@ fn get_foo(c: char) -> bool {
 
 ## Option 用法
 
-`Option`是一个枚举类型，它的定义如下：
+`Option` 是一个枚举类型，它的定义如下：
 
 ```rust
 enum Option<T> {
@@ -253,9 +253,9 @@ enum Option<T> {
 }
 ```
 
-简单来说，一个变量要么是`Some`类型，要么是`None`类型，`Some`类型中包含一个值，`None`类型中不包含任何值。
+简单来说，一个变量要么是 `Some` 类型，要么是 `None` 类型，`Some` 类型中包含一个值，`None` 类型中不包含任何值。
 
-那么可以用`match`来判断`Option`类型的值：
+那么可以用 `match` 来判断 `Option` 类型的值：
 
 ```rust
 #![allow(unused)]
@@ -273,7 +273,7 @@ let none = plus_one(None);
 }
 ```
 
-在这个模式匹配中，`None`类型的值不会被处理，而`Some(5)`和`Some(i)`属于相同的成员，并绑定值后加一。
+在这个模式匹配中，`None` 类型的值不会被处理，而 `Some(5)` 和 `Some(i)` 属于相同的成员，并绑定值后加一。
 
 :::note
 
@@ -317,7 +317,7 @@ if let PATTERN = SOME_VALUE {
 
 ```rust
 fn main() {
-// Vec是动态数组
+// Vec 是动态数组
 let mut stack = Vec::new();
 
 // 向数组尾部插入元素
@@ -325,14 +325,14 @@ stack.push(1);
 stack.push(2);
 stack.push(3);
 
-// stack.pop从数组尾部弹出元素
+// stack.pop 从数组尾部弹出元素
 while let Some(top) = stack.pop() {
     println!("{}", top);
 }
 }
 ```
 
-`pop`方法取出动态数组的最后一个元素并返回`Some(value)`，如果动态数组是空的，将返回`None`，对`while`来说，只要`pop`返回`Some`就会一直不停的循环。一旦其返回`None`，`while` 循环停止。我们可以使用 `while let` 来弹出栈中的每一个元素
+`pop` 方法取出动态数组的最后一个元素并返回 `Some(value)`，如果动态数组是空的，将返回 `None`，对 `while` 来说，只要 `pop` 返回 `Some` 就会一直不停的循环。一旦其返回 `None`，`while` 循环停止。我们可以使用 `while let` 来弹出栈中的每一个元素
 
 ### for 循环
 
@@ -407,11 +407,11 @@ fn main() {
 }
 ```
 
-这个例子中，变量`x`不符合第一个分支，跳过，在第二个分支中，引入了一个新的变量`y`，但是它在`match`的作用域中，和上面的那个`y`不是同一个变量，因此这个新绑定的`y`的值是`5`，而不是`10`。
+这个例子中，变量 `x` 不符合第一个分支，跳过，在第二个分支中，引入了一个新的变量 `y`，但是它在 `match` 的作用域中，和上面的那个 `y` 不是同一个变量，因此这个新绑定的 `y` 的值是 `5`，而不是 `10`。
 
 ### 单分支多模式
 
-可以用`|`来匹配多个模式，代表或的关系：
+可以用 `|` 来匹配多个模式，代表或的关系：
 
 ```rust
 let x = 1;
@@ -425,7 +425,7 @@ match x {
 
 ### 序列匹配范围
 
-`..=`表示闭区间，`..`表示开区间，可以用来匹配序列中的值，当模式匹配任何在此序列内的值时，该分支会执行：
+`..=` 表示闭区间，`..` 表示开区间，可以用来匹配序列中的值，当模式匹配任何在此序列内的值时，该分支会执行：
 
 ```rust
 let x = 5;
@@ -455,15 +455,15 @@ struct Point {
 }
 
 fn main() {
-    let p = Point { x: 0, y: 7 };
+    let p = Point {x: 0, y: 7};
 
-    let Point { x: a, y: b } = p;
+    let Point {x: a, y: b} = p;
     assert_eq!(0, a);
     assert_eq!(7, b);
 }
 ```
 
-这里创建了一个结构体`Point`，然后创建了一个`p`的实例，然后使用模式匹配来解构`p`，将`x`和`y`的值分别赋值给`a`和`b`。
+这里创建了一个结构体 `Point`，然后创建了一个 `p` 的实例，然后使用模式匹配来解构 `p`，将 `x` 和 `y` 的值分别赋值给 `a` 和 `b`。
 
 也可以使用字面值作为结构体模式的一部分进行解构，而不是为所有的字段创建变量。这允许我们测试一些字段为特定值的同时创建其他字段的变量。
 
@@ -474,12 +474,12 @@ struct Point {
 }
 
 fn main() {
-    let p = Point { x: 0, y: 7 };
+    let p = Point {x: 0, y: 7};
 
     match p {
-        Point { x, y: 0 } => println!("On the x axis at {}", x),
-        Point { x: 0, y } => println!("On the y axis at {}", y),
-        Point { x, y } => println!("On neither axis: ({}, {})", x, y),
+        Point {x, y: 0} => println!("On the x axis at {}", x),
+        Point {x: 0, y} => println!("On the y axis at {}", y),
+        Point {x, y} => println!("On neither axis: ({}, {})", x, y),
     }
 }
 ```
@@ -491,7 +491,7 @@ fn main() {
 ```rust
 enum Message {
     Quit,
-    Move { x: i32, y: i32 },
+    Move {x: i32, y: i32},
     Write(String),
     ChangeColor(i32, i32, i32),
 }
@@ -503,7 +503,7 @@ fn main() {
         Message::Quit => {
             println!("The Quit variant has no data to destructure.")
         }
-        Message::Move { x, y } => {
+        Message::Move {x, y} => {
             println!(
                 "Move in the x direction {} and in the y direction {}",
                 x,
@@ -535,7 +535,7 @@ enum Color {
 
 enum Message {
     Quit,
-    Move { x: i32, y: i32 },
+    Move {x: i32, y: i32},
     Write(String),
     ChangeColor(Color),
 }
@@ -644,13 +644,13 @@ println!("setting is {:?}", setting_value);
 
 这个之前提到过，就是为了消除编译器的警告。
 
-但是，只使用 _ 和使用以下划线开头的名称有些微妙的不同：比如 `_x` 仍会**将值绑定到变量**，而 `_` 则**完全不会绑定**。比如下面两个例子：
+但是，只使用 _ 和使用以下划线开头的名称有些微妙的不同：比如 `_x` 仍会 ** 将值绑定到变量 **，而 `_` 则 ** 完全不会绑定 **。比如下面两个例子：
 
 ```rust
 fn main() {
 let s = Some(String::from("Hello!"));
 
-if let Some(_s) = s {  // 这里的 _s 仍然会绑定到 s 的值，s的值会被移动到 _s 中
+if let Some(_s) = s {  // 这里的 _s 仍然会绑定到 s 的值，s 的值会被移动到 _s 中
     println!("found a string");
 }
 
@@ -674,9 +674,9 @@ println!("{:?}", s);
 ```
 ````
 
-#### 使用..忽略剩余的值
+#### 使用.. 忽略剩余的值
 
-对于有多个部分的值，可以使用`..`语法来只使用部分值而忽略其它值，这样也不用再为每一个被忽略的值都单独列出下划线。
+对于有多个部分的值，可以使用 `..` 语法来只使用部分值而忽略其它值，这样也不用再为每一个被忽略的值都单独列出下划线。
 
 ```rust
 fn main() {
@@ -690,7 +690,7 @@ fn main() {
 }
 ```
 
-主打一个优雅。但是同时要主要的是，`..`不能存在歧义，比如下面这个例子：
+主打一个优雅。但是同时要主要的是，`..` 不能存在歧义，比如下面这个例子：
 
 ```rust
 fn main() {
@@ -706,7 +706,7 @@ fn main() {
 
 ### 匹配守卫
 
-匹配守卫，(match guards)允许我们在匹配模式的同时，加入额外的条件判断。如果这个条件判断为 `true`，则执行匹配分支，否则继续尝试下一个匹配分支。
+匹配守卫，(match guards) 允许我们在匹配模式的同时，加入额外的条件判断。如果这个条件判断为 `true`，则执行匹配分支，否则继续尝试下一个匹配分支。
 
 ```rust
 let num = Some(4);
@@ -741,24 +741,24 @@ match x {
 
 ### @ 绑定
 
-`@` 绑定，(at binding)允许我们将匹配的值绑定到一个变量，这个变量可以在匹配分支中使用。
+`@` 绑定，(at binding) 允许我们将匹配的值绑定到一个变量，这个变量可以在匹配分支中使用。
 
 ```rust
 fn main() {
 enum Message {
-    Hello { id: i32 },
+    Hello {id: i32},
 }
 
-let msg = Message::Hello { id: 5 };
+let msg = Message::Hello {id: 5};
 
 match msg {
-    Message::Hello { id: id_variable @ 3..=7 } => {
+    Message::Hello {id: id_variable @ 3..=7} => {
         println!("Found an id in range: {}", id_variable)
     },
-    Message::Hello { id: 10..=12 } => {
+    Message::Hello {id: 10..=12} => {
         println!("Found an id in another range")
     },
-    Message::Hello { id } => {
+    Message::Hello {id} => {
         println!("Found some other id: {}", id)
     },
 }
@@ -774,12 +774,12 @@ match msg {
 <ReferenceList
   data={[
     {
-      title: "Rust语言圣经",
+      title: "Rust 语言圣经 ",
       link: "https://course.rs",
       src: rust,
     },
     {
-      title: "Rust程序设计语言",
+      title: "Rust 程序设计语言 ",
       link: "https://kaisery.github.io/trpl-zh-cn/",
       src: rust,
     },

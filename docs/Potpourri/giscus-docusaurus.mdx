@@ -1,6 +1,6 @@
 ---
-title: 在Docusaurus上配置Giscus评论系统
-description: 简单介绍如何在Docusaurus上配置Giscus评论系统，并解决更新后的bug
+title: 在 Docusaurus 上配置 Giscus 评论系统
+description: 简单介绍如何在 Docusaurus 上配置 Giscus 评论系统，并解决更新后的 bug
 tags: [giscus, docusaurus]
 sidebar_position: 2
 ---
@@ -10,11 +10,11 @@ import ReferenceList from "@site/src/components/ReferenceList";
 
 ## 背景
 
-Docusaurus 自己没有带评论系统，而且现在官方插件也比较少，所以可以利用[Giscus](https://giscus.app/)来实现评论功能。
+Docusaurus 自己没有带评论系统，而且现在官方插件也比较少，所以可以利用 [Giscus](https://giscus.app/) 来实现评论功能。
 
 ### 其他评论系统
 
-其他还有一些评论系统，比如[utterances](https://utteranc.es/)，[Disqus](https://disqus.com/)，但是出于网络稳定和账号登陆的考虑，还是选择了 Giscus。
+其他还有一些评论系统，比如 [utterances](https://utteranc.es/)，[Disqus](https://disqus.com/)，但是出于网络稳定和账号登陆的考虑，还是选择了 Giscus。
 
 ## Giscus 获取
 
@@ -32,18 +32,18 @@ npm install @giscus/react
 
 都用了 react，那么就封装一个组件，方便调用。
 
-我是放在了`src/components`目录下：
+我是放在了 `src/components` 目录下：
 
 ```js title="src/components/GiscusComponent.js"
 import React from "react";
 import Giscus from "@giscus/react";
-import { useColorMode } from "@docusaurus/theme-common"; // 导入当前主题API
+import {useColorMode} from "@docusaurus/theme-common"; // 导入当前主题 API
 
 export default function GiscusComponent() {
-  const { colorMode } = useColorMode(); // 获取当前主题
+  const {colorMode} = useColorMode(); // 获取当前主题
   return (
-    // 前面放一个带margin的div，美观
-    <div style={{ marginTop: "30px" }}>
+    // 前面放一个带 margin 的 div，美观
+    <div style={{marginTop: "30px"}}>
       <Giscus
         repo="name/repo"
         repoId="XXXXXXX"
@@ -76,7 +76,7 @@ export default function GiscusComponent() {
 
 ## 插入组件
 
-那么看一下评论系统应该是要放在**文档页面区域**的倒数第二个区域，也就是翻页区域和文档内容之间。
+那么看一下评论系统应该是要放在 ** 文档页面区域 ** 的倒数第二个区域，也就是翻页区域和文档内容之间。
 
 这样的话就是要 swizzle 出对应的组件，然后在里面插入我们的组件。
 
@@ -84,13 +84,13 @@ export default function GiscusComponent() {
 npx docusaurus swizzle @docusaurus/theme-classic DocItem
 ```
 
-找到对应的文件，然后在`<MDXContent/>`后面插入我们的组件。
+找到对应的文件，然后在 `<MDXContent/>` 后面插入我们的组件。
 
 ```js title="src/theme/DocItem/Content/index.js" showLineNumbers {7,39}
 import React from "react";
 import clsx from "clsx";
-import { ThemeClassNames } from "@docusaurus/theme-common";
-import { useDoc } from "@docusaurus/theme-common/internal";
+import {ThemeClassNames} from "@docusaurus/theme-common";
+import {useDoc} from "@docusaurus/theme-common/internal";
 import Heading from "@theme/Heading";
 import MDXContent from "@theme/MDXContent";
 import GiscusComponent from "@site/src/components/GiscusComponent";
@@ -105,7 +105,7 @@ import GiscusComponent from "@site/src/components/GiscusComponent";
  - the markdown content does not already contain a top-level h1 heading
 */
 function useSyntheticTitle() {
-  const { metadata, frontMatter, contentTitle } = useDoc();
+  const {metadata, frontMatter, contentTitle} = useDoc();
   const shouldRender =
     !frontMatter.hide_title && typeof contentTitle === "undefined";
   if (!shouldRender) {
@@ -113,7 +113,7 @@ function useSyntheticTitle() {
   }
   return metadata.title;
 }
-export default function DocItemContent({ children }) {
+export default function DocItemContent({children}) {
   const syntheticTitle = useSyntheticTitle();
 
   return (
@@ -152,11 +152,11 @@ npx docusaurus swizzle @docusaurus/theme-classic BlogPostPage
 ## 后续优化计划
 
 - [ ] 将评论开关放到 mdx 文档的头信息，根据需要来展示评论
-- [ ] 把 giscus 的配置信息放到`docusaurus.config.js`中，符合规范，在封装的组件中就利用 API 去获取配置信息
+- [ ] 把 giscus 的配置信息放到 `docusaurus.config.js` 中，符合规范，在封装的组件中就利用 API 去获取配置信息
 
 ## 后面的大坑
 
-2022 年 11 月 16 日，我突然发现我的评论系统的主题颜色错误了，在 gicsus-react 的 github 下也找到了同样的问题，具体就看[这个](https://github.com/giscus/giscus-component/issues/778)吧
+2022 年 11 月 16 日，我突然发现我的评论系统的主题颜色错误了，在 gicsus-react 的 github 下也找到了同样的问题，具体就看 [这个](https://github.com/giscus/giscus-component/issues/778) 吧
 
 我出现这个 BUG 的环境是 MacOS Montery 12.6 和 ios 16.0 下的 safari 浏览器和 chrome 浏览器。
 
@@ -168,13 +168,13 @@ Module not found: Error: Can't resolve 'react/jsx-runtime' in '/.../node_modules
 
 把我这种前端业余选手给整不会了，用微薄的前端知识，大概定位到了是 webpack 的问题。
 
-在这个[issue](https://github.com/webpack/webpack.js.org/issues/3975#issue-701021807)里，人家说在 webpack 5 版本后面，import 的时候，可以通过设置`resolve.fullySpecified`为`false`来解决。但我也不会啊，抄了一下看到了那个提出问题的老哥的[解决方案](https://github.com/webpack/webpack/issues/11467#issuecomment-691873586)，人家是专业的。
+在这个 [issue](https://github.com/webpack/webpack.js.org/issues/3975#issue-701021807) 里，人家说在 webpack 5 版本后面，import 的时候，可以通过设置 `resolve.fullySpecified` 为 `false` 来解决。但我也不会啊，抄了一下看到了那个提出问题的老哥的[解决方案](https://github.com/webpack/webpack/issues/11467#issuecomment-691873586)，人家是专业的。
 
-半懂不懂的情况下，按照别人的说法，自己创建了一个 plugin，然后在`docusaurus.config.js`中配置了一下，具体步骤如下：
+半懂不懂的情况下，按照别人的说法，自己创建了一个 plugin，然后在 `docusaurus.config.js` 中配置了一下，具体步骤如下：
 
 ### 1. 创建一个 plugin
 
-在主目录下创建`plugins/my-loaders`目录，然后在`my-loaders`目录下创建`index.js`文件，内容如下：
+在主目录下创建 `plugins/my-loaders` 目录，然后在 `my-loaders` 目录下创建 `index.js` 文件，内容如下：
 
 ```js title="/plugins/my-loaders/index.js"
 module.exports = function (context, options) {
@@ -198,7 +198,7 @@ module.exports = function (context, options) {
 };
 ```
 
-再创建一个`package.json`文件，内容如下：
+再创建一个 `package.json` 文件，内容如下：
 
 ```json title="/plugins/my-loaders/package.json"
 {
@@ -211,9 +211,9 @@ module.exports = function (context, options) {
 }
 ```
 
-### 2. 在`docusaurus.config.js`中配置
+### 2. 在 `docusaurus.config.js` 中配置
 
-按照 docusaurus 官网使用插件的[说明](https://docusaurus.io/docs/using-plugins#installing-a-plugin)，将相对路径配置到`plugins`中即可。
+按照 docusaurus 官网使用插件的 [说明](https://docusaurus.io/docs/using-plugins#installing-a-plugin)，将相对路径配置到 `plugins` 中即可。
 
 ```js title="/docusaurus.config.js"
 // ...

@@ -1,6 +1,6 @@
 ---
-title: Python-Mixin混合类
-description: python中的混合类
+title: Python-Mixin 混合类
+description: python 中的混合类
 tags: [python, code]
 sidebar_position: 2
 ---
@@ -9,14 +9,14 @@ sidebar_position: 2
 
 [My Presentation](pathname:///slides/ppt_encrypted.html)
 
-在谈及混合类之前，首先需要了解<highlight color="#25c2a0">多重继承</highlight>的概念，多重继承是指一个类可以继承多个父类，这样就可以从多个父类中继承属性和方法，但是这种设计模式也存在一定的问题。
+在谈及混合类之前，首先需要了解 <highlight color="#25c2a0"> 多重继承 </highlight> 的概念，多重继承是指一个类可以继承多个父类，这样就可以从多个父类中继承属性和方法，但是这种设计模式也存在一定的问题。
 
 例如，轿车是一个交通工具，所以轿车类应该继承交通工具这个父类。那民航飞机呢？它也属于交通工具的一种，所以也应该继承交通工具这个父类，但是交通工具这个类应该怎么设计？是否应该实现飞行功能？如果实现，那轿车继承交通工具父类显然不合适，因为轿车根本没有飞行功能。如果不实现，民航飞机继承交通工具类也同样不合适。如果两者都分别实现自己的方法，那将会违背代码重用的原则，那应该这么解决这个问题？事实上，我们可以把地上跑的，天上飞的，甚至水上漂的这些工具的功能抽象出来实现交通工具这个父类。对于飞机来说，那就去继承交通工具和有飞行功能两个父类，对于船来说，那就去继承交通工具和有水上漂功能的两个父类。但是这样子的多重继承说到底还是违背了“is-a”的原则，这个问题应该怎么样处理？
 
 :::info is-a | has-a
 
-- is-a 是一种继承关系，A 是 B 的一种，比如在长方体和正方体之间--正方体是长方体的一种
-- has-a 是一种组合关系，A 有 B，比如在人和手之间--人有手，汽车有轮胎
+- is-a 是一种继承关系，A 是 B 的一种，比如在长方体和正方体之间 -- 正方体是长方体的一种
+- has-a 是一种组合关系，A 有 B，比如在人和手之间 -- 人有手，汽车有轮胎
 
 :::
 
@@ -28,11 +28,11 @@ sidebar_position: 2
 
 ## 概念
 
-`Mixin`故名思义`Mix in`，也被称为混合类，不只是 python 中有，通常作为一种编程范式，在面对对象的语言中常见。`Mixin`的作用是为一个类提供额外的功能，而不需要继承这个类。`Mixin`的特点是可以被多个类继承，且不会影响到其他类的继承关系。
+`Mixin` 故名思义 `Mix in`，也被称为混合类，不只是 python 中有，通常作为一种编程范式，在面对对象的语言中常见。`Mixin` 的作用是为一个类提供额外的功能，而不需要继承这个类。`Mixin` 的特点是可以被多个类继承，且不会影响到其他类的继承关系。
 
 ## 举例
 
-拿[背景](#背景)中的例子定义一个简单的类：
+拿 [背景](# 背景) 中的例子定义一个简单的类：
 
 ```python showLineNumbers title="example.py" {6}
 class Displayer():
@@ -59,9 +59,9 @@ subclass = MySubClass()
 subclass.display("This string will be shown and logged in subclasslog.txt")
 ```
 
-在上述例子中，我们定义了三个类，其中`Displayer`类只有一个`display`方法，`LoggerMixin`类有两个方法，一个是`log`方法，一个是`display`方法，`MySubClass`类继承了`LoggerMixin`和`Displayer`类，`MySubClass`类重写了`LoggerMixin`类中的`log`方法，这样就实现了在`MySubClass`类中，`display`方法既会显示到屏幕，又会写入到文件中。
+在上述例子中，我们定义了三个类，其中 `Displayer` 类只有一个 `display` 方法，`LoggerMixin` 类有两个方法，一个是 `log` 方法，一个是 `display` 方法，`MySubClass` 类继承了 `LoggerMixin` 和 `Displayer` 类，`MySubClass` 类重写了 `LoggerMixin` 类中的 `log` 方法，这样就实现了在 `MySubClass` 类中，`display` 方法既会显示到屏幕，又会写入到文件中。
 
-逻辑很简单，但是仔细看，在第 6 行中, 我们定义的`LoggerMixin`实际上没有继承任何父类，那何来的 super()方法呢？
+逻辑很简单，但是仔细看，在第 6 行中, 我们定义的 `LoggerMixin` 实际上没有继承任何父类，那何来的 super() 方法呢？
 
 :::tip
 
@@ -69,15 +69,15 @@ super 方法是调用父类的方法。
 
 :::
 
-在多继承的环境下，`super()`方法有比较复杂的含义，它会按照 **MRO**（Method Resolution Order）继承链的顺序来查找父类，MRO 的顺序是在类定义时就确定的，不会随着子类的定义而改变。
+在多继承的环境下，`super()` 方法有比较复杂的含义，它会按照 **MRO**（Method Resolution Order）继承链的顺序来查找父类，MRO 的顺序是在类定义时就确定的，不会随着子类的定义而改变。
 
 ## 触发过程
 
-那么，在调用`MySubClass.display()`方法时，触发了以下行为
+那么，在调用 `MySubClass.display()` 方法时，触发了以下行为
 
-1. 首先调用了`LoggerMixin.display`方法，因为在继承关系上，它最近
-2. 其次`LoggerMixin.display`调用`super().display()`，上文说到，`super()`会寻找当前类的 MRO，那么当前类是`MysubClass`，在继承链上，过了`LoggerMixin`就是`Displayer`，所以去找`Displayer`的`display`方法。
-3. 当然也要调用`LoggerMixin`的`self.log`方法，那么这个`self`又是谁？，实际上也是 MySubClass 的实例，所以调用的是`MySubClass.log()`，那为什么又可以输出到文件呢？因为`MySubClass.log()`调用了`super().log()`，MRO 来寻找最近的父类，那就是`LoggerMixin.log()`咯！
+1. 首先调用了 `LoggerMixin.display` 方法，因为在继承关系上，它最近
+2. 其次 `LoggerMixin.display` 调用 `super().display()`，上文说到，`super()` 会寻找当前类的 MRO，那么当前类是 `MysubClass`，在继承链上，过了 `LoggerMixin` 就是 `Displayer`，所以去找 `Displayer` 的 `display` 方法。
+3. 当然也要调用 `LoggerMixin` 的 `self.log` 方法，那么这个 `self` 又是谁？，实际上也是 MySubClass 的实例，所以调用的是 `MySubClass.log()`，那为什么又可以输出到文件呢？因为 `MySubClass.log()` 调用了 `super().log()`，MRO 来寻找最近的父类，那就是 `LoggerMixin.log()` 咯！
 
 讲清楚这一系列触发过程，基本就能理解 Mix-in 这个概念了
 
@@ -93,7 +93,7 @@ super 方法是调用父类的方法。
 
 ## 实际中的应用
 
-在 Django 和 DRF 框架中，应用较多，比如有两个接口，一个接口 A 需要返回表格展示所需数据，一个接口 B 需要返回这些数据的文件下载流，在业务逻辑上，两个接口是一样的，那么就可以用混合类的方法，接口 B 继承一个混合类 C 和 A，其中混合类重写`get`方法，来返回文件流，并继承 A 的数据获取。
+在 Django 和 DRF 框架中，应用较多，比如有两个接口，一个接口 A 需要返回表格展示所需数据，一个接口 B 需要返回这些数据的文件下载流，在业务逻辑上，两个接口是一样的，那么就可以用混合类的方法，接口 B 继承一个混合类 C 和 A，其中混合类重写 `get` 方法，来返回文件流，并继承 A 的数据获取。
 
 :::note
 
@@ -107,7 +107,7 @@ Here's a simple footnote,[^1] and here's a longer one.[^bignote]
 [^bignote]:
     Here's one with multiple paragraphs and code.
     Indent paragraphs to include them in the footnote.
-    `{ my code }`
+    `{my code}`
     Add as many paragraphs as you like.
 
 | Table Header 1 | Table Header 2 | Table Header 3 |

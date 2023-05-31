@@ -1,6 +1,6 @@
 ---
-title: maf格式转换
-description: maf格式转换为sam/paf/delta格式
+title: maf 格式转换
+description: maf 格式转换为 sam/paf/delta 格式
 tags: [bioinfo, code]
 sidebar_position: 1
 ---
@@ -9,9 +9,9 @@ sidebar_position: 1
 
 ## 由来
 
-全基因组比对，各个软件有各自的输出格式，如 [MAF](https://genome.ucsc.edu/FAQ/FAQformat.html#format5)、[SAM](https://samtools.github.io/hts-specs/SAMv1.pdf)、[PAF](https://github.com/lh3/miniasm/blob/master/PAF.md)、[delta](https://mummer.sourceforge.net/manual/) 等，总体而言，我认为 MAF(Multiple Alignment Format)格式是最能体现全基因组比对的特点的，但是其下游操作，比如结构变异的鉴定、可视化等，需要其他格式，所以对其进行格式转换比较有必要。目前暂时还没发现有现成的工具，而且实现起来也比较简单，就自己写了一个。不过仅限于两个基因组的比对结果。
+全基因组比对，各个软件有各自的输出格式，如 [MAF](https://genome.ucsc.edu/FAQ/FAQformat.html#format5)、[SAM](https://samtools.github.io/hts-specs/SAMv1.pdf)、[PAF](https://github.com/lh3/miniasm/blob/master/PAF.md)、[delta](https://mummer.sourceforge.net/manual/) 等，总体而言，我认为 MAF(Multiple Alignment Format) 格式是最能体现全基因组比对的特点的，但是其下游操作，比如结构变异的鉴定、可视化等，需要其他格式，所以对其进行格式转换比较有必要。目前暂时还没发现有现成的工具，而且实现起来也比较简单，就自己写了一个。不过仅限于两个基因组的比对结果。
 
-有需要的就直接复制或者点 👉[这里](./assets/maf-convert.py)下载
+有需要的就直接复制或者点 👉[这里](./assets/maf-convert.py) 下载
 
 ## 用法
 
@@ -217,7 +217,7 @@ class Prefix:
 class MAF:
     """A reader for :term:`MAF` format."""
 
-    def __init__(self, filename, header: Header, prefix: Prefix, outfile=None, ):
+    def __init__(self, filename, header: Header, prefix: Prefix, outfile=None,):
         self.filename = filename
         self.outfile = outfile
         self.header = header
@@ -273,7 +273,7 @@ class MAF:
         with open(self.filename, "r") as fin:
             for line in track(fin, description="[bold green]Converting maf to sam...", total=fin_total):
                 # skipping empty lines
-                if line.strip() == "" or line.startswith("#"):
+                if line.strip()== "" or line.startswith("#"):
                     continue
 
                 if line[0] == "a":
@@ -346,7 +346,7 @@ class MAF:
 
                     data.append(editDistance)
 
-                    fout.write("\t".join([str(x) for x in data]) + "\n")
+                    fout.write("\t".join([str(x) for x in data])+ "\n")
                     s = []
 
         if len(s):

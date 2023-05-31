@@ -1,5 +1,5 @@
 ---
-title: Rust基础入门-第七章
+title: Rust 基础入门 - 第七章
 description: 泛型、特征
 tags: [rust, code]
 sidebar_position: 8
@@ -62,8 +62,8 @@ struct Point<T> {
 }
 
 fn main () {
-    let integer = Point { x: 5, y: 10 };
-    let float = Point { x: 1.0, y: 4.0 };
+    let integer = Point {x: 5, y: 10};
+    let float = Point {x: 1.0, y: 4.0};
 }
 ```
 
@@ -105,9 +105,9 @@ enum Result<T, E> {
 ```
 
 ## 特征 Trait
-Rust中特征Trait的概念和其他语言中的接口很相似，它定义了一些方法，如果一个类型实现了某个特征，那么它就可以调用这些方法。
+Rust 中特征 Trait 的概念和其他语言中的接口很相似，它定义了一些方法，如果一个类型实现了某个特征，那么它就可以调用这些方法。
 
-既定义了**一组可以被共享的行为，只要实现了特征，就可以使用这些行为**
+既定义了 ** 一组可以被共享的行为，只要实现了特征，就可以使用这些行为 **
 
 ### 定义特征
 例如，我们有两个结构体，一个是新闻，一个是微博这两种内容载体，我们想对这两者都实现一个共享的 `summarize` 方法，用来返回一个摘要，那么我们可以定义一个特征 `Summary`，然后在两个结构体中实现这个特征：
@@ -119,7 +119,7 @@ pub trait Summary {
 ```
 这里我们使用 `trait` 关键字定义了一个名为 `Summary` 的特征，它有一个 `summarize` 方法，返回一个字符串。
 
-定义这样一个特征，只是定义了一组行为，但是并没有具体实现，我们需要在结构体中定义实现这个特征的**具体方法**：
+定义这样一个特征，只是定义了一组行为，但是并没有具体实现，我们需要在结构体中定义实现这个特征的 ** 具体方法 **：
 
 ### 实现特征
 还是上面这个例子，为两个结构体实现 `Summary` 特征：
@@ -136,7 +136,7 @@ pub struct News {
 
 impl Summary for News {
     fn summarize(&self) -> String {
-        format!("文章{}, 作者是{}", self.title, self.author)
+        format!(" 文章 {}, 作者是 {}", self.title, self.author)
     }
 }
 
@@ -147,12 +147,12 @@ pub struct Weibo {
 
 impl Summary for Weibo {
     fn summarize(&self) -> String {
-        format!("{}发表了微博{}", self.username, self.content)
+        format!("{} 发表了微博 {}", self.username, self.content)
     }
 }
 fn mian() {
-    let news = News{title: "title".to_string(),author: "wjwei".to_string(), content: "Rust棒极了!".to_string()};
-    let weibo = Weibo{username: "wjwei".to_string(),content: "好像微博没Tweet好用".to_string()};
+    let news = News{title: "title".to_string(),author: "wjwei".to_string(), content: "Rust 棒极了!".to_string()};
+    let weibo = Weibo{username: "wjwei".to_string(),content: " 好像微博没 Tweet 好用 ".to_string()};
 
     println!("{}",post.summarize());
     println!("{}",weibo.summarize());
@@ -166,7 +166,7 @@ fn mian() {
 #### 特征定义和实现的位置（孤儿规则）
 关于特征定义和实现的位置，一个很重要的原则：
 
-**如果为类型 `A` 实现特征 `T` ，那么 `A` 和 `T` 至少一个需要在当前作用域中定义**
+** 如果为类型 `A` 实现特征 `T` ，那么 `A` 和 `T` 至少一个需要在当前作用域中定义 **
 
 也就是说：
 - 如果要实现外部的特征，要先将特征引入到当前作用域中
@@ -180,7 +180,7 @@ fn mian() {
 
 :::
 
-这条规则被称为**孤儿规则**（Orphan Rule），可以保证代码之间不会相互破坏。
+这条规则被称为 ** 孤儿规则 **（Orphan Rule），可以保证代码之间不会相互破坏。
 
 #### 默认实现
 特征中的方法可以有默认实现，这样在实现特征的时候，就不需要再实现这个方法了，比如我们为 `Summary` 特征添加一个默认实现：
@@ -199,7 +199,7 @@ impl Summary for News {}
 
 impl Summary for Weibo {
     fn summarize(&self) -> String {
-        format!("{}发表了微博{}", self.username, self.content)
+        format!("{} 发表了微博 {}", self.username, self.content)
     }
 }
 ```
@@ -224,7 +224,7 @@ pub fn notify<T: Summary>(item: T) {
     println!("Breaking news! {}", item.summarize());
 }
 ```
-结合学过的泛型知识，形如 `<T: Summary>` 的写法被称为**特征约束**（Trait Bound），它表示泛型 `T` 必须实现 `Summary` 特征。
+结合学过的泛型知识，形如 `<T: Summary>` 的写法被称为 ** 特征约束 **（Trait Bound），它表示泛型 `T` 必须实现 `Summary` 特征。
 
 在部分简单场景下，可以使用 `impl Trait` 的简写形式，但是在一些复杂场景下，特征约束可以提供更多的灵活性和语法表现能力，比如：
 
@@ -343,7 +343,7 @@ Rust 提供了 `derive` 宏，可以自动实现一些特征，比如 `Debug`、
 具体所有的特征可以参考 [Rust Reference](https://course.rs/appendix/derive.html)。
 
 ### 特征对象
-对于之前那段[无法编译通过的代码](#函数返回值类型中使用特征约束)，可以使用特征对象来解决。
+对于之前那段 [无法编译通过的代码](# 函数返回值类型中使用特征约束)，可以使用特征对象来解决。
 
 比如这样一个场景，我们想要实现一系列 UI 组件，比如按钮、文本框等，我们无法知道所有的对象类型，只知道的是：
 - 每个 UI 组件都是不同的类型
@@ -383,7 +383,7 @@ struct SelectBox {
 }
 impl Draw for SelectBox {
     fn draw(&self) {
-        // 绘制SelectBox的代码
+        // 绘制 SelectBox 的代码
     }
 }
 ```
@@ -395,12 +395,12 @@ impl Draw for SelectBox {
 <ReferenceList
     data={[
         {
-            title: "Rust语言圣经",
+            title: "Rust 语言圣经 ",
             link: "https://course.rs",
             src: rust,
         },
         {
-            title: "Rust程序设计语言",
+            title: "Rust 程序设计语言 ",
             link: "https://kaisery.github.io/trpl-zh-cn/",
             src: rust,
         },
