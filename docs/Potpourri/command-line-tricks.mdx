@@ -94,7 +94,7 @@ make install ## 一般而言你没权限装到系统目录，所以需要指定�
 <AsciinemaComponent prefix={'https://asciinema.org/a/588645'} rows={'10'} cols={'80'}></AsciinemaComponent>
 
 
-#### 自动建议/补全
+#### 自动建议 / 补全
 
 Fish 会自动根据你的输入，给出建议，比如：
 
@@ -104,28 +104,28 @@ Fish 会自动根据你的输入，给出建议，比如：
 
 :::note
 
-它的建议主要是根据你的history来的，比如我最近执行 `git push`比较多，就会给出这个建议。
+它的建议主要是根据你的 history 来的，比如我最近执行 `git push` 比较多，就会给出这个建议。
 
 :::
 
-- 参数建议，有些命令的参数，对于非英语母语的用户来说，有些记不住，比如`grep`的`--files-without-match`参数，有时候无法写出完整的，这时候输入 `grep --file`，按下 <kbd>Tab</kbd> 键，就会给出参数的含义：
+- 参数建议，有些命令的参数，对于非英语母语的用户来说，有些记不住，比如 `grep` 的 `--files-without-match` 参数，有时候无法写出完整的，这时候输入 `grep --file`，按下 <kbd>Tab</kbd> 键，就会给出参数的含义：
 
 <AsciinemaComponent prefix="https://asciinema.org/a/588660" rows={'10'} cols={'120'}></AsciinemaComponent>
 
 :::note
 
-不仅参数，一些软件的子命令也可以给出补全和含义，只要配置好自己的completions即可
+不仅参数，一些软件的子命令也可以给出补全和含义，只要配置好自己的 completions 即可
 
 :::
 
 
-在安装fish时候，会自动安装一些Linux自带命令的completions，具体目录参见[这里官方文档](https://fishshell.com/docs/current/completions.html),
+在安装 fish 时候，会自动安装一些 Linux 自带命令的 completions，具体目录参见 [这里官方文档](https://fishshell.com/docs/current/completions.html),
 
-比如我经常记不住的sort的参数：
+比如我经常记不住的 sort 的参数：
 
 <AsciinemaComponent prefix="https://asciinema.org/a/588661" rows={'20'} cols={'120'}></AsciinemaComponent>
 
-一些友好的第三方软件在安装时候，也会自动配置completions，或者提供生成completions的命令，比如我常用的`csvtk`和`seqkit`
+一些友好的第三方软件在安装时候，也会自动配置 completions，或者提供生成 completions 的命令，比如我常用的 `csvtk` 和 `seqkit`
 
 ```shell
 seqkit genautocomplete --shell fish --file ~/.config/fish/completions/seqkit.fish
@@ -140,34 +140,94 @@ csvtk genautocomplete --shell fish --file ~/.config/fish/completions/csvtk.fish
 
 如果没有这个，我忘了命令用法，只能去网上搜，所以这大大提示了效率
 
-- /其他补全
+- / 其他补全
 
 还包括但不限于：
 1. 路径建议补全
-2. git分支补全
+2. git 分支补全
 3. 命令历史补全
 4. 环境变量补全
-5. ssh hosts补全
+5. ssh hosts 补全
 6. ...
 
 #### 实用的内置函数
 
-- `string`：字符串处理函数，比如 `string match`，`string replace`，`string split`，`string join`，`string sub`等
+- `string`：字符串处理函数，比如 `string match`，`string replace`，`string split`，`string join`，`string sub` 等
 - `math`：数学函数，这个对我而言比较实用，我在做一些实时统计的时候，要做一些简单的运算，比如：我要统计日志目录中运行成功的数量，并除以总任务的数量，可以这样：
 ```shell
 math (rg 'Successfully completed' -tlog -l|wc -l)/(wc -l ../sample.list |cut -f1 -d' ')
 ```
 语法简洁明了
 - `fish_add_path`: 添加环境变量，比如 `fish_add_path /my/new_software/dir/bin`，这样就可以直接执行 `/my/new_software/dir/bin` 下的命令了
-- 其他的详见[官方文档](https://fishshell.com/docs/current/commands.html)
+- 其他的详见 [官方文档](https://fishshell.com/docs/current/commands.html)
 
 #### 不一样的语法？
 
-Fish 的语法和 Bash 有些不同，其中优劣，各有千秋，都是工具，顺手就行。个人觉得Fish的语法更合我胃口，比如：
+Fish 的语法和 Bash 有些不同，其中优劣，各有千秋，都是工具，顺手就行。个人觉得 Fish 的语法更合我胃口。
+
+## 用 `rg` 替代 `grep`
+
+[rg](https://github.com/BurntSushi/ripgrep) 的全称是 `ripgrep`，是一个用 Rust 写的 grep 工具，速度比原生 grep 和其他替代品比如 ag[更快](https://blog.burntsushi.net/ripgrep/#single-file-benchmarks)
+
+有以下特点：
+- 速度更快，因为
+    + 有限自动机
+    + SIMD
+    + 内存缓冲
+    + 无锁的并行递归目录迭代器
+- 默认递归搜索，不需要`grep -R`
+- 自动遵循 `.gitignore` 文件，不需要额外 `grep --exclude-dir `
+- 指定文件类型搜索，比如 `rg -t py`，不需要额外 `grep -r --include='*.py'`
+- 支持grep的大部分feature
+- 默认高亮搜索结果
+- 等等
+
+:::caution
+
+rg 用 Rust 写的，所以它的正则语法和 grep 不一样，具体参见 [官方文档](https://docs.rs/regex/1/regex/#syntax)
+
+:::
+
+### 安装/使用
+
+Rust写的，就不多说了，直接用 `cargo` 安装：
+
+```shell
+cargo install ripgrep
+```
+大部分用法和 grep 一样，具体参见官方文档或者自动补全解释
+
+## 用 `fd` 替代 `find`
+
+[fd](https://github.com/sharkdp/fd) 是用 Rust 写的 `find` 的替代品，速度更快，语法更简洁，功能更强大。
+
+说实话，我之前特别讨厌 `find`，因为用的频率不是很高，但是每次要用，就记不住参数，而且速度一般，集群上海量文件，每次在主目录搜想要的文件要半天。
+
+相比起来，fd的语法更让我喜欢，比如：
+
+```shell
+## 搜索当前目录下所有文件名包含rs的文件
+find ./ -name "rs"
+
+## fd
+fd rs
+```
+
+### 安装/使用
+
+cargo!
+
+使用方法自己看吧，复制粘贴浪费网络空间。
+
+## 用 `bat` 替代 `cat`
 
 
 
+## `fzf` 模糊搜索文件
+## `fzf.fish` 大整合
 
+
+####
 
 ## 参考资料
 
