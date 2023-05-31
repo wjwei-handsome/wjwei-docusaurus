@@ -84,15 +84,15 @@ make install ## 一般而言你没权限装到系统目录，所以需要指定�
 
 执行结果是否成功，会有不同的颜色区分，比如：
 
-<AsciinemaComponent src="https://asciinema.org/a/588641.cast" rows={10} idleTimeLimit={3} preload={true} />
-
+<AsciinemaComponent prefix={'https://asciinema.org/a/588641'} rows={'10'} cols={'80'}></AsciinemaComponent>
 
 
 #### 路径是否存在提醒
 
 如果命令行中输入的路径存在，会有下划线提示，否则没有，可以避免输入错误路径，如图所示：
 
-![fish-2](https://raw.githubusercontent.com/wjwei-handsome/wwjPic/main/img/20230531165841.png)
+<AsciinemaComponent prefix={'https://asciinema.org/a/588645'} rows={'10'} cols={'80'}></AsciinemaComponent>
+
 
 #### 自动建议/补全
 
@@ -110,7 +110,7 @@ Fish 会自动根据你的输入，给出建议，比如：
 
 - 参数建议，有些命令的参数，对于非英语母语的用户来说，有些记不住，比如`grep`的`--files-without-match`参数，有时候无法写出完整的，这时候输入 `grep --file`，按下 <kbd>Tab</kbd> 键，就会给出参数的含义：
 
-![fish-4](https://raw.githubusercontent.com/wjwei-handsome/wwjPic/main/img/20230531170652.png)
+<AsciinemaComponent prefix="https://asciinema.org/a/588660" rows={'10'} cols={'120'}></AsciinemaComponent>
 
 :::note
 
@@ -123,7 +123,7 @@ Fish 会自动根据你的输入，给出建议，比如：
 
 比如我经常记不住的sort的参数：
 
-![fish-sort](https://raw.githubusercontent.com/wjwei-handsome/wwjPic/main/img/20230531171119.png)
+<AsciinemaComponent prefix="https://asciinema.org/a/588661" rows={'20'} cols={'120'}></AsciinemaComponent>
 
 一些友好的第三方软件在安装时候，也会自动配置completions，或者提供生成completions的命令，比如我常用的`csvtk`和`seqkit`
 
@@ -136,7 +136,7 @@ csvtk genautocomplete --shell fish --file ~/.config/fish/completions/csvtk.fish
 ```
 生成补全建议后效果：
 
-![fish-seqkit](https://raw.githubusercontent.com/wjwei-handsome/wwjPic/main/img/20230531171422.png)
+<AsciinemaComponent prefix="https://asciinema.org/a/588665" rows={'40'} cols={'120'}></AsciinemaComponent>
 
 如果没有这个，我忘了命令用法，只能去网上搜，所以这大大提示了效率
 
