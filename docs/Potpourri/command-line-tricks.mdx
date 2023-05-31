@@ -7,179 +7,174 @@ sidebar_position: 3
 
 import ReferenceList from "@site/src/components/ReferenceList";
 import vscode from "@site/static/img/icon/linux.png";
+import AsciinemaComponent from "../../src/components/AsciinemaComponent";
 
-生物信息吃饭的家伙，离不开 Shell 的命令行操作，其中魅力无穷。其中有一些技巧 / 配置 / 工具，可以让操作更加丝 (zhuang) 滑(bi)。莱次够！
+生物信息吃饭的家伙，离不开 Shell 的命令行操作，其中魅力无穷。其中有一些技巧 / 配置 / 工具，可以让操作更加丝 (zhuang) 滑 (bi)。莱次够！
 
-** 排名不分先后，按字母 **
 
-## autoDocstring
+## Fish Shell 代替 Bash/Zsh
 
-在 Python 开发中，给类或者函数写 docstring 注释是一个很好的习惯
+Bash 是 Linux 系统默认的 Shell，在初学生物信息的时候，不知道被哪篇公众号文章骗了，以为 Bash 是 Basic Shell 的简写，其实并不是，全称是 `Bourne Again Shell`，`Bourne` 是它的作者的名字。
+为什么有个 again 呢，因为这哥们在之前就写过一个 Shell，叫做 Bourne Shell，所以这个是它的升级版，也是目前最常用的 Shell 版本。
 
-autoDocstring 可以根据你的参数和返回值自动生成 docstring 注释模版，往里面填充即可
+后面渐渐熟悉 Linux Shell 操作了，感觉原汁原味的 Bash 无法满足我的一些效率要求，但初期我可以写一些简单的 bash function，比如：
 
-模版类型可更换。
+- 我有时候要对手动装的软件的 binary 目录添加到系统环境变量 PATH:
+```bash
+function add_dir2path() {
+    echo $PATH | grep "${PWD}:" > /dev/null
+    if [$? -ne 0];then
+        echo "export PATH=$PWD:\$PATH" >>$CFG/path.cfg && sbc && tail -1 $CFG/path.cfg
+    else
+        echo -e "\033[35m[WARNING]\033[0m --> Already in PATH" >&2
+    fi
+}
+```
+渐渐的，管理自定义的 `alias`、`functions` 也比较麻烦，有时候会忘记自己写过什么，移植到新环境也比较麻烦，要改各种路径等等。
 
-使用时，输入 `"""`，然后按 <kbd>Tab</kbd> 键，即可生成模版，一气呵成
+后来接触到了 `Zsh`，一开始体验不错，UI 好看，自带功能也多，配合火热的 `oh-my-zsh` 用了一段时间，但是存在的问题就是随着 `.zshrc` 配置的冗余，zsh 越来越慢。
 
-![autoDocstring](https://github.com/NilsJPWerner/autoDocstring/raw/HEAD/images/demo.gif)
+再到后来，接触到了 rust 写的 [starship](https://starship.rs/)，相当惊艳，之前花了大力气配置的各种 PS 变量，只需要自定义简单易读的 `toml` 配置就行了。
 
-## Color Highlight
+终于到了 23 年，把自己集群上的一些稀碎的配置、文件都整理了一些，再了解到了 [Fish Shell](https://fishshell.com/)，虽然官网的样子很复古。
 
-可以在 VSCode 中显示颜色编码所对应的颜色，让人看起来很专业
+Fish 的全称是 `Friendly Interactive Shell`，人如其名，最大的特点就是方便易用，很多之前 Bash/Zsh 需要配置的功能，Fish 开箱即用。
 
-在进行可视化或者前端开发，比如写 R 和 CSS 时，比较方便
+### 安装
 
-没有用法，只要你写了正确的颜色编码，比如 `#147336` 或者 `rgb(255, 255, 255)`，就会显示颜色
-![colorhight](./assets/color-highlight.png)
+#### MacOS 安装
 
-## Dash
+不多说了，本地电脑安装最简单了，`brew` 就完事了
 
-Dash 是个桌面 app，用于快速查看、搜索各种编程语言的文档
+#### Linux 安装
 
-也有集成在 VSCode 中的插件，鼠标选中想要查阅的内容，按下 <kbd>ctrl</kbd>+<kbd>h</kbd>，即可在 Dash 中打开查看
+如果是在有 root 权限的自己服务器上安装，挑选包管理器安装就行。
 
-## Draw.io Integration
+但我是在集群环境上使用的，是没有 root 权限的，所以选择源码安装：
 
-Draw.io 是一个在线的绘图工具，可以绘制流程图、思维导图、UML 图等
+```shell
+# 下载源码
+wget https://github.com/fish-shell/fish-shell/releases/download/3.6.1/fish-3.6.1.tar.xz
+# 解压
+tar -xvf fish-3.6.1.tar.xz
+# 进入目录
+cd fish-3.6.1
+# 配置
+cmake . ## cmake 版本要求详见 README.rst
+# 编译
+make -j8 ## 加加速
+# 安装
+make install ## 一般而言你没权限装到系统目录，所以需要指定安装目录
+```
+### 配置
 
-也可以安装集成在 VSCode 中的插件，用法一样
+#### 设置为默认 Shell
 
-但我现在用 Excalidraw 更多，各有特色
-![drawio](https://github.com/hediet/vscode-drawio/raw/HEAD/docs/demo.gif)
+- 有 root 权限的服务器，可以直接 `chsh -s /usr/local/bin/fish`，然后重新登录即可
+- 没有 root 权限的服务器，比如我的集群，我在 `~/.bash_profile` 中添加 `exec /your/path/to/fish`，然后重新登录即可，
+这样相当于每次登录都会执行 `fish`，就相当于默认了
 
-## Error Lens
+#### 配置主题
 
-可以在多种语言中，突出显示错误的行，并展示错误的消息
+我比较喜欢干净简洁的 `pure` 主题： https://github.com/pure-fish/pure
 
-即装即用，如图所示，比如在 python 中，我没有定义 `a`：
+### 特点
 
-![errorlens](./assets/error-lens.png)
+#### 执行结果颜色区分
 
-对于新手，可以帮助快速找到错误原因；对于老手，遇到低级错误，可以快速扇自己几巴掌
+执行结果是否成功，会有不同的颜色区分，比如：
 
-## Excel Viewer
+<AsciinemaComponent src="https://asciinema.org/a/588641.cast" rows={10} idleTimeLimit={3} preload={true} />
 
-可以用来预览 Excel 文件和 CSV 文件，但我很少用 Excel，CSV 看的比较多
 
-安装后，打开 CSV 文件，点击右上角的按钮就行，或者按 <kbd>shit</kbd>+<kbd>command</kbd>+<kbd>v</kbd> 快捷键即可预览
-![csv-view-1](./assets/csv-view-1.png)
-![csv-view-2](./assets/csv-view-2.png)
 
-支持排序功能
+#### 路径是否存在提醒
 
-## Git Graph
+如果命令行中输入的路径存在，会有下划线提示，否则没有，可以避免输入错误路径，如图所示：
 
-便捷、明了地查看 git 记录，用图的方式展示
+![fish-2](https://raw.githubusercontent.com/wjwei-handsome/wwjPic/main/img/20230531165841.png)
 
-点击每次提交的节点，可以查看具体的修改内容等
+#### 自动建议/补全
 
-![git-graph](https://github.com/mhutchie/vscode-git-graph/raw/master/resources/demo.gif)
+Fish 会自动根据你的输入，给出建议，比如：
 
-## Github Copilot
+- 命令建议，比如 `git` 命令，输入 `gi`，会出现 `git push` 命令的建议，按下 <kbd>Tab</kbd> 键，就会自动补全：
 
-** 这位更是重量级 **
+![fish-3](https://raw.githubusercontent.com/wjwei-handsome/wwjPic/main/img/20230531170114.png)
 
-Github 推出的一个 AI 助手，以 Github 中所有公开的代码作为训练集，还会考虑上下文的情况，来自动补全你可能想写的代码
+:::note
 
-我常常就是鼠标一放，等它给提示，然后一看，如果和我想的一样，夸它一句牛逼；如果比我想的高级，那我就学一下高级写法
+它的建议主要是根据你的history来的，比如我最近执行 `git push`比较多，就会给出这个建议。
 
-总之用过都说牛逼，只不过可能马上要收费了；而且对墙内用户来说速度可能不稳定
+:::
 
-至于版权争论，那不是我考虑的事，先爽着
+- 参数建议，有些命令的参数，对于非英语母语的用户来说，有些记不住，比如`grep`的`--files-without-match`参数，有时候无法写出完整的，这时候输入 `grep --file`，按下 <kbd>Tab</kbd> 键，就会给出参数的含义：
 
-来个例子：我只写了模糊的函数名和参数，它就给我补全了，而且这个函数也没这么烂大街 😅：
+![fish-4](https://raw.githubusercontent.com/wjwei-handsome/wwjPic/main/img/20230531170652.png)
 
-![copilot](./assets/copilot.png)
+:::note
 
-PS: 我在写这个文档的时候，很多也是它给我补全的，谢谢你
+不仅参数，一些软件的子命令也可以给出补全和含义，只要配置好自己的completions即可
 
-## Live Server
+:::
 
-可以快速的开启一个本地服务，用于预览网页，默认端口是 5500
 
-可以修改默认打开的浏览器，支持自动刷新
+在安装fish时候，会自动安装一些Linux自带命令的completions，具体目录参见[这里官方文档](https://fishshell.com/docs/current/completions.html),
 
-![live-server](https://github.com/ritwickdey/vscode-live-server/raw/HEAD/images/Screenshot/vscode-live-server-explorer-menu-demo-1.gif)
+比如我经常记不住的sort的参数：
 
-## Python Environment Manager
+![fish-sort](https://raw.githubusercontent.com/wjwei-handsome/wwjPic/main/img/20230531171119.png)
 
-管理 Python 的虚拟环境，有点鸡肋，我用命令行就行
+一些友好的第三方软件在安装时候，也会自动配置completions，或者提供生成completions的命令，比如我常用的`csvtk`和`seqkit`
 
-![python-env](https://raw.githubusercontent.com/DonJayamanne/vscode-python-manager/environmentManager/resources/demo.gif)
+```shell
+seqkit genautocomplete --shell fish --file ~/.config/fish/completions/seqkit.fish
+```
 
-## Python Type Hint
+```shell
+csvtk genautocomplete --shell fish --file ~/.config/fish/completions/csvtk.fish
+```
+生成补全建议后效果：
 
-在 Python 开发中，写类型标注也是有必要的，这个插件可以帮助你快速生成类型标注
+![fish-seqkit](https://raw.githubusercontent.com/wjwei-handsome/wwjPic/main/img/20230531171422.png)
 
-在变量名后面输入 `:`，上下输入选择即可
+如果没有这个，我忘了命令用法，只能去网上搜，所以这大大提示了效率
 
-![python-type-hint](https://github.com/njqdev/vscode-python-typehint/raw/master/images/demo.gif)
+- /其他补全
 
-## Rainbow CSV
+还包括但不限于：
+1. 路径建议补全
+2. git分支补全
+3. 命令历史补全
+4. 环境变量补全
+5. ssh hosts补全
+6. ...
 
-因为 CSV 用逗号分隔，如果没有颜色，密密麻麻很伤眼
+#### 实用的内置函数
 
-这个插件可以用颜色区分不同的列，方便查看
+- `string`：字符串处理函数，比如 `string match`，`string replace`，`string split`，`string join`，`string sub`等
+- `math`：数学函数，这个对我而言比较实用，我在做一些实时统计的时候，要做一些简单的运算，比如：我要统计日志目录中运行成功的数量，并除以总任务的数量，可以这样：
+```shell
+math (rg 'Successfully completed' -tlog -l|wc -l)/(wc -l ../sample.list |cut -f1 -d' ')
+```
+语法简洁明了
+- `fish_add_path`: 添加环境变量，比如 `fish_add_path /my/new_software/dir/bin`，这样就可以直接执行 `/my/new_software/dir/bin` 下的命令了
+- 其他的详见[官方文档](https://fishshell.com/docs/current/commands.html)
 
-![rainbow-csv](https://i.imgur.com/6eJqeUN.png)
+#### 不一样的语法？
 
-## shellman
+Fish 的语法和 Bash 有些不同，其中优劣，各有千秋，都是工具，顺手就行。个人觉得Fish的语法更合我胃口，比如：
 
-它可以给你提供实用的 shell 代码片段，我当初就是看这个学 shell 的
 
-它官网自带的 [小册子](https://github.com/yousefvand/shellman-ebook)，也是顶中顶
 
-![shellman1](https://github.com/yousefvand/shellman/raw/HEAD/images/for.gif)
-![shellman2](https://github.com/yousefvand/shellman/raw/HEAD/images/math.gif)
-![shellman3](https://github.com/yousefvand/shellman/raw/HEAD/images/banner.gif)
 
-## Todo Tree
-
-在项目开发中，我习惯用 TODO、FIXME、NOTE 等关键词做 ** 注释 **，标记还需要做的目标、需要修复的问题和注意事项等
-
-这个插件可以给这些关键字高亮显示，并在侧面板中用树状结构展示，用来快速查看和定位
-
-关键词、颜色等这些都可以自己配置
-
-![todo-tree](./assets/todo.png)
-
-## 其他
-
-其他大部分都是一些语言自带的官方插件，比如 Python 和自带的格式化器，你可以选择不同的格式化方法和配置项。
-
-还有一些是小众支持，比如预览 svg、dotpot、graghviz 等格式，就不一一列举了
-
-## 外观
-
-### 图标 icons
-
-文件图标 icons 我使用的是 [vscode-icons-mac](https://marketplace.visualstudio.com/items?itemName=wayou.vscode-icons-mac)
-
-![icons](./assets/icons.png)
-
-### 主题
-
-我使用的是 [Shades of Puple](https://marketplace.visualstudio.com/items?itemName=ahmadawais.shades-of-purple)
-
-整体效果我挺喜欢，黑暗 / 明亮模式我都用它
-
-![theme](./assets/theme.png)
-
-不过这东西见仁见智吧，我之前还用一个贼骚的赛伯朋克，一闪一闪的霓虹，挺好看的，就是废眼睛
-
-### 字体
-
-下载安装了 `Operator Mono`，不解释，个人喜好。
-
-** 分享就到这吧，等找到啥好玩有用的再更新！**
 
 ## 参考资料
 
 <ReferenceList
     data={[
         {
-            title: "VSCode 插件市场 ",
+            title: "Fish 官方文档 ",
             link: "https://marketplace.visualstudio.com",
             src: vscode,
         },
