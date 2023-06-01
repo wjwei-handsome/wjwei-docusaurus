@@ -23,7 +23,7 @@ export default function AsciinemaComponent({ prefix , cols, rows}) {
     const url = `${prefix}.cast`;
     return (
         <div>
-            <AsciinemaWidget src={url} theme={'monokai'} loop={true} autoplay={true} preload={true} idleTimeLimit={3} size={'big'} cols={cols} rows={rows}/>
+            <AsciinemaWidget src={url} theme={'solarized-light'} loop={true} size={'big'} cols={cols} rows={rows}/>
         </div>
     );
 }

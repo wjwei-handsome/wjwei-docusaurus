@@ -6,7 +6,8 @@ sidebar_position: 3
 ---
 
 import ReferenceList from "@site/src/components/ReferenceList";
-import vscode from "@site/static/img/icon/linux.png";
+import linux from "@site/static/img/icon/linux.png";
+import github from "@site/static/img/icon/github.png";
 import AsciinemaComponent from "../../src/components/AsciinemaComponent";
 
 生物信息吃饭的家伙，离不开 Shell 的命令行操作，其中魅力无穷。其中有一些技巧 / 配置 / 工具，可以让操作更加丝 (zhuang) 滑 (bi)。莱次够！
@@ -175,10 +176,10 @@ Fish 的语法和 Bash 有些不同，其中优劣，各有千秋，都是工具
     + SIMD
     + 内存缓冲
     + 无锁的并行递归目录迭代器
-- 默认递归搜索，不需要`grep -R`
+- 默认递归搜索，不需要 `grep -R`
 - 自动遵循 `.gitignore` 文件，不需要额外 `grep --exclude-dir `
 - 指定文件类型搜索，比如 `rg -t py`，不需要额外 `grep -r --include='*.py'`
-- 支持grep的大部分feature
+- 支持 grep 的大部分 feature
 - 默认高亮搜索结果
 - 等等
 
@@ -188,9 +189,9 @@ rg 用 Rust 写的，所以它的正则语法和 grep 不一样，具体参见 [
 
 :::
 
-### 安装/使用
+### 安装 / 使用
 
-Rust写的，就不多说了，直接用 `cargo` 安装：
+Rust 写的，就不多说了，直接用 `cargo` 安装：
 
 ```shell
 cargo install ripgrep
@@ -203,17 +204,17 @@ cargo install ripgrep
 
 说实话，我之前特别讨厌 `find`，因为用的频率不是很高，但是每次要用，就记不住参数，而且速度一般，集群上海量文件，每次在主目录搜想要的文件要半天。
 
-相比起来，fd的语法更让我喜欢，比如：
+相比起来，fd 的语法更让我喜欢，比如：
 
 ```shell
-## 搜索当前目录下所有文件名包含rs的文件
+## 搜索当前目录下所有文件名包含 rs 的文件
 find ./ -name "rs"
 
 ## fd
 fd rs
 ```
 
-### 安装/使用
+### 安装 / 使用
 
 cargo!
 
@@ -221,13 +222,169 @@ cargo!
 
 ## 用 `bat` 替代 `cat`
 
+bat 是用 Rust 写的 cat 的替代品，有以下特点：
+- 语法高亮： 支持绝大部分主流语言语法高亮
+- Git 集成：支持显示文件修改前后的差异
+- 自动分页：支持自动分页，不需要 `cat | less`
+- 可显示不可见字符：比如空格，tab，换行符等
+- 涵盖原生 cat 的所有功能
 
+### 安装 / 使用
+
+cargo/ 自行查阅
+
+### 备注
+
+实际上，我单独使用 bat 的情况不多，我个人基本很少在终端阅读代码，更偏好编辑器。
 
 ## `fzf` 模糊搜索文件
+
+这位是重量级，是一个命令行模糊搜索工具，支持按文件名、文件内容搜索匹配，配合自定义的搜索命令，可以提升效率。用 Golang 编写。
+
+### 安装
+
+```shell
+## 很简单
+git clone https://github.com/junegunn/fzf.git ~/.fzf
+~/.fzf/install
+```
+
+### 使用
+
+最简单的就是在当前目录直接使用，也可以接收 stdin，比如用 `fd` 来过滤 `.gitignore` 文件，然后用 `fzf` 来模糊搜索。
+
+可以上下键选择，按 <kbd>Tab</kbd> 可以多选条目，按 <kbd>Enter</kbd> 确认选择，会将选择的文件路径输出到 stdout
+
+<AsciinemaComponent prefix="https://asciinema.org/a/588840"/>
+
+### 配置
+
+fzf 默认查找文件用的是系统自带的 `find` 命令，但是这个命令的速度比较慢，可以用 `fd` 来替代，速度会快很多。
+
+按照官方文档所述，改变 `$FZF_DEFAULT_COMMAND` 变量即可，比如替换为：
+
+```shell
+set -g FZF_DEFAULT_COMMAND 'fd --exclude={.git,.idea,target,node_modules,build} --type f'
+```
+
+其他具体配置可参考官方文档。
+
+### 效率
+
+有时候会在一个比较大的项目目录中，忘记了自己要找的文件的名字，用这个就比较方便。
+
 ## `fzf.fish` 大整合
 
+其实上面这四个 Linux 原生工具的替代品，每一个都并不是缺一不可的，但是如果能够将它们整合起来，才是提高效率的究级体。
 
-####
+[`fzf.fish`](https://github.com/PatrickF1/fzf.fish) 是一个 Fish 插件，实际上就是一系列 Fish 函数，来整合 `fzf`、`fd`、`bat`、`fish` 这
+几样强力工具。
+
+### 搜索当前目录
+这个是用的最多的，对我而言有两种用法：
+1. 进入了一个项目目录，忘记了要寻找、** 预览 ** 文件的的名字，可以直接按下 <kbd>Ctrl</kbd> + <kbd>z</kbd>，然后输入关键字，就可以模糊搜索了：
+
+<AsciinemaComponent prefix="https://asciinema.org/a/588846" />
+
+可以看到，查找、预览比较快速，有时候会忘记这个文件的内容长什么样子了，也可以看一眼来确定。
+
+当然，想根据文件内容来查找也可以，后面我会 ** 自定义一个函数命令 ** 来实现。
+
+2. 第二种用法相对实用，在使用很多生物信息软件时，大部分都要指定一些文件，比如 `fa/fq/gff/bed` 等，有时候写不出具体的路径，又要重开命令行去寻找，然后复制粘贴路径。
+有了这个快捷键，再配合输入的已知前缀 token，就可以快速找到文件了，比如我要找一个 `fa` 文件，我记得前面的路径是 `~/vg/`，后面忘了，就可以这样：
+
+<AsciinemaComponent prefix="https://asciinema.org/a/588847" cols="140" rows="20" />
+
+### 搜索历史记录
+实际上我用这个比较少，因为大部分都会帮我自动补全建议，我很少主动去模糊搜索历史记录
+
+### 搜索环境变量
+这个倒是比较方便，但用的频率也不是很高，用法简单，比如：
+
+<AsciinemaComponent prefix="https://asciinema.org/a/588850" />
+
+### 在当前目录搜索文件内容
+
+这个功能在原生的 `fzf.fish` 中并没实现，但我这个需求还比较常用，那么怎么实现呢？自己写一个就行
+
+模仿 `fzf.fish` 中 [`_fzf_search_directory`](https://github.com/PatrickF1/fzf.fish/blob/main/functions/_fzf_search_directory.fish) 的写法，写一个 `_fzf_grep_current_dir.fish`，然后放到 `~/.config/fish/functions/` 目录下
+
+然后修改 `~/.config/fish/functions/fzf_configure_bindings.fish` 其中的键盘绑定，将 <kbd>Ctrl</kbd>+<kbd>g</kbd> 绑定到 `_fzf_grep_current_dir` 函数上，效果如下：
+
+<AsciinemaComponent prefix="https://asciinema.org/a/588853" />
+
+可以实现以下特征：
+1. 搜索当前目录下的所有文件
+2. 高亮匹配的关键字
+3. 实时预览搜索内容
+4. 展示匹配行号、行数
+
+函数实现如下：
+```shell title=~/.config/fish/functions/_fzf_grep_current_dir.fish showLineNumbers
+ function _fzf_grep_current_dir --description "Search current directory content for current token. Replace the current token with the selected file paths."
+    # Make sure that fzf uses fish as shell.
+    set --local --export SHELL (command --search fish)
+
+    set rg_cmd rg --color=always --smart-case --no-heading --count --auto-hybrid-regex
+    set token (commandline --current-token | string unescape)
+
+    set fzf_arguments --multi --ansi --disabled --delimiter=: --query=$token \
+        --preview='rg --smart-case --auto-hybrid-regex --pretty --context 2 {q} {1}' \
+	#--preview="_fzf_preview_file {} |rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 'CIMBL' || rg --ignore-case --pretty --context 10 'CIMBL' {}" \
+	# reload the search when the query change
+	--bind "change:reload:$rg_cmd {q} || true"
+
+    set file_paths_selected
+    for file in ($rg_cmd $token | _fzf_wrapper $fzf_arguments)
+       set --append file_paths_selected (string split : $file)[1]
+    end
+
+    if test $status -eq 0
+        commandline --current-token --replace -- (string escape -- $file_paths_selected | string join ' ')
+    end
+
+    commandline --function repaint
+end
+```
+
+### 安装 / 配置
+
+#### 安装
+
+首先需要安装 `fish`、`fzf`、`fd`、`bat`，然后安装 `fzf.fish` 插件
+
+```shell
+fisher install PatrickF1/fzf.fish
+```
+#### 配置
+
+基本开箱即用，常用的就是修改 `fzf` 的参数和键盘绑定，具体参考 [官方文档](https://github.com/PatrickF1/fzf.fish#configuration)
+
+## 使用 zoxide 来快速改变目录
+
+`cd` 是日常工作中最常见的命令了，但是存在一个痛点在于，随着项目和目录的增多，有时候路径的深度也不断增加，在切换目录时，要输入很长的路径
+虽然可以一路 <kbd>Tab</kbd> 补全，但还是多了很多不必要的操作。特别是有些目录，一天要进好多次，主要是心疼键盘。
+
+那么之前其实有过一些解决方案 / 产品，比如 `z`、`autojump`，但是 [`zoxide`](https://github.com/ajeetdsouza/zoxide) 的出现，大大加快了速度，提升了使用体验。
+
+### 安装配置
+
+`zoxide` 用 Rust 实现，所以 cargo
+
+配置，根据不同的 shell 来，Fish 如下：
+
+```shell
+zoxide init fish | source
+```
+添加到 `~/.config/fish/config.fish` 即可。
+
+### 使用
+
+不多说，智能好用就完事了，它的原理是会根据你的历史记录、最近是否访问过来计算一个权重，然后根据权重来排序。
+
+用的时候，`z` 后面跟一个模糊的名称，然后按 <kbd>Tab</kbd> 选择补全，就可以快速切换目录了，比如我只记得 `crus`，不想输入前缀路径：
+
+<AsciinemaComponent prefix="https://asciinema.org/a/588858" />
 
 ## 参考资料
 
@@ -235,8 +392,33 @@ cargo!
     data={[
         {
             title: "Fish 官方文档 ",
-            link: "https://marketplace.visualstudio.com",
-            src: vscode,
+            link: "https://fishshell.com/docs/current/index.html",
+            src: linux,
+        },
+        {
+            title: "ripgrep",
+            link: "https://github.com/BurntSushi/ripgrep",
+            src: github,
+        },
+        {
+            title: "fd-find",
+            link: "https://github.com/sharkdp/fd",
+            src: github,
+        },
+        {
+            title: "bat",
+            link: "https://github.com/sharkdp/bat",
+            src: github,
+        },
+        {
+            title: "fzf",
+            link: "https://github.com/junegunn/fzf",
+            src: github,
+        },
+        {
+            title: "zoxide",
+            link: "https://github.com/ajeetdsouza/zoxide",
+            src: github,
         },
     ]}
 />
