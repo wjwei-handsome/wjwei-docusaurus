@@ -84,8 +84,8 @@ export const features: feature[] = [
   {
     title: "Enthused To CS",
     sources: {
-      light: "/img/programming.svg",
-      dark: "/img/programming.svg",
+      light: "/img/cs.png",
+      dark: "/img/cs.png",
     },
     description: (
       <>
@@ -101,8 +101,8 @@ export const features: feature[] = [
   {
     title: "Love My Life",
     sources: {
-      light: "/img/trip.svg",
-      dark: "/img/trip.svg",
+      light: "/img/life.png",
+      dark: "/img/life.png",
     },
     description: (
       <>
@@ -119,8 +119,8 @@ export const features: feature[] = [
   {
     title: "Bland Graduatestudent",
     sources: {
-      light: "/img/scientist.svg",
-      dark: "/img/scientist.svg",
+      light: "/img/research.png",
+      dark: "/img/research.png",
     },
     description: (
       <>
@@ -129,7 +129,7 @@ export const features: feature[] = [
         <ul>
           <li>Bio-database architecture and development</li>
           <li>Graphic genomics</li>
-          <li>Bioinfomatic kits development</li>
+          <li>Bioinformatic kits development</li>
           <li>🥱</li>
         </ul>
       </>
