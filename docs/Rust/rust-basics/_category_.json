@@ -4,5 +4,6 @@
     "link": {
         "type": "generated-index",
         "description": "Rust基础语法、数据类型、项目结构等"
-    }
+    },
+    "collapsed": false
 }

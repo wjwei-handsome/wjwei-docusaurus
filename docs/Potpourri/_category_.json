@@ -5,5 +5,6 @@
         "type": "generated-index",
         "description": "个人常用的工具和大杂烩",
         "image": "/img/icon/tools.png"
-    }
+    },
+    "collapsed": false
 }
