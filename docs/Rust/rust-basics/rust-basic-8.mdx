@@ -342,52 +342,8 @@ Rust 提供了 `derive` 宏，可以自动实现一些特征，比如 `Debug`、
 
 具体所有的特征可以参考 [Rust Reference](https://course.rs/appendix/derive.html)。
 
-### 特征对象
-对于之前那段 [无法编译通过的代码](# 函数返回值类型中使用特征约束)，可以使用特征对象来解决。
-
-比如这样一个场景，我们想要实现一系列 UI 组件，比如按钮、文本框等，我们无法知道所有的对象类型，只知道的是：
-- 每个 UI 组件都是不同的类型
-- 需要一个统一的类型来处理这些对象
-- 每个对象都需要实现 `Draw` 特征
-
-如果让我用 `Python` 来实现，我会定义一个抽象顶层的类，并定义一个 `draw` 方法，然后让所有的 UI 组件继承这个类，并重写 `draw` 方法。
-
-在 Rust 中，可以使用特征对象来实现这个功能。
-
-### 定义特征对象
-
-先对 UI 组件定义一个特征：
-
-```rust
-pub trait Draw {
-    fn draw(&self);
-}
-```
-然后定义几个组件：
-
-```rust
-pub struct Button {
-    pub width: u32,
-    pub height: u32,
-    pub label: String,
-}
-impl Draw for Button {
-    fn draw(&self) {
-        // 绘制按钮的代码
-    }
-}
-struct SelectBox {
-    width: u32,
-    height: u32,
-    options: Vec<String>,
-}
-impl Draw for SelectBox {
-    fn draw(&self) {
-        // 绘制 SelectBox 的代码
-    }
-}
-```
-
+## 进阶内容
+详见后续进阶章节。
 
 
 ## 参考资料
