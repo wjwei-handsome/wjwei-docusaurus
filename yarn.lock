@@ -1745,6 +1745,13 @@
   dependencies:
     "@iconify/types" "*"
 
+"@iconify-json/logos@^1.1.37":
+  version "1.1.37"
+  resolved "https://registry.npmjs.org/@iconify-json/logos/-/logos-1.1.37.tgz"
+  integrity sha512-H2S8frTEznk6paX2kMzeUGn4KSiykghvO0b8UvEDd1fFFzt0WxCXpP1tBv67XaWK99e6JgA34hhv4lRGAm1hJg==
+  dependencies:
+    "@iconify/types" "*"
+
 "@iconify-json/ph@^1.1.6":
   version "1.1.6"
   resolved "https://registry.npmjs.org/@iconify-json/ph/-/ph-1.1.6.tgz"
@@ -2147,6 +2154,16 @@
   dependencies:
     "@slidev/types" "0.43.5"
     js-yaml "^4.1.0"
+
+"@slidev/theme-apple-basic@^0.20.0":
+  version "0.20.0"
+  resolved "https://registry.npmjs.org/@slidev/theme-apple-basic/-/theme-apple-basic-0.20.0.tgz"
+  integrity sha512-sjgxAyn63TNHsiwT/Iz2D8IjpuOg/x8l+nG2TTH3zg8XChIo7uYcNNApWH+i5zuBfaNHHUOaGLPaZw5s6fINQg==
+  dependencies:
+    "@slidev/types" "^0.22.7"
+    codemirror-theme-vars "^0.1.1"
+    prism-theme-vars "^0.2.2"
+    theme-vitesse "^0.1.12"
 
 "@slidev/theme-default@^0.21.2":
   version "0.21.2"
@@ -2973,7 +2990,7 @@
     "@vue/compiler-core" "3.3.4"
     "@vue/shared" "3.3.4"
 
-"@vue/compiler-sfc@^3.0.2 || ^2.7.0", "@vue/compiler-sfc@3.3.4":
+"@vue/compiler-sfc@^3.0.2 || ^2.7.0", "@vue/compiler-sfc@^3.2.20", "@vue/compiler-sfc@3.3.4":
   version "3.3.4"
   resolved "https://registry.npmjs.org/@vue/compiler-sfc/-/compiler-sfc-3.3.4.tgz"
   integrity sha512-6y/d8uw+5TkCuzBkgLS0v3lSM3hJDntFEiUORM11pQ/hKvkhSKZrXW6i69UyXlJQisJxuUEJKAWEqWbWsLeNKQ==
@@ -3891,7 +3908,7 @@ cheerio@^1.0.0-rc.12, cheerio@^1.0.0-rc.3:
     parse5 "^7.0.0"
     parse5-htmlparser2-tree-adapter "^7.0.0"
 
-chokidar@^3.4.2, chokidar@^3.5.3:
+chokidar@^3.4.2, chokidar@^3.5.3, "chokidar@>=3.0.0 <4.0.0":
   version "3.5.3"
   resolved "https://registry.npmmirror.com/chokidar/-/chokidar-3.5.3.tgz"
   integrity sha512-Dr3sfKRP6oTcjf2JmUmFJfeVMvXBdegxB0iVQ5eb2V10uFJUCAS8OByZdVAyVb8xXNz3GjjTgj9kLWsZTqE6kw==
@@ -4367,12 +4384,28 @@ css-tree@^1.1.2, css-tree@^1.1.3:
     mdn-data "2.0.14"
     source-map "^0.6.1"
 
+css-tree@^2.2.1:
+  version "2.3.1"
+  resolved "https://registry.npmjs.org/css-tree/-/css-tree-2.3.1.tgz"
+  integrity sha512-6Fv1DV/TYw//QF5IzQdqsNDjx/wc8TrMBZsqjL9eW01tWb7R7k/mq+/VXfJCl7SoD5emsJop9cOByJZfs8hYIw==
+  dependencies:
+    mdn-data "2.0.30"
+    source-map-js "^1.0.1"
+
 css-tree@^2.3.1:
   version "2.3.1"
   resolved "https://registry.npmjs.org/css-tree/-/css-tree-2.3.1.tgz"
   integrity sha512-6Fv1DV/TYw//QF5IzQdqsNDjx/wc8TrMBZsqjL9eW01tWb7R7k/mq+/VXfJCl7SoD5emsJop9cOByJZfs8hYIw==
   dependencies:
     mdn-data "2.0.30"
+    source-map-js "^1.0.1"
+
+css-tree@~2.2.0:
+  version "2.2.1"
+  resolved "https://registry.npmjs.org/css-tree/-/css-tree-2.2.1.tgz"
+  integrity sha512-OA0mILzGc1kCOCSJerOeqDxDQ4HOh+G8NbOJFOTgOCzpw7fCBubk0fEyxp8AgOL/jvLgYA/uV0cMbe43ElF1JA==
+  dependencies:
+    mdn-data "2.0.28"
     source-map-js "^1.0.1"
 
 css-what@^6.0.1, css-what@^6.1.0:
@@ -4452,6 +4485,13 @@ csso@^4.2.0:
   integrity sha512-wvlcdIbf6pwKEk7vHj8/Bkc0B4ylXZruLvOgs9doS5eOsOpuodOV2zJChSpkp+pRpYQLQMeF04nr3Z68Sta9jA==
   dependencies:
     css-tree "^1.1.2"
+
+csso@^5.0.5:
+  version "5.0.5"
+  resolved "https://registry.npmjs.org/csso/-/csso-5.0.5.tgz"
+  integrity sha512-0LrrStPOdJj+SPCCrGhzryycLjwcgUSHBtxNA8aIDxf0GLsRh1cKYhB00Gd1lDOS4yGH69+SNn13+TWbVHETFQ==
+  dependencies:
+    css-tree "~2.2.0"
 
 csstype@^3.0.2, csstype@^3.1.0, csstype@^3.1.1, csstype@^3.1.2:
   version "3.1.2"
@@ -6383,6 +6423,11 @@ immer@^9.0.7:
   resolved "https://registry.npmmirror.com/immer/-/immer-9.0.15.tgz"
   integrity sha512-2eB/sswms9AEUSkOm4SbV5Y7Vmt/bKRwByd52jfLkW4OLYeaTP3EEiJ9agqU0O/tq6Dk62Zfj+TJSqfm1rLVGQ==
 
+immutable@^4.0.0:
+  version "4.3.4"
+  resolved "https://registry.npmjs.org/immutable/-/immutable-4.3.4.tgz"
+  integrity sha512-fsXeu4J4i6WNWSikpI88v/PcVflZz+6kMhUfIwc5SY+poQRPnaf5V7qds6SUyUN3cVxEzuCab7QIoLOQ+DQ1wA==
+
 import-fresh@^3.1.0, import-fresh@^3.2.1, import-fresh@^3.3.0:
   version "3.3.0"
   resolved "https://registry.npmmirror.com/import-fresh/-/import-fresh-3.3.0.tgz"
@@ -7187,6 +7232,11 @@ mdn-data@2.0.14:
   resolved "https://registry.npmmirror.com/mdn-data/-/mdn-data-2.0.14.tgz"
   integrity sha512-dn6wd0uw5GsdswPFfsgMp5NSB0/aDe6fK94YJV/AJDYXL6HVLWBsxeq7js7Ad+mU2K9LAlwpk6kN2D5mwCPVow==
 
+mdn-data@2.0.28:
+  version "2.0.28"
+  resolved "https://registry.npmjs.org/mdn-data/-/mdn-data-2.0.28.tgz"
+  integrity sha512-aylIc7Z9y4yzHYAJNuESG3hfhC+0Ibp/MAMiaOZgNv4pmEdFyfZhhhny4MNiAfWdBQ1RQ2mfDWmM1x8SvGyp8g==
+
 mdn-data@2.0.30:
   version "2.0.30"
   resolved "https://registry.npmjs.org/mdn-data/-/mdn-data-2.0.30.tgz"
@@ -7741,6 +7791,11 @@ no-case@^3.0.4:
     lower-case "^2.0.2"
     tslib "^2.0.3"
 
+node-bin-setup@^1.0.0:
+  version "1.1.3"
+  resolved "https://registry.npmjs.org/node-bin-setup/-/node-bin-setup-1.1.3.tgz"
+  integrity sha512-opgw9iSCAzT2+6wJOETCpeRYAQxSopqQ2z+N6BXwIMsQQ7Zj5M8MaafQY8JMlolRR6R1UXg2WmhKp0p9lSOivg==
+
 node-emoji@^1.10.0:
   version "1.11.0"
   resolved "https://registry.npmmirror.com/node-emoji/-/node-emoji-1.11.0.tgz"
@@ -7769,6 +7824,13 @@ node-releases@^2.0.13:
   version "2.0.13"
   resolved "https://registry.npmjs.org/node-releases/-/node-releases-2.0.13.tgz"
   integrity sha512-uYr7J37ae/ORWdZeQ1xxMJe3NtdmqMC/JZK+geofDrkLUApKRHPd18/TxtBOJ4A0/+uUIliorNrfYV6s1b02eQ==
+
+node@^20.6.0:
+  version "20.6.0"
+  resolved "https://registry.npmjs.org/node/-/node-20.6.0.tgz"
+  integrity sha512-aoXMnA7DfNRwlmR3u++rYM9M4tnzmXYezVSrK/8vBsrwLF1TVcyjYO0RzX2unJxXfKWIl9Kfo0WLoMs3atWOqQ==
+  dependencies:
+    node-bin-setup "^1.0.0"
 
 non-layered-tidy-tree-layout@^2.0.2:
   version "2.0.2"
@@ -9235,6 +9297,15 @@ safe-buffer@5.2.1:
   resolved "https://registry.npmmirror.com/safer-buffer/-/safer-buffer-2.1.2.tgz"
   integrity sha512-YZo3K82SD7Riyi0E1EQPojLz7kpepnSQI9IyPbHHg1XXXevb5dJI7tpyN2ADxGcQbHG7vcyRHk0cbwqcQriUtg==
 
+sass@*:
+  version "1.68.0"
+  resolved "https://registry.npmjs.org/sass/-/sass-1.68.0.tgz"
+  integrity sha512-Lmj9lM/fef0nQswm1J2HJcEsBUba4wgNx2fea6yJHODREoMFnwRpZydBnX/RjyXw2REIwdkbqE4hrTo4qfDBUA==
+  dependencies:
+    chokidar ">=3.0.0 <4.0.0"
+    immutable "^4.0.0"
+    source-map-js ">=0.6.2 <2.0.0"
+
 sax@^1.2.4:
   version "1.2.4"
   resolved "https://registry.npmmirror.com/sax/-/sax-1.2.4.tgz"
@@ -9599,7 +9670,7 @@ sort-css-media-queries@2.1.0:
   resolved "https://registry.npmjs.org/sort-css-media-queries/-/sort-css-media-queries-2.1.0.tgz"
   integrity sha512-IeWvo8NkNiY2vVYdPa27MCQiR0MN0M80johAYFVxWWXQ44KU84WNxjslwBHmc/7ZL2ccwkM7/e6S5aiKZXm7jA==
 
-source-map-js@^1.0.1, source-map-js@^1.0.2:
+source-map-js@^1.0.1, source-map-js@^1.0.2, "source-map-js@>=0.6.2 <2.0.0":
   version "1.0.2"
   resolved "https://registry.npmmirror.com/source-map-js/-/source-map-js-1.0.2.tgz"
   integrity sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==
@@ -9879,6 +9950,18 @@ svgo@^2.7.0, svgo@^2.8.0:
     csso "^4.2.0"
     picocolors "^1.0.0"
     stable "^0.1.8"
+
+svgo@^3.0.2:
+  version "3.0.2"
+  resolved "https://registry.npmjs.org/svgo/-/svgo-3.0.2.tgz"
+  integrity sha512-Z706C1U2pb1+JGP48fbazf3KxHrWOsLme6Rv7imFBn5EnuanDW1GPaA/P1/dvObE670JDePC3mnj0k0B7P0jjQ==
+  dependencies:
+    "@trysound/sax" "0.2.0"
+    commander "^7.2.0"
+    css-select "^5.1.0"
+    css-tree "^2.2.1"
+    csso "^5.0.5"
+    picocolors "^1.0.0"
 
 tapable@^1.0.0:
   version "1.1.3"
@@ -10620,6 +10703,14 @@ vite-plugin-windicss@^1.9.1:
     debug "^4.3.4"
     kolorist "^1.8.0"
     windicss "^3.5.6"
+
+vite-svg-loader@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.npmjs.org/vite-svg-loader/-/vite-svg-loader-4.0.0.tgz"
+  integrity sha512-0MMf1yzzSYlV4MGePsLVAOqXsbF5IVxbn4EEzqRnWxTQl8BJg/cfwIzfQNmNQxZp5XXwd4kyRKF1LytuHZTnqA==
+  dependencies:
+    "@vue/compiler-sfc" "^3.2.20"
+    svgo "^3.0.2"
 
 "vite@^2.0.0 || ^3.0.0 || ^4.0.0", "vite@^2.0.0 || ^3.0.0-0 || ^4.0.0", "vite@^2.0.1 || ^3.0.0 || ^4.0.0", "vite@^2.9.0 || ^3.0.0-0 || ^4.0.0", "vite@^3.0.0 || ^4.0.0", "vite@^3.1.0 || ^4.0.0", vite@^4.0.0, vite@^4.4.9:
   version "4.4.9"
