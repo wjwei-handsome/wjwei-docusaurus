@@ -151,6 +151,10 @@ async function CreateConfig() {
                             {
                                 label: "💃JingyunLuo's Blog",
                                 href: 'https://jingyunluo.github.io/',
+                            },
+                            {
+                                label: "🎤️talks",
+                                href: "/talks/",
                             }
                             // {
                             //     type: 'doc',
