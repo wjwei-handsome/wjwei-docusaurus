@@ -35,13 +35,13 @@ async function CreateConfig() {
         tagline: '&quot;My Beatuifal Dark Twisted Fantsty&quot;',
         url: 'https://www.wjwei.blog',
         baseUrl: '/',
-        onBrokenLinks: 'throw',
+        onBrokenLinks: 'ignore',
         onBrokenMarkdownLinks: 'warn',
-        favicon: 'img/favicon.ico',
+        favicon: 'img/Avatar-s.png',
 
         // GitHub pages deployment config.
         // If you aren't using GitHub pages, you don't need these.
-        organizationName: 'maizego', // Usually your GitHub org/user name.
+        organizationName: 'wjwei-handsome', // Usually your GitHub org/user name.
         projectName: 'wjwei-docusaurus', // Usually your repo name.
 
         // Even if you don't use internalization, you can use this field to set useful
