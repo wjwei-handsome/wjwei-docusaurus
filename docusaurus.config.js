@@ -41,7 +41,7 @@ async function CreateConfig() {
 
         // GitHub pages deployment config.
         // If you aren't using GitHub pages, you don't need these.
-        organizationName: 'wjwei-handsome', // Usually your GitHub org/user name.
+        organizationName: 'Wenjiewei', // Usually your GitHub org/user name.
         projectName: 'wjwei-docusaurus', // Usually your repo name.
 
         // Even if you don't use internalization, you can use this field to set useful

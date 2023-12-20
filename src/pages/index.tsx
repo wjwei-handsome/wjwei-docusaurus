@@ -24,7 +24,7 @@ import styles from './index.module.css';
 // import styles from "./styles.module.css";
 
 function HomepageHeader() {
-  const {siteConfig} = useDocusaurusContext();
+  const { siteConfig } = useDocusaurusContext();
   return (
     <header className={clsx('hero hero--primary', styles.heroBanner)}>
       <div className="container">
@@ -60,31 +60,50 @@ const slides = [
       </div>
     </div>
   </header>,
+  <header
+    className={clsx("hero hero--primary", styles.heroBanner, styles.slide)}>
+    <img className={styles.bkgimg} src="/img/westlake-starbucks.jpg" />
+    <div className={clsx("container", styles.storycontainer)}>
+      <h1 className="hero__title">志在必得</h1>
+      <p className="hero__subtitle">西湖大学面试前的小幸运🍀</p>
+      <div className={styles.button}>
+        <Link
+          className={clsx(
+            "button button--outline button--secondary button--lg",
+          )}
+          to="/blog/westlake-interview">
+          Read more
+        </Link>
+      </div>
+    </div>
+  </header>,
+  <header
+    className={clsx("hero hero--primary", styles.heroBanner, styles.slide)}>
+    <img className={styles.bkgimg} src="/img/test.jpg" />
+    <div className={clsx("container", styles.storycontainer)}>
+      <h1 className="hero__title">满月🌕入网</h1>
+      <p className="hero__subtitle">拍摄于 HZAU-三运</p>
+    </div>
+  </header>,
   <div
-  className={clsx(styles.heroBanner, styles.slide)}
-  style={{
-    backgroundImage: "linear-gradient(135deg,#4071BE, #ABCBE3)",
-  }}>
-  {/* <h2 className={styles.slideHeading} style={{ color: "white" }}>
-    ZEAMAP
-  </h2>
-  <h3 className={styles.slideHeading} style={{ color: "white" }}>
-  A comprehensive database adapted to the maize multi-omics era
-  </h3> */}
-  <img src="/img/zeamap.png" className={styles.bkgimg} />
-  <div className={clsx(styles.button, styles.readMore)}>
-    <Link
-      className="button button--outline button--lg"
-      style={{ color: "white" }}
-      href="https://zeamap.com">
-      <h1 className="hero__title">ZEAMAP</h1>
-    </Link>
+    className={clsx(styles.heroBanner, styles.slide)}
+    style={{
+      backgroundImage: "linear-gradient(135deg,#4071BE, #ABCBE3)",
+    }}>
+    <img src="/img/zeamap.png" className={styles.bkgimg} />
+    <div className={clsx(styles.button, styles.readMore)}>
+      <Link
+        className="button button--outline button--lg"
+        style={{ color: "white" }}
+        href="https://zeamap.com">
+        <h1 className="hero__title">ZEAMAP</h1>
+      </Link>
+    </div>
   </div>
-</div>,
 ];
 
 export default function Home(): JSX.Element {
-  const {siteConfig} = useDocusaurusContext();
+  const { siteConfig } = useDocusaurusContext();
   const [buttonVisible, setButtonVisible] = useState(false);
   return (
     <Layout
@@ -108,7 +127,7 @@ export default function Home(): JSX.Element {
           onMouseLeave={() => {
             setButtonVisible(false);
           }}>
-        <Slider>
+          <Slider>
             {slides.map((elem, idx) => (
               <Slide key={idx} index={idx}>
                 {elem}
@@ -140,7 +159,7 @@ export default function Home(): JSX.Element {
             ))}
           </div>
         </div>
-        </CarouselProvider>
+      </CarouselProvider>
       <main>
         <HomepageFeatures />
       </main>

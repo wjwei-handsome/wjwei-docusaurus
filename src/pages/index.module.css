@@ -49,17 +49,28 @@
 
 .logo {
     background-color: white;
-    padding: 25px;
+    padding: 10px;
     border-radius: 50%;
-    width: 250px;
+    width: 25%;
+    height: 25%;
+}
+
+.storycontainer {
+    display: flex;
+    margin-left: 10%;
+    margin-right: 10%;
+    flex-direction: column;
+    align-items: flex-start;
+    z-index: 1;
 }
 
 .bkgimg {
     position: absolute;
-    right: calc(30% - 400px);
+    /* right: calc(30% - 400px); */
+    right: 0;
     top: 0;
     max-width: none;
-    max-height: 550px;
+    max-height: 100%;
     overflow: hidden;
     z-index: 0;
 }
@@ -161,13 +172,22 @@
         height: 400px;
     }
     .logo {
-        width: 90px;
-        padding: 15px;
+        width: 25%;
+        padding: 10px;
+        height: 25%;
     }
     .bkgimg {
-        right: -10rem;
+        /* right: -10rem; */
+        /* top: 0; */
+        /* max-height: 400px; */
+        position: absolute;
+        /* right: calc(30% - 400px); */
+        right: 0;
         top: 0;
-        max-height: 400px;
+        max-width: none;
+        max-height: 100%;
+        overflow: hidden;
+        z-index: 0;
     }
     .slideHeading {
         left: 5rem;

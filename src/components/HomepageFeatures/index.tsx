@@ -85,7 +85,7 @@ export const features: feature[] = [
     title: "Enthused To CS",
     sources: {
       light: "/img/cs.png",
-      dark: "/img/cs.png",
+      dark: "/img/cs-dark.png",
     },
     description: (
       <>
@@ -102,7 +102,7 @@ export const features: feature[] = [
     title: "Love My Life",
     sources: {
       light: "/img/life.png",
-      dark: "/img/life.png",
+      dark: "/img/life-dark.png",
     },
     description: (
       <>
@@ -120,7 +120,7 @@ export const features: feature[] = [
     title: "Bland Graduatestudent",
     sources: {
       light: "/img/research.png",
-      dark: "/img/research.png",
+      dark: "/img/research-dark.png",
     },
     description: (
       <>
@@ -154,10 +154,10 @@ function Feature({
           style={{ height: "320px" }}
         />
       </div>
-      <h2 style={{textAlign: "center"}}>
+      <h2 style={{ textAlign: "center" }}>
         {title}
       </h2>
-      <p style={{fontSize: "20px",fontWeight: "500"}}>{description}</p>
+      <p style={{ fontSize: "20px", fontWeight: "500" }}>{description}</p>
     </div>
   );
 }
@@ -165,13 +165,13 @@ function Feature({
 export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
-            <div className="container">
-              <div className="row">
-                {features.map((props, idx) => (
-                  <Feature key={idx} index={idx} {...props} />
-                ))}
-              </div>
-            </div>
-          </section>
+      <div className="container">
+        <div className="row">
+          {features.map((props, idx) => (
+            <Feature key={idx} index={idx} {...props} />
+          ))}
+        </div>
+      </div>
+    </section>
   );
 }
