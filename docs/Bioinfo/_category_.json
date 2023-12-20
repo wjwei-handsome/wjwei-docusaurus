@@ -5,5 +5,6 @@
         "type": "generated-index",
         "description": "Bioinformatics",
         "image": "/img/icon/bioinformatics.png"
-    }
+    },
+    "collapsed": false
 }

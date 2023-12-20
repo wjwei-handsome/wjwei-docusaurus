@@ -64,6 +64,8 @@ async function CreateConfig() {
                         editUrl: 'https://github.com/wjwei-handsome/wjwei-docusaurus/tree/main/',
                         // docTagsListComponent: '@theme/DocTagsList',
                         remarkPlugins: [mdxMermaid.default],
+                        showLastUpdateAuthor: true,
+                        showLastUpdateTime: true,
 
                     },
                     blog: {
@@ -154,7 +156,7 @@ async function CreateConfig() {
                             },
                             {
                                 label: "🎤️talks",
-                                href: "/talks/",
+                                href: "/talks",
                             }
                             // {
                             //     type: 'doc',
