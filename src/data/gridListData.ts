@@ -34,15 +34,15 @@ function gridItem(
 }
 
 const DocGridList: Array<GridItemType> = [
-  gridItem("Python", "/docs/category/python", python),
   gridItem("Linux", "/docs/category/linux", linux),
   gridItem("Potpourri", "/docs/category/potpourri", potpourri),
-  gridItem("R", "/docs/category/r", rlang),
   gridItem("Bio-Info", "/docs/category/bioinformatics", bioinfo),
   gridItem("Rust", "/docs/category/rust", rust),
-  // gridItem("Django", "/docs/category/django", django),
+  gridItem("Python", "/docs/category/python", python),
   gridItem("Algorithm", "/docs/category/algorithm", algorithm),
+  gridItem("R", "/docs/category/r", rlang),
+  // gridItem("Django", "/docs/category/django", django),
 ];
 
 
-export { DocGridList,  };
+export { DocGridList, };

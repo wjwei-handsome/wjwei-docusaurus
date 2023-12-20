@@ -2,16 +2,16 @@
 title: fish 与 module 的结合
 description: 在 Fish 环境中使用 module
 tags: [command-line]
-sidebar_position: 4
+sidebar_position: 2
 ---
 
 ## 背景
 
-之前一直使用 `Fish Shell` 来作为生产力，但是在本校的集群环境下，其中有个痛点就行不支持原生的 `module`, 因为之前系统安装的版本过低，所以需着手解决这个问题.
+之前一直使用 `Fish Shell` 来作为生产力，但是在本校的集群环境下，其中有个痛点就行不支持原生的 `module`, 因为之前系统安装的版本过低，所以需着手解决这个问题。
 
 ## 定位问题
 
-首先根据集群的 [官方文档](http://hpc.ncpgr.cn/app/004-Module/#module_2) 所述:
+首先根据集群的 [官方文档](http://hpc.ncpgr.cn/app/004-Module/#module_2) 所述：
 
 ```shell
 export PATH="/public/home/software/opt/moudles/Modules/3.2.10/bin/:/opt/ibm/lsf/10.1/linux3.10-glibc2.17-x86_64/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin"
@@ -20,15 +20,15 @@ source /public/home/software/opt/moudles/Modules/3.2.10/init/bash
 
 这两行一个是添加了 module 的路径，一个是初始化 module.
 
-但是在 `Fish` 环境下，不可能 `source ***.bash`, 然后查看目录 `/public/home/software/opt/moudles/Modules/3.2.10/init/`, 发现并没有 `fish` 对应的初始化的脚本.
+但是在 `Fish` 环境下，不可能 `source ***.bash`, 然后查看目录 `/public/home/software/opt/moudles/Modules/3.2.10/init/`, 发现并没有 `fish` 对应的初始化的脚本。
 
-查看 `module` 的 [官方更新文档](https://modules.readthedocs.io/en/stable/MIGRATING.html), 发现更新后的版本已经支持 `fish` 了.
+查看 `module` 的 [官方更新文档](https://modules.readthedocs.io/en/stable/MIGRATING.html), 发现更新后的版本已经支持 `fish` 了。
 
 所以解决方式就是安装一个用户的 `module`.
 
 ## 安装 `module`
 
-根据官网的 [文档](https://modules.readthedocs.io/en/stable/INSTALL.html), 安装步骤如下:
+根据官网的 [文档](https://modules.readthedocs.io/en/stable/INSTALL.html), 安装步骤如下：
 
 ### 下载解压
 
@@ -48,23 +48,23 @@ make install
 
 ### 配置
 
-首先需要做之前提到的初始化，对应的命令是:
+首先需要做之前提到的初始化，对应的命令是：
 
 ```shell
 source YOUR_PREFIX/init/fish
 ```
 
-为了每次登陆都生效，可以写到 fish 的 config 中，添到 `~/.config/fish/config.fish` 文件即可.
+为了每次登陆都生效，可以写到 fish 的 config 中，添到 `~/.config/fish/config.fish` 文件即可。
 
-这样一来，就可以运行 module 了，并且还做好了命令补全:
+这样一来，就可以运行 module 了，并且还做好了命令补全：
 
 ![module](https://raw.githubusercontent.com/wjwei-handsome/wwjPic/main/img/20231023165751.png)
 
 ### 添加 modulefiles
 
-最重要的就是要添加集群已经配置好的 modulefiles, 好在即使 module 的版本在更新，但是 modulefiles 还是可以共用的.
+最重要的就是要添加集群已经配置好的 modulefiles, 好在即使 module 的版本在更新，但是 modulefiles 还是可以共用的。
 
-寻找集群已配置的环境变量，查阅 `/public/home/software/opt/moudles/Modules/3.2.10/init/bash` 文件，发现如下配置:
+寻找集群已配置的环境变量，查阅 `/public/home/software/opt/moudles/Modules/3.2.10/init/bash` 文件，发现如下配置：
 
 ```shell
 MODULESHOME=/public/home/software/opt/moudles/Modules/3.2.10
@@ -72,9 +72,9 @@ MODULEPATH=`sed -n's/[ 	#].*$//; /./H; $ { x; s/^\n//; s/\n/:/g; p; }' ${MODULES
 export MODULEPATH
 ```
 
-这样可以直接拿到 `$MODULEPATH` 这个环境变量，然后把添加到自己安装的 module 的 init 脚本中即可.
+这样可以直接拿到 `$MODULEPATH` 这个环境变量，然后把添加到自己安装的 module 的 init 脚本中即可。
 
-示例如下，修改 `~/modules/init/fish` 文件:
+示例如下，修改 `~/modules/init/fish` 文件：
 
 ```shell
 ...
