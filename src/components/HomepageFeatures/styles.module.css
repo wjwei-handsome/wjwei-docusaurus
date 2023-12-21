@@ -3,6 +3,7 @@
     align-items: center;
     padding: 2rem 0;
     width: 100%;
+    flex-direction: column;
 }
 
 .featureSvg {
@@ -11,6 +12,24 @@
 }
 
 
+/* .uniquetabs {
+    justify-content: space-between;
+}
+
+.tabimg {
+    object-fit: cover;
+    max-height: 300px;
+    border-radius: 5%;
+} */
+
+
 /* .homepage-feature-center-h3 {
     text-align: center;
 } */
+
+.codeblock {
+    max-width: 90%;
+    margin-left: 15%;
+    margin-right: 15%;
+    /* padding: 0 var(--ifm-spacing-horizontal); */
+}

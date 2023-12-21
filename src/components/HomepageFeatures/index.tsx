@@ -2,6 +2,10 @@ import React from 'react';
 import clsx from 'clsx';
 import styles from './styles.module.css';
 import ThemedImage from "@theme/ThemedImage";
+import CodeBlock from "@theme/CodeBlock";
+import Tabs from "@theme/Tabs";
+import TabItem from '@theme/TabItem';
+
 
 // type FeatureItem = {
 //   title: string;
@@ -88,14 +92,33 @@ export const features: feature[] = [
       dark: "/img/cs-dark.png",
     },
     description: (
-      <>
-        😎Fluent with "Hello World" in programming languages. <br />
-        ⭐️Some experiences in Python and Django for back-end. <br />
-        📊Use R as my drawing board. <br />
-        🐧With Linux/Shell everyday, but only use currently. <br />
-        😘My new love: Rust, but it doesn't love me. <br />
-        ⛽️Always be a novice.
-      </>
+      // <>
+      //   😎Fluent with "Hello World" in programming languages. <br />
+      //   ⭐️Some experiences in Rust/Python/Django in bioinfomatic. <br />
+      //   📊Use R/Vega-lite as my drawing board. <br />
+      //   🐧With Linux/Shell everyday. <br />
+      //   🦀My new love: Rust <br />
+      //   ⛽️Always be a novice.
+      // </>
+      // <>
+      //   <CodeBlock language='bash'>
+      //     $ wjwei --help{'\n'}{'\n'}
+      //     Name: Wenjie Wei{'\n'}
+      //     Version: {new Date().getFullYear()}-{new Date().getMonth() + 1}-{new Date().getDate()}{'\n'}
+      //     Usage: wjwei [OPTIONS] {'<'}COMMANDS{'>'}{'\n'}
+      //     Commands:{'\n'}
+      //     {'    '}bioinfo: Play biological problems with code{'\n'}
+      //     {'    '}coder: GET HANDS DIRTY!{'\n'}
+      //     {'    '}student: HZAU_2_WestLake{'\n'}
+      //     Options:{'\n'}
+      //     {'    '}-l, --linux [default: true]{'\n'}
+      //     {'    '}-r, --rust [default: true]{'\n'}
+      //     {'    '}-p, --python [default: true]{'\n'}
+      //     {/* {'    '}-g, --vegalite [default: true]{'\n'} */}
+      //     {'    '}-f, --frontend [default: false]{'\n'}
+      //   </CodeBlock>
+      // </>
+      <></>
     ),
   },
   {
@@ -105,33 +128,58 @@ export const features: feature[] = [
       dark: "/img/life-dark.png",
     },
     description: (
-      <>
-        🙌Work hard, play harder<br />
-        {/* 🏞For my trip, COVID, F**K off！ <br /> */}
-        🏀Old fan of Thunder and Westbrook0 <br />
-        ☕️A coffee a day keeps the burden at bay. <br />
-        🎥Since the invention of the movie, human life has been extended at least three times.<br />
-        🎵Music is a universal language, now prefer JayChou and Kanye.<br />
-        🏋️Enjoy the endorphins secreted by exercise.  <br />
-      </>
+      // <>
+      //   🙌Work hard, play harder<br />
+      //   {/* 🏞For my trip, COVID, F**K off！ <br /> */}
+      //   🏀Old fan of Thunder and Westbrook0 <br />
+      //   ☕️A coffee a day keeps the burden at bay. <br />
+      //   🎥Since the invention of the movie, human life has been extended at least three times.<br />
+      //   🎵Music is a universal language, now prefer JayChou and Kanye.<br />
+      //   🏋️Enjoy the endorphins secreted by exercise.  <br />
+      // </>
+      // <>
+      //   <Tabs className={styles.uniquetabs}>
+      //     <TabItem value="Basketball" label="🏀" default>
+      //       <div style={{ display: "flex", flexDirection: "column" }}>
+      //         {/* <p>pppppp</p> */}
+      //         <img src="/img/test.jpg" className={styles.tabimg} />
+      //       </div>
+      //     </TabItem>
+      //     <TabItem value="Music" label="🎵">
+      //       <div style={{ display: "flex", flexDirection: "column" }}>
+      //         <img src="/img/music2023.png" className={styles.tabimg} />
+      //       </div>
+      //     </TabItem>
+      //     <TabItem value="Coffee" label="☕️">
+      //       A coffee a day keeps the burden at bay.
+      //     </TabItem>
+      //     <TabItem value="Fitness" label="🏋️">
+      //       Enjoy the endorphins secreted by exercise.
+      //     </TabItem>
+      //     <TabItem value="Movie" label="🎥">
+      //       Since the invention of the movie, human life has been extended at least three times.
+      //     </TabItem>
+      //   </Tabs>
+      // </>
+      <></>
     ),
   },
   {
-    title: "Bland Graduatestudent",
+    title: "Bland Student",
     sources: {
       light: "/img/research.png",
       dark: "/img/research-dark.png",
     },
     description: (
       <>
-        A graduate student of Crop genomics in the National Key Laboratory of Crop Genetic Improvement, Huazhong Agricultural University. <br />
+        {/* Master student of Crop genomics in the National Key Laboratory of Crop Genetic Improvement, Huazhong Agricultural University. <br />
         My research interests include:
         <ul>
           <li>Bio-database architecture and development</li>
           <li>Graphic genomics</li>
           <li>Bioinformatic kits development</li>
           <li>🥱</li>
-        </ul>
+        </ul> */}
       </>
     ),
   },
@@ -157,7 +205,9 @@ function Feature({
       <h2 style={{ textAlign: "center" }}>
         {title}
       </h2>
-      <p style={{ fontSize: "20px", fontWeight: "500" }}>{description}</p>
+      {/* <p style={{ fontSize: "20px", fontWeight: "500" }}> */}
+      {description}
+      {/* </p> */}
     </div>
   );
 }
@@ -165,13 +215,43 @@ function Feature({
 export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
-      <div className="container">
+      <div className="container" style={{ "maxWidth": "100%" }}>
         <div className="row">
           {features.map((props, idx) => (
             <Feature key={idx} index={idx} {...props} />
           ))}
         </div>
       </div>
+
+      <CodeBlock language='text' className={styles.codeblock} showLineNumbers={false}>
+        $ wjwei --help{'\n'}{'\n'}
+        Name: Wenjie Wei🇨🇳{'\n'}{'\n'}
+        Version: {new Date().getFullYear()}-{new Date().getMonth() + 1}-{new Date().getDate()}{'\n'}{'\n'}
+        Usage: wjwei [OPTIONS] {'<'}COMMANDS{'>'}{'\n'}{'\n'}
+
+        Commands:{'\n'}
+        {'    '}bioinfo: {'\n'}
+        {'    '}{'    '}🧬Play biological problems with code. Years of experience in bioinformatics analysis, working in the field of genomics.{'\n'}
+        {'    '}coder: {'\n'}
+        {'    '}{'    '}🛠️Get my hands dirty! Always be a rookie and stay hungry. Enjoy contributing to the bioinfo community.{'\n'}
+        {'    '}life: {'\n'}
+        {'    '}{'    '}🙌Work hard, play harder! Enjoy dopamine and endorphins from nature🏞, food🥑, coffee☕️, movies🎥, music🎧 and sports🏋.{'\n'}
+        {'    '}student: {'\n'}
+        {'    '}{'    '}👨‍🎓Master student of Crop genomics in the National Laboratory of Crop Genetic Improvement, HZAU.{'\n'}
+        {'    '}{'    '}💎PhD candidate of WestLake University.
+        {'\n'}
+        {'    '}{'    '}💡Interested in: 1.graph-pan-genome 2.complex phenotye ~ multi omics 3.database/tools.
+        {'\n'}
+        {'    '}gamer: {'\n'}
+        {'    '}{'    '}🎮Hundreds of hours of Zelda/Pokemon/Stardew Valley{'\n'}{'\n'}
+        Options:{'\n'}
+        {'    '}-l, --linux    {'    '}💻Unix/Commmand Line/Fish enthusiast    [default: true]{'\n'}
+        {'    '}-r, --rust     {'    '}🦀YES! I'm a Rustacean!    [default: true]{'\n'}
+        {'    '}-p, --python   {'    '}🐍Use for Django && quickly develop simple scripts.    [default: true]{'\n'}
+        {'    '}-v, --visualize{'    '}📊Prefer vega-lite/R for data presentation.    [default: true]{'\n'}
+        {'    '}-f, --frontend {'    '}🌐Stay at the basic stage for Vue/React, just google. [default: false]{'\n'}
+      </CodeBlock>
+
     </section>
   );
 }

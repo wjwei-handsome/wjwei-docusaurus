@@ -36,11 +36,13 @@
         --ifm-color-primary-lightest: #4fddbf;
         --docusaurus-highlighted-code-line-bg: rgba(149, 200, 239, 0.3);
     } */
+
     @import url('https://gw.alipayobjects.com/os/k/font/lxgwwenkaiscreenr.css');
     /*@font-face {*/
     /*    font-family: 'LXGWenKaiScreenR';*/
     /*    src: url("../../static/fonts/LXGWWenKaiScreenR.ttf") format('truetype');*/
     /*}*/
+
      :root {
         --ifm-color-primary: #5391ba;
         --ifm-color-primary-dark: #4584ad;
@@ -49,15 +51,15 @@
         --ifm-color-primary-light: #669dc2;
         --ifm-color-primary-lighter: #70a3c6;
         --ifm-color-primary-lightest: #8db6d1;
-         --ifm-menu-color: rgb(31, 31, 31);
-         --ifm-font-color-base: rgb(31, 31, 31);
+        --ifm-menu-color: rgb(31, 31, 31);
+        --ifm-font-color-base: rgb(31, 31, 31);
         --docusaurus-highlighted-code-line-bg: rgba(32, 98, 221, 0.3);
-         --font-fallback: LXGW WenKai Screen R, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
-         --font-body: var(--font-fallback);
-         --font-mono: 'SF Mono', Consolas, Monaco, 'Courier New', Courier, monospace;
-         --ifm-font-family-base: 'LXGW WenKai Screen R', sans-serif;
+        --font-fallback: LXGW WenKai Screen R, Helvetica, Arial, sans-serif, Apple Color Emoji, Segoe UI Emoji;
+        --font-body: var(--font-fallback);
+        --font-mono: 'SF Mono', Consolas, Monaco, 'Courier New', Courier, monospace;
+        --ifm-font-family-base: 'LXGW WenKai Screen R', sans-serif;
     }
-    
+
     [data-theme='dark'] {
         --ifm-color-primary: #5391ba;
         --ifm-color-primary-dark: #4584ad;
@@ -70,7 +72,7 @@
         --ifm-menu-color: rgb(204, 216, 220);
         --ifm-font-color-base: rgb(204, 216, 220);
     }
-    
+
     .code-block-error-line {
         background-color: #ff000020;
         display: block;
@@ -78,7 +80,7 @@
         padding: 0 var(--ifm-pre-padding);
         border-left: 3px solid #ff000080;
     }
-    
+
     .header-github-link::before {
         background: url("data:image/svg+xml;charset=utf-8,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E") no-repeat;
         content: "";
@@ -86,35 +88,37 @@
         height: 36px;
         width: 36px;
     }
-    
+
     .navbar__title {
         flex: 1 1 auto;
         font-size: 25px;
     }
+
     .navbar__search-input {
         font-family: "LXGW WenKai Screen R";
     }
+
     .markdown>h2 {
         padding-left: 10px;
         line-height: 100%;
         border-left: var(--ifm-color-primary-dark) 7px solid;
         border-radius: 1px;
     }
-    
+
     .markdown>h3 {
         padding-left: 10px;
         line-height: 100%;
         border-left: var(--ifm-color-primary-darker) 4px solid;
         border-radius: 1px;
     }
-    
+
     .markdown>h4 {
         padding-left: 10px;
         line-height: 100%;
         border-left: var(--ifm-color-primary-darker) 4px solid;
         border-radius: 1px;
     }
-    
+
     .markdown>h5 {
         padding-left: 10px;
         line-height: 100%;
@@ -122,23 +126,23 @@
         border-radius: 1px;
     }
     /* 徽章居左 */
-    
+
     .Badges {
         display: inline-block !important;
     }
-    
+
     .navbar__logo {
         /* height: 3.75rem; */
         height: 48px;
     }
-    
+
     .navbar {
         padding-top: 6px;
         padding-bottom: 6px;
         /* height: 3.75rem; */
         height: 60px;
     }
-    
+
     kbd {
         margin: 0px 0.2em;
         padding: 0.1em 0.6em;

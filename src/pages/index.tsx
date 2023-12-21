@@ -47,7 +47,7 @@ const slides = [
     className={clsx("hero hero--primary", styles.heroBanner, styles.slide)}>
     <div className="container">
       <img className={styles.logo} alt="Logo" src="/img/Avatar-s.png" />
-      <h1 className="hero__title">Wenjie Wei</h1>
+      <h1 className="hero__title">Wenjie Wei 魏文杰</h1>
       <p className="hero__subtitle">&quot;My Beatuifal Dark Twisted Fantsty&quot;</p>
       <div className={styles.button}>
         <Link
@@ -107,7 +107,7 @@ export default function Home(): JSX.Element {
   const [buttonVisible, setButtonVisible] = useState(false);
   return (
     <Layout
-      title={`Hello from ${siteConfig.title}`}
+      title={`${siteConfig.title}`}
       description="wenjiewei wjwei weiwenjie blog bioinfomatic">
       {/* <HomepageHeader /> */}
       <CarouselProvider
