@@ -1,0 +1,11 @@
+.tag {
+    display: inline-block;
+    margin: 0.5rem 0.5rem 0 1rem;
+}
+
+.flexdiv {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+}
