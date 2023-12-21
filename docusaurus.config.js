@@ -62,7 +62,7 @@ async function CreateConfig() {
                         // Please change this to your repo.
                         // Remove this to remove the "edit this page" links.
                         editUrl: 'https://github.com/wjwei-handsome/wjwei-docusaurus/tree/main/',
-                        // docTagsListComponent: '@theme/DocTagsList',
+                        // docTagsListComponent: '@theme/DocTagsListPage',
                         remarkPlugins: [mdxMermaid.default],
                         showLastUpdateAuthor: true,
                         showLastUpdateTime: true,
@@ -124,15 +124,19 @@ async function CreateConfig() {
                     },
                     {
                         to: '/about-me',
-                        label: '🏡About Me',
+                        label: '🙋🏻‍♂️About Me',
                         position: 'left'
                     },
                     {
                         href: 'https://github.com/wjwei-handsome/wjwei-docusaurus/',
-                        // label: 'GitHub',
                         position: 'right',
                         className: 'header-github-link',
                         'aria-label': 'Github repository',
+                    },
+                    {
+                        to: '/docs/tags',
+                        label: '🏷️Tags',
+                        position: 'left'
                     },
                     {
                         type: 'dropdown',
@@ -143,8 +147,8 @@ async function CreateConfig() {
                                 href: 'https://scholar.google.com/citations?user=AO4Qqk4AAAAJ&',
                             },
                             {
-                                label: 'Discord',
-                                href: 'https://discord.gg/dUyetKKSbv',
+                                label: 'Matrix',
+                                href: 'https://matrix.to/#/@wjwei:matrix.org',
                             },
                             {
                                 label: "🧑‍🏫SongtaoGui's Blog",
@@ -176,42 +180,6 @@ async function CreateConfig() {
             },
             footer: {
                 style: 'dark',
-                // links: [{
-                //         title: 'Docs',
-                //         items: [{
-                //             label: 'my docs',
-                //             to: '/docs/intro',
-                //         }, ],
-                //     },
-                //     {
-                //         title: 'Community',
-                //         items: [{
-                //                 label: 'Github',
-                //                 href: 'https://github.com/wjwei-handsome/wjwei-docusaurus/',
-                //             },
-                //             {
-                //                 label: 'Discord',
-                //                 href: 'https://discord.gg/dUyetKKSbv',
-                //             },
-                //             {
-                //                 label: 'Google Scholar',
-                //                 href: 'https://twitter.com/docusaurus',
-                //             },
-                //         ],
-                //     },
-                //     {
-                //         title: 'More',
-                //         items: [{
-                //                 label: 'Blog',
-                //                 to: '/blog',
-                //             },
-                //             {
-                //                 label: 'GitHub',
-                //                 href: 'https://github.com/facebook/docusaurus',
-                //             },
-                //         ],
-                //     },
-                // ],
                 copyright: `Copyright © ${new Date().getFullYear()} WenjieWei, Inc. Built with Docusaurus.`,
             },
             prism: {
