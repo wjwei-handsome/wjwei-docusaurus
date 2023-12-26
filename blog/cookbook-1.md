@@ -1,14 +1,14 @@
 ---
 slug: cookbook-20230701-1
-title: 学做菜-2023-0701-午餐
-authors: [wjwei]
+title: 学做菜 -2023-0701-午餐
+# authors: [wjwei]
 tags: [cook]
+date: 2023-07-01
+# truncateMarker: {/* truncate */}
 ---
 
-学习一下家常菜，2023年7月1日午餐菜谱
-
-<!-- truncate -->
-
+学习一下家常菜，2023 年 7 月 1 日午餐菜谱
+<!-- truncate  -->
 ## 葱爆牛肉
 
 ### 清洗、切牛肉
