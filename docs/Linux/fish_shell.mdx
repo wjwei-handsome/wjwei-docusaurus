@@ -1,0 +1,520 @@
+---
+title: fish 的简单学习
+description: fish 语法和功能的学习，与 Bash 的不同之处
+tags: [command-line, fish, shell]
+sidebar_position: 3
+---
+
+import ReferenceList from "@site/src/components/ReferenceList";
+import linux from "@site/static/img/icon/linux.png";
+import github from "@site/static/img/icon/github.png";
+
+## 前言
+
+有关 Fish 的介绍，我在之前已写过一篇文章，详见[这里](./command-line-tricks), 这里主要是对 Fish 的语法和功能进行学习，以及说明与 Bash 的不同之处。
+
+## 使用
+
+### 通配符
+
+大部分用法和 Bash 一致，有个独特的功能就是连续用两个星号 `**` 可以匹配任意层级的目录，比如：
+
+```sh
+$ ls *.jpg
+1.jpg 2.jpg 3.jpg
+$ ls **.rs
+main.rs lib/lib.rs
+```
+
+这样可以把当前目录下的所有 `.rs` 文件列出来，包括子目录下的。
+
+:::caution
+
+慎重使用，万一目录层级太深，会导致命令执行时间过长。
+
+:::
+
+### 重定向
+
+一致的：
+
+1. `>` 重定向到文件
+2. `>>` 追加到文件
+3. `1>` 重定向标准输出到文件 `1>>` 追加标准输出到文件
+4. `2>` 重定向标准错误到文件  `2>>` 追加标准错误到文件
+5. `|` 管道
+
+多的功能：
+
+`&>` 同时重定向标准输出和标准错误到文件，省得写`1> out 2>err`
+
+### 自动补全
+
+输入开头的几个字母，按下<kbd>→</kbd>键，会自动补全完整命令
+
+如果只想补全接下来的词，按下<kbd>option</kbd>键 (MacOS) 即可
+
+### 变量
+
+双引号中的变量会被解析，单引号中的变量不会被解析
+
+```shell
+$ echo "My name is $USER"
+$ echo 'My name is $USER'
+```
+
+设置变量：
+
+```shell
+$ set name "wwj"
+$ echo $name
+```
+
+取消变量：
+
+```shell
+$ set -e name ## e for erase
+```
+
+变量导出：把这个变量传递到子进程中
+
+```shell
+$ set -x name
+```
+
+### 列表
+
+这是一个特性，实际上 Fish 所有的变量都是列表，包含任意数量的值，或者空。
+
+比如`$PWD`只有一个值，实际上是该列表的第一个值。
+
+再比如`$PATH`, 就有很多个值了。
+
+可以用`count`命令查看列表的长度：
+
+```shell
+$ count $PATH
+19
+```
+
+也可以用索引的方式获得列表中的值：
+
+```shell
+$ echo $PATH[1]
+/usr/local/bin
+```
+
+如果要自己设置一个列表变量，就这样：
+
+```shell
+$ set a 1 2 3
+$ echo $a
+```
+
+列表可以用`for`循环：
+
+```shell
+$ for i in $a
+    echo "I'm $i"
+end
+```
+
+:::tip
+
+这个列表比较实用的地方在于可以做两个列表的笛卡尔积，比如我们有 10 个样品名称，每个样本有 3 个重复，就可以这样操作：
+
+```shell
+$ set samples A B C D E F G H I J
+$ set rep 1 2 3
+$ set my_list $samples$rep
+$ echo $my_list
+A1 B1 C1 D1 E1 F1 G1 H1 I1 J1 A2 B2 C2 D2 E2 F2 G2 H2 I2 J2 A3 B3 C3 D3 E3 F3 G3 H3 I3 J3
+$ for item in $my_list
+    ll $item.fastq.gz
+end
+```
+
+:::
+
+### 命令替换
+
+用`$()` 或 `()`包裹命令，可以把命令的输出作为变量的值。
+
+```shell
+$ echo In (pwd), running $(uname)
+In /Users/wjwei/code/wgatools, running Darwin
+```
+
+最常用的就是设置变量：
+
+```shell
+$ set sample_list (ls *.fastq.gz|cut -f1 -d '.')
+```
+
+当然如果你是在双引号内，就要加上`$`符号：
+
+```shell
+$ echo "testing_$(date +%s).txt"
+testing_1703690857.txt
+$ echo "testing_(date +%s).txt"
+testing_(date +%s).txt
+```
+
+:::info
+
+这里值得注意的一个点是，有些命令的输出会带有换行符，那么在 Linux 中，是逐行操作的，所以换行符有时候会引起一些问题
+
+基于这个问题，Fish 默认的命令替换是会去掉换行符的。但是如果我就不想换，怎么样呢？
+
+这时候可以用`双引号`把命令替换包裹起来，这样就会把换行符去掉。
+
+```shell
+$ echo "first line
+second line" > myfile  ## 这里有个换行符
+$ set myfile "$(cat myfile)"
+$ printf '|%s|' $myfile
+|first line
+second line|
+```
+
+:::
+
+### 退出码
+
+Fish 会把上一个命令的退出码保存在`$status`变量中，而不是 Bash 中的`$?`。
+
+```shell
+$ false
+$ echo $status
+1
+```
+
+### 条件判断
+
+#### if else
+
+语法略有不同，`if`后面不需要加`then`，`else`后面不需要加`fi`。
+
+```sh
+if grep fish /etc/shells
+    echo Found fish
+else if grep bash /etc/shells
+    echo Found bash
+else
+    echo Got nothing
+end
+```
+
+#### 判断条件
+
+和 Bash 不一样的地方在于，Fish 中的判断条件不需要加`[]`，也不需要加`$`符号，而是用`test`命令来判断。
+
+```shell
+if test "$fish" = "flounder"
+    echo FLOUNDER
+end
+
+# or
+
+if test "$number" -gt 5
+    echo $number is greater than five
+else
+    echo $number is five or less
+end
+
+# or
+
+# This test is true if the path /etc/hosts exists
+# - it could be a file or directory or symlink (or possibly something else).
+if test -e /etc/hosts
+    echo We most likely have a hosts file
+else
+    echo We do not have a hosts file
+end
+```
+
+这种语法见仁见智吧，我个人觉得学习成本也不高，也比较好记忆，可能一些 Bash 老人会不习惯吧。
+
+### 循环
+
+#### while
+
+最常用：
+
+```sh
+while read line
+    echo $line
+end < myfile.txt
+```
+
+#### for
+
+最常用：
+
+```sh
+for i in *.fa
+    echo $i
+end
+```
+
+### 便捷添加环境变量
+
+Fish 有个很方便的命令，可以把当前目录添加到环境变量中，这样就可以直接运行当前目录下的可执行文件了。
+
+```shell
+$  fish_add_path your_bin_path
+```
+
+### 小坑
+
+在用管道作为输入的时候，之前用 Bash 是这样的用法：
+
+```bash
+$ while read l;do echo $l;done < ls *.csv
+```
+但是 Fish 这里不一样，最后的命令要用 psub 来包裹起来：
+
+```shell
+$ while read l;echo $l;end < (ls *.csv|psub)
+```
+## 工具
+
+Fish 有一些包装好的工具命令，还是挺好用的。
+
+### read
+
+其实这个命令在 Bash 中也有，但是 Fish 中的用法更多更实用：
+
+1. 最常用简单的：
+
+```
+$ echo "AAAA" | read foo
+$ echo $foo
+AAAA
+```
+
+```shell
+$ while read l;echo $l;end < myfile.txt
+```
+
+2. 用`-d` 来指定分隔符，用`-l`来分配局部变量
+
+```shell
+ls *.csv |
+    while read -d . -l a b ;
+    echo prefix is `{$a}` and surfix is `{$b}`;
+    end
+
+prefix is `abc` and surfix is `csv`
+prefix is `edf` and surfix is `csv`
+```
+
+这个例子中，`-d` 指定了分隔符为`.`，`-l` 指定了局部变量为`a`和`b`, 相当于把文件名的前缀和后缀分别赋值给了`a`和`b`。
+
+### string
+
+这个命令可以用来处理字符串
+
+#### string collect
+
+把多个输入拼接成一个输出
+
+```shell
+$ count (echo one\ntwo\nthree)
+3 ## echo 打印了三行
+$ count (echo one\ntwo\nthree | string collect)
+1 ## string collect 把三个元素拼接成了一个字符串
+```
+
+#### string join
+
+这个好用，可以把列表中的元素用指定的分隔符拼接起来
+
+```shell
+$ seq 10 | string join ,
+1,2,3,4,5,6,7,8,9,10
+
+$ string join ':' a b c
+a:b:c
+```
+
+#### string length
+
+计算字符串的长度，实际上没用过
+
+```shell
+$ string length "hello world"
+11
+```
+
+#### string match
+
+这个好用，可以用来匹配字符串，支持正则表达式
+
+```shell
+$ string match '?' a
+a
+$ string match 'a*b' axxb
+axxb
+$ string match -i 'a??B' Axxb
+Axxb
+$ echo 'ok?' | string match '*\?'
+ok?
+$ string match 'foo' 'foo1' 'foo' 'foo2'
+foo ## 只会输出匹配的第一个
+$ string match -e 'foo' 'foo1' 'foo' 'foo2'
+foo1
+foo
+foo2
+## -e 输出包含的所有匹配
+$ string match 'foo?' 'foo1' 'foo' 'foo2'
+foo1
+foo2
+```
+
+这个用法有很多，可以配合`test`来判断字符串是否匹配，也可以配合`for`来遍历匹配的字符串。
+
+#### string repeat
+
+重复字符串
+
+```shell
+$ string repeat -n 2 'foo '
+foo foo ## 重复两次
+
+$ echo foo | string repeat -n 2
+foofoo ## 重复两次
+
+$ string repeat -n 2 -m 5 'foo'
+foofo ## 重复两次，最多输出 5 个字符
+
+$ string repeat -m 10 'foo'
+foofoofoof ## 重复无限次，最多输出 10 个字符
+```
+
+就个人而言用的不多
+
+#### string replace
+
+这个用法和`match` 一样，也可以用来匹配字符串，支持正则表达式，但是它会把匹配到的字符串替换成指定的字符串。
+
+```shell
+$ string replace is was 'blue is my favorite'
+blue was my favorite
+$ string replace 3rd last 1st 2nd 3rd
+1st 2nd last
+$ string replace -a ' ' _ 'spaces to underscores'
+spaces_to_underscores
+```
+
+我会把他当作脚本中来简单替代`sed` , 来替换一些字符串。
+
+#### string split
+
+这个命令和`join`相反，可以把字符串按照指定的分隔符拆分成列表
+
+比如我最常用的就是看一个 tsv 文件的表头，我习惯把横的表头输出成竖的，也可以输出序号：
+
+```shell
+$ head -n1 00_tissue_info.tsv| string split \t|less -N
+1 Reference
+2 Version
+3 Analysis
+4 TissueClass
+5 TissueStage
+6 TissuePosition
+7 TissueID
+8 SvgClass
+9 TissueDesc
+```
+
+#### string sub
+
+这个命令可以拿出字符串中的一部分，支持正则表达式，也比较好用
+
+```shell
+$ string sub --length 2 abcde
+ab ## 取前两个字符
+$ string sub -s 2 -l 2 abcde
+bc ## 从第二个字符开始取两个字符
+$ string sub --start=-2 abcde
+de ## 取倒数两个字符
+$ string sub --end=3 abcde
+abc ## 取到第三个字符
+$ string sub -e -1 abcde
+abcd ## 取到倒数第一个字符
+$ string sub -s 2 -e -1 abcde
+bcd ## 从第二个字符开始取到倒数第一个字符
+```
+
+#### string trim
+
+这个简单，就是去掉字符串两端的空格，当然也可以指定去掉的字符
+
+```shell
+$ string trim ' abc  '
+abc
+$ string trim --right --chars=yz xyzzy zany
+x
+zan ## 去掉右边的 y 和 z
+```shell
+
+综上所述，`string` 命令可以完成很多字符串的操作，有点像三剑客 `grep`, `sed`, `awk` 的结合体，但是使用场景主要集中在管道的输入输出或者作为参数传递给其他命令。具体得看个人的使用习惯了。
+```
+
+### math
+
+这个命令用来做数学运算，用法也很简单，就是把数学表达式作为参数传递给`math`命令即可。
+
+```shell
+$ math 1+1
+2
+$ math 8-6
+2
+$ math 2\*3 ## 乘法要加转义符
+6
+$ math 18/3
+6
+$ math \(2+5\)\*3 ## 括号要加转义符
+21
+$ math "(2+5)*3" ## 也可以用双引号来包裹
+```
+
+当然也有其他数学函数，比如`sin`, `cos`, `tan`, `log`, `sqrt`等等，具体可以查看[官方文档](https://fishshell.com/docs/current/cmds/math.html), 我个人觉得用的不多。
+
+### abbr
+
+abbr 是 abbreviation 的缩写，这个命令可以用来设置缩写，但是又和`alias`不同的地方在于，他会补全完整的命令，比如：
+
+```shell
+$ abbr zzz bjobs -w -noheader
+$ zzz # 输入 zzz，但是不会显示 zzz，而是会显示完整的命令
+$ bjobs -w -noheader
+```
+
+以上面这个例子为例子，我输入`zzz`后，再按一个空格，会自动补全成`bjobs -w -noheader`, 并且光标会自动跳到命令的末尾，这样就可以直接输入其他参数了。当然了，你也可以指定光标停留的位置，比如：
+
+```shell
+abbr -a zzz --set-cursor "bjobs -w -noheader|rg %"
+```
+
+这个例子就是把光标停留在`rg`后面，这样就可以直接输入要搜索的字符串了。
+
+这种方法相对函数的输入参数而言，稍微灵活一点。
+
+
+## 结语
+
+整体而言，Fish 还是提供了很好的用户体验，语法也比较简单，但是有些命令的用法和 Bash 不一样，学习成本见仁见智，还是那句话，自己习惯的工具才是最好的工具。
+
+## 参考资料
+
+<ReferenceList
+    data={[
+        {
+            title: "Fish 官方文档 ",
+            link: "https://fishshell.com/docs/current/index.html",
+            src: linux,
+        },
+    ]}
+/>
