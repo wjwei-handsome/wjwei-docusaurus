@@ -1,0 +1,9 @@
+{
+    "label": "Rust - Advanced",
+    "position": 2,
+    "link": {
+        "type": "generated-index",
+        "description": "Rust 进阶知识"
+    },
+    "collapsed": true
+}

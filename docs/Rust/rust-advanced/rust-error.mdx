@@ -1,0 +1,451 @@
+---
+title: Rust 错误处理
+description: 如何优雅地处理 Rust 中的错误
+tags: [rust, code, error]
+sidebar_position: 1
+---
+
+import ReferenceList from "@site/src/components/ReferenceList";
+import github from "@site/static/img/icon/github.png";
+import blog from "@site/static/img/icon/blog.png";
+
+
+## 简介
+
+在使用 Rust 进行开发的过程中，不管是编写库还是应用，都会遇到错误处理的问题。那么处理错误的手段在某种程度上决定了代码的可读性和可维护性。本文将介绍 Rust 中的错误处理的几种方式，以及它们的优缺点，并且用简单实践的例子来说明。
+
+## 背景
+
+### 什么是错误
+
+先抛开语言不谈，通常来讲，错误是指程序在运行过程中发生的不符合预期的情况。
+
+> 我做了错范，错误的示范
+![cuofan](./assets/cuofan.webp)
+
+### 为什么要处理错误
+
+对开发者而言，需要针对不同的错误采取不同的策略，也许有些错误我们是可以接受并采取其他措施的，有些错误是无法接受从而必须终止程序的。
+
+对用户而言，一个好的错误输出可以让用户捕获到易读的错误信息，进而帮助用户解决问题。
+
+### 处理错误的方式
+
+我相信绝大部分开发者都是有强迫症的，一个好的处理错误的态度应该是尽可能包含所有可能的错误，并尽可能地提供错误的关键信息。
+
+## 实践场景
+
+为了讲明白这些点，我们来设定一个简单的实践场景：
+
+我们将开发一个命令行工具，用于读取一个文本文件，该文本每行包含一个**不超过 256**的数字，我们需要将这些数字相加并打印结果到标准输出。
+
+### 预估会发生的错误
+
+1. 文件读取的错误
+
+- 文件路径不存在
+- 文件没有读取权限
+- 文件的编码格式不正确
+- 文件内容为空
+
+2. 文件内容解析的错误
+
+- 某一行不能解析为数字
+- 某一行的数字超出了 `i8` 的范围
+
+
+
+### 开始动手
+
+#### 创建项目
+
+```bash
+cargo new my-adder
+cd my-adder
+cargo add clap --features derive ## 唯一的依赖, 用于解析命令行参数
+```
+
+#### 编写 CLI 代码
+
+```rust title="src/main.rs"
+use clap::Parser;
+
+/// Simple adder
+#[derive(Parser, Debug)]
+#[command(author, version, about, long_about = None)]
+struct Args {
+    /// input file path
+    #[arg(short, long)]
+    input: String,
+}
+
+fn main() {
+    let args = Args::parse();
+    let input_path = args.input;
+    println!("input: {}", input_path);
+}
+```
+
+这里简单的用 `clap` 来解析命令行参数，我们的目标是将 `input` 文件中的数字相加并输出屏幕，所以只需要读取一个必要的参数，创建完成后，打印这个参数，效果如下：
+
+```bash
+$ cargo build --release
+$ ./target/release/my-adder -i input.txt
+input: input.txt
+```
+
+#### 编写核心代码
+
+其实核心代码的思路就是一个函数，接受输入文件的路径，然后将输入文件中的数字相加并输出，代码如下：
+
+```rust title="src/core.rs"
+use std::fs::File;
+use std::io::{BufRead, BufReader};
+
+pub fn process_files(input_path: &str) {
+    // Open the input file
+    let input_file = File::open(input_path).unwrap();
+    let reader = BufReader::new(input_file);
+
+    // Accumulator for the sum
+    let mut sum = 0;
+
+    // Read each line from the input file and parse it as i32
+    for line in reader.lines() {
+        let line = line.unwrap();
+        let number: i8 = line.parse().unwrap();
+        sum += number;
+    }
+
+    // Write the sum to the output file
+    println!("sum: {}", sum);
+}
+```
+
+#### 调用核心代码
+
+```rust title="src/main.rs"
+// import the function
+pub mod core;
+use crate::core::process_files;
+
+/// ...
+
+fn main() {
+    let args = Args::parse();
+    let input_path = args.input;
+    // println!("input: {}", input_path);
+    process_files(&input_path);
+}
+```
+
+编译后运行，效果如下：
+
+```bash
+$ cargo build --release
+$ seq 1 100 > input.txt
+$ ./target/release/my-adder -i input.txt
+sum: 5050
+```
+
+完结！撒花！
+
+然而并不能。
+
+回想一下，我们在前面提到了可能会发生的错误，但是我们的代码并没有对这些错误进行处理，那么我们来看看会发生什么。
+
+
+当我们输入一个不存在的文件：
+
+```shell
+$ ./target/release/my-adder -i input_not_exist
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Os { code: 2, kind: NotFound, message: "No such file or directory" }', src/core.rs:6:45
+note: run with RUST_BACKTRACE=1 environment variable to display a backtrace
+```
+
+当我们输入一个压缩文件：
+
+```shell
+$ seq 1 100 |bgzip > input.txt
+$ ./target/release/my-adder -i input.txt
+thread 'main' panicked at 'called `Result::unwrap()` on an `Err` value: Error { kind: InvalidData, message: "stream did not contain valid UTF-8" }', src/core.rs:14:25
+note: run with RUST_BACKTRACE=1 environment variable to display a backtrace
+```
+
+`panicked` ! 多么可怕的词汇，这意味着程序崩溃了。那当然会崩溃，那么就来处理错误吧！
+
+## 方式一：梭哈，用`trait`对象传递错误
+
+这种方法最简单，标准库中的绝大部分错误都实现了`std::error::Error`这个`trait`，所以我们可以直接使用`Box<dyn Error>`来传递错误，代码如下：
+
+```rust title="src/core.rs"
+use std::error::Error;
+use std::fs::File;
+use std::io::{BufRead, BufReader};
+
+pub fn process_files(input_path: &str) -> Result<(), Box<dyn Error>> {
+    // Open the input file
+    let input_file = File::open(input_path)?;
+    let reader = BufReader::new(input_file);
+
+    // Accumulator for the sum
+    let mut sum = 0;
+
+    // Read each line from the input file and parse it as i32
+    for line in reader.lines() {
+        let line = line?;
+        let number: i32 = line.parse()?;
+        sum += number;
+    }
+
+    // Write the sum to the output file
+    println!("sum: {}", sum);
+    Ok(())
+}
+```
+
+来看一下修改的内容，首先我们将这个处理的函数的返回类型，从原来的单元类型，变成了`Result`类型，什么是`Result`类型，直接看 Rust 源码的展示，它是一个枚举类型，它有两个成员，一个是`Ok`,一个是`Err`,它的定义如下：
+
+```rust
+pub enum Result<T, E> {
+    Ok(T),
+    Err(E),
+}
+```
+
+其中，OK 成员内部包含了一个泛型类型的值，而 Err 成员内部同样包含了一个泛型类型的错误，这个错误类型，可以是任何实现了`std::error::Error`这个`trait`的类型。
+
+那么在我们这个例子中，我们的 Result 中的 Ok 成员内部包含了一个单元类型的值，而 Err 成员内部包含了一个`Box<dyn Error>`类型的错误。
+
+接下来看将`unwrap()` 替换成了`?`，这个`?`它是 rust 中的一个操作符，它的作用是将`Result`类型的值进行解包，如果是`Ok`成员，那么就返回内部的值，如果是`Err`成员，那么就直接**返回**`Err`成员内部的错误。是不是很简洁！很干净漂亮！
+
+所以相当于我们的代码逻辑变成了，在调用文件打开 API 的时候，如果发生了错误，那么就直接返回错误，后面的不会再执行了; 如果没有错误，`input_file` 变量就会被赋值，然后继续执行后面的代码，以此类推。
+
+同时修改`main.rs`中的调用：
+
+```rust title="src/main.rs"
+///..
+
+match process_files(&input_path) {
+        Ok(_) => {}
+        Err(e) => println!("Error: {}", e),
+    }
+
+///..
+```
+这里的修改逻辑是，我们用一个 match 表达式来匹配`process_files`函数的返回值，如果是`Ok`成员，那么就什么都不做，如果是`Err`成员，那么就打印错误信息。
+
+编译后，再去测试一下：
+
+```shell
+$ ./target/release/my-adder -i input.txt ## 压缩文件
+Error: stream did not contain valid UTF-8
+$ ./target/release/my-adder -i input_not_exist ## 不存在的文件
+Error: No such file or directory (os error 2)
+$ seq 1 1000 > aaa
+$ ./target/release/my-adder -i aaa ## 超出范围的数字
+Error: number too large to fit in target type
+```
+好像还不错哦！可以惊喜地发现，我们的程序针对不同的错误打印了错误信息，这就是我们想要的效果。
+
+但是这个存在什么问题呢？我们依然无法获得错误的具体信息，比如说，我们无法知道是哪一行的数字超出了范围，又比如如果要对于不同的错误类型进行不同处理，就会遇到麻烦。
+
+当然了，我们现在的场景是开发一个命令行工具，用这种方式已经足够了，错误都会在自身内部进行处理了，不会作为第三方库去被调用。
+但是如果我们要开发一个库，那么这种方式就不太合适了，因为我们无法预知调用者会如何处理错误，所以我们需要一种更加灵活的方式去向上层用户传递具体的错误信息。
+
+## 方式二：自定义错误类型
+
+在这个例子中，我们的错误类型实际上很少，但是项目一旦变大，自定义类型的好处就体现出来了，我们可以将其归纳到自己的错误类型中，以便于更好的处理。
+
+那就让我们来自定义一个错误类型吧！
+
+```rust title="src/core.rs"
+
+///
+
+pub enum MyError {
+    IO(std::io::Error),
+    Parse(std::num::ParseIntError),
+}
+
+///
+```
+
+在这里，我们简单地定义了一个枚举类型来表示我们这个项目中的错误，它有两个成员，一个是`IO`，一个是`Parse`，它们分别包含了`std::io::Error`和`std::num::ParseIntError`这两个类型的错误。
+
+然后我们将`process_files`函数的返回类型修改为`Result<(), MyError>`:
+
+```rust title="src/core.rs"
+pub fn process_files(input_path: &str) -> Result<(), MyError> {
+    ///
+}
+```
+
+改了之后都不用编译，一堆红色波浪线就知道有问题，可以看到会提醒我们：
+
+> `?` couldn't convert the error to `core::MyError`
+the question mark operation (`?`) implicitly performs a conversion on the error value using the `From` trait
+
+多棒的提示啊！它告诉我们，我们需要为我们的`MyError`实现`From`这个`trait`, 来干吧：
+
+```rust title="src/core.rs"
+impl From<std::io::Error> for MyError {
+    fn from(err: std::io::Error) -> Self {
+        MyError::IO(err)
+    }
+}
+
+impl From<std::num::ParseIntError> for MyError {
+    fn from(err: std::num::ParseIntError) -> Self {
+        MyError::Parse(err)
+    }
+}
+```
+
+就这么简单，意思就是，我们分别为`std::io::Error`和`std::num::ParseIntError`这两个类型实现了`From`这个`trait`，其中内部的函数就是将其转换成我们自定义的`MyError`. 当然，你也可以在其中添加其他有用的信息，可以自行探索。
+
+这样一来，我们`src/core.rs`中的报错就会消失了，但是`src/main.rs`中的主函数还是有报错，来看信息：
+
+> `core::MyError` doesn't implement `std::fmt::Display`
+the trait `std::fmt::Display` is not implemented for `core::MyError`
+
+这个简单了，意思就是我们没有为我们的`MyError`实现`std::fmt::Display`这个`trait`，这样打印的时候就不知道该怎么输出了，那就干吧：
+
+```rust title="src/core.rs"
+
+impl std::fmt::Display for MyError {
+    fn fmt(&self, f: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self {
+            MyError::IO(err) => write!(f, "IO error: {}, please check file", err),
+            MyError::Parse(err) => write!(f, "Parse error: {}, please check content", err),
+        }
+    }
+}
+
+```
+
+这里我们为`MyError`实现了`std::fmt::Display`这个`trait`，其中的`fmt`函数就是用来格式化输出的，我们在其中使用了`match`表达式来匹配不同的错误类型，然后分别输出不同的错误信息，用来友善地提醒可爱 (shabi) 的用户。
+
+好了，这样代码就可以编译通过了，最终的输出也是我们所自己定义的错误信息了，这里就不展示了。
+
+那么用表格来总结一下这种方式的优缺点：
+
+| 方法 | 优点 | 缺点 |
+| --- | ---- | --- |
+|自定义错误类型 | 可以统一错误类型，方便上层用户对不同的错误类型采取不同的措施 | 需要进行各式的类型转换，较为繁琐 |
+|Error 特征对象 | Error 可以直接透传，不需要在乎具体的类型 | 丢失了结构体类型信息 |
+
+那有没有更好的方法呢？我想是有的，Rust 社区发展多年，有很多优秀的第三方库，比如说`anyhow`, `thiserror`等等，这两个库都是同一个作者开发的，那么他们在处理错误上有什么不同呢？
+
+## 方式三：anyhow
+
+如同[官方文档](https://docs.rs/anyhow/latest/anyhow/)所述：
+
+> This library provides anyhow::Error, a trait object based error type for easy idiomatic error handling in Rust applications.
+
+这个库可以把所有实现了`std::error::Error`这个`trait`的类型，都转换成`anyhow::Error`这个类型，这样就可以统一处理了。而且它这个类型和标准库的`Error`特征对象不同，它是`Send`, `Sync`的，所以可以在多线程很香。
+
+来使用吧，首先添加依赖：
+
+```sh
+cargo add anyhow
+```
+
+按照文档所述，简单的修改我们的代码，我们可以把之前定义的`MyError`及其特征实现的代码都删了：
+
+```rust title="src/core.rs"
+pub fn process_files(input_path: &str) -> anyhow::Result<()> {
+    ///
+}
+```
+
+然后我们只需要将原来的`Result<(), MyError>` 修改为`anyhow::Result<()>`就可以了。一开始可能会奇怪，不是说好`Result`结构体内部有两个成员吗，你这怎么偷工减料了？我们去看看`anyhow::Result`的定义就能找到答案：
+
+```rust title="anyhow-1.0.79/src/lib.rs"
+pub type Result<T, E = Error> = core::result::Result<T, E>;
+```
+
+原来它只是对`Result`进行了一个类型别名，核心还是 rust 核心库的`Result`，只不过它把`E`这个泛型类型的默认值设置为了`anyhow::Error`.
+
+这样一来，我们的代码中就不用出现任何和`Error`相关的代码了，函数返回什么，就在 anyhow::Result 里面包裹什么。美哉！
+
+不过好像又回到了[方法一](#方式一梭哈用trait对象传递错误), 当然了，人家作者就这么设计的，在这个库的[repo](https://github.com/dtolnay/anyhow)中的 README 中，人家作者最后也说了：
+
+>Use Anyhow if you don't care what error type your functions return, you just want it to be easy. This is common in application code. Use thiserror if you are a library that wants to design your own dedicated error type(s) so that on failures the caller gets exactly the information that you choose.
+
+那我们就来看看同样是这个作者开发的另一个库吧。
+
+## 方式四：thiserror
+
+还是先看[官方说明](https://github.com/dtolnay/thiserror):
+
+>This library provides a convenient derive macro for the standard library's std::error::Error trait.
+
+啥意思呢，我们在[方法二](#方式二自定义错误类型)中展示过，我们自定义错误类型后，要为它实现各种繁琐的特征实现。这个库就是来解决繁琐的！它提供了很棒的过程宏来简化这个过程。
+
+首先我们还是添加依赖：
+
+```sh
+cargo add thiserror
+```
+
+然后我们将处理的函数的返回类型修改为`Result<(), MyError>`:
+
+```rust title="src/core.rs"
+use thiserror::Error; // 引入宏
+
+pub fn process_files(input_path: &str) -> Result<(), MyError> {}
+```
+
+然后我们再根据[文档所述](https://github.com/dtolnay/thiserror), 为我们的错误类型添加宏：
+
+```rust title="src/core.rs"
+#[derive(Error, Debug)]
+pub enum MyError {
+    #[error("io error: {0}, please check file")]
+    Io(#[from] std::io::Error),
+    #[error("parse error: {0}, please check content")]
+    Parse(#[from] std::num::ParseIntError),
+}
+```
+
+这里的 `#[error()]` 宏用来定义错误信息，成员中的`#[from]` 宏定义了错误类型的转换，大大简化了重复繁琐的代码。
+
+编译通过后，可以达到我们预期的效果。
+
+当然了，具体错误信息，可以包含更多我们想要的，可以看文档的例子来为你自己的项目实现更多的功能。
+
+## 总结
+
+在本文这个示例中，是非常简单的场景，也许无法领略到其中奥妙。实际上当一个项目逐渐庞大的时候，就能逐渐在实践中积累经验，我在我的项目中也是进行了狠狠的错误处理的代码重构，最终呈现代码在[此处](https://github.com/wjwei-handsome/wgatools/blob/master/src/errors.rs), 这样的错误处理可以让用户快速地定位到错误的位置，以及错误的原因，从而更好地解决问题。
+
+通常来讲，我们需要尽可能地在项目中用合理的方式来处理错误，但是如果仅仅是开发一个命令行工具，那么用`anyhow`库是最合适不过的，不用考虑任何和错误处理相关的代码，专注于业务逻辑，错误信息输出也足够友好了。因为在这种场景下，你只要让用户知道为什么出错，可以大致判断出错的位置，就足够了，正如这个库的名字一样，anyhow!
+
+但是当你在开发一个相对完善的第三方库时，就需要好好设计你的错误类型，以便于上层用户可以根据不同的错误类型采取不同的措施，这时候就用`thiserror`库是很合适的，可以专注于定义合适的错误类型，而不用去关心繁琐的特征实现。当然，某些错误及其**罕见**或者**边缘**，可以结合`anyhow`来使用，以便于更好的处理。
+
+## 参考资料
+
+<ReferenceList
+    data={[
+        {
+            title: "anyhow",
+            link: "https://github.com/dtolnay/anyhow",
+            src: github,
+        },
+        {
+            title: "thiserror",
+            link: "https://github.com/dtolnay/thiserror",
+            src: github,
+        },
+        {
+            title: "Rust中的错误传递和日志记录",
+            link: "https://rustmagazine.github.io/rust_magazine_2021/chapter_2/rust_error_handle_and_log.html",
+            src: blog,
+        },
+        {
+            title: "蚂蚁集团 CeresDB 团队 | 关于 Rust 错误处理的思考",
+            link: "https://rustmagazine.github.io/rust_magazine_2021/chapter_2/rust_error_handle.html",
+            src: blog,
+        }
+    ]}
+/>
