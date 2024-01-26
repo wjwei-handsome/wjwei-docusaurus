@@ -161,6 +161,7 @@ async function CreateConfig() {
                             {
                                 label: "🎤️talks",
                                 href: "/talks",
+                                target: "_blank",
                             }
                             // {
                             //     type: 'doc',
