@@ -143,6 +143,10 @@
         height: 60px;
     }
 
+    .navbar__items {
+        font-size: 18px;
+    }
+
     kbd {
         margin: 0px 0.2em;
         padding: 0.1em 0.6em;
