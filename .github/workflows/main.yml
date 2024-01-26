@@ -9,5 +9,7 @@ on:
 
 jobs:
   mlc-check:
-    uses: becheran/mlc@v0.16.1
-    
+    runs-on: ubuntu-latest
+    steps:
+    - name: Markup Link Checker (mlc)
+      uses: becheran/mlc@v0.16.3
