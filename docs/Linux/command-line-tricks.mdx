@@ -111,7 +111,7 @@ Fish 会自动根据你的输入，给出建议，比如：
 
 - 参数建议，有些命令的参数，对于非英语母语的用户来说，有些记不住，比如 `grep` 的 `--files-without-match` 参数，有时候无法写出完整的，这时候输入 `grep --file`，按下 <kbd>Tab</kbd> 键，就会给出参数的含义：
 
-<AsciinemaComponent prefix="https://asciinema.org/a/588660" rows={'10'} cols={'120'}></AsciinemaComponent>
+<AsciinemaComponent prefix={"https://asciinema.org/a/588660"} rows={'10'} cols={'120'}></AsciinemaComponent>
 
 :::note
 
@@ -124,7 +124,7 @@ Fish 会自动根据你的输入，给出建议，比如：
 
 比如我经常记不住的 sort 的参数：
 
-<AsciinemaComponent prefix="https://asciinema.org/a/588661" rows={'20'} cols={'120'}></AsciinemaComponent>
+<AsciinemaComponent prefix={"https://asciinema.org/a/588661"} rows={'20'} cols={'120'}></AsciinemaComponent>
 
 一些友好的第三方软件在安装时候，也会自动配置 completions，或者提供生成 completions 的命令，比如我常用的 `csvtk` 和 `seqkit`
 
@@ -137,7 +137,7 @@ csvtk genautocomplete --shell fish --file ~/.config/fish/completions/csvtk.fish
 ```
 生成补全建议后效果：
 
-<AsciinemaComponent prefix="https://asciinema.org/a/588665" rows={'40'} cols={'120'}></AsciinemaComponent>
+<AsciinemaComponent prefix={"https://asciinema.org/a/588665"} rows={'40'} cols={'120'}></AsciinemaComponent>
 
 如果没有这个，我忘了命令用法，只能去网上搜，所以这大大提示了效率
 
@@ -255,7 +255,7 @@ git clone https://github.com/junegunn/fzf.git ~/.fzf
 
 可以上下键选择，按 <kbd>Tab</kbd> 可以多选条目，按 <kbd>Enter</kbd> 确认选择，会将选择的文件路径输出到 stdout
 
-<AsciinemaComponent prefix="https://asciinema.org/a/588840"/>
+<AsciinemaComponent prefix={"https://asciinema.org/a/588840"}/>
 
 ### 配置
 
@@ -284,7 +284,7 @@ set -g FZF_DEFAULT_COMMAND 'fd --exclude={.git,.idea,target,node_modules,build} 
 这个是用的最多的，对我而言有两种用法：
 1. 进入了一个项目目录，忘记了要寻找、** 预览 ** 文件的的名字，可以直接按下 <kbd>Ctrl</kbd> + <kbd>z</kbd>，然后输入关键字，就可以模糊搜索了：
 
-<AsciinemaComponent prefix="https://asciinema.org/a/588846" />
+<AsciinemaComponent prefix={"https://asciinema.org/a/588846"} />
 
 可以看到，查找、预览比较快速，有时候会忘记这个文件的内容长什么样子了，也可以看一眼来确定。
 
@@ -293,7 +293,7 @@ set -g FZF_DEFAULT_COMMAND 'fd --exclude={.git,.idea,target,node_modules,build} 
 2. 第二种用法相对实用，在使用很多生物信息软件时，大部分都要指定一些文件，比如 `fa/fq/gff/bed` 等，有时候写不出具体的路径，又要重开命令行去寻找，然后复制粘贴路径。
 有了这个快捷键，再配合输入的已知前缀 token，就可以快速找到文件了，比如我要找一个 `fa` 文件，我记得前面的路径是 `~/vg/`，后面忘了，就可以这样：
 
-<AsciinemaComponent prefix="https://asciinema.org/a/588847" cols="140" rows="20" />
+<AsciinemaComponent prefix={"https://asciinema.org/a/588847"} cols="140" rows="20" />
 
 ### 搜索历史记录
 实际上我用这个比较少，因为大部分都会帮我自动补全建议，我很少主动去模糊搜索历史记录
@@ -301,7 +301,7 @@ set -g FZF_DEFAULT_COMMAND 'fd --exclude={.git,.idea,target,node_modules,build} 
 ### 搜索环境变量
 这个倒是比较方便，但用的频率也不是很高，用法简单，比如：
 
-<AsciinemaComponent prefix="https://asciinema.org/a/588850" />
+<AsciinemaComponent prefix={"https://asciinema.org/a/588850"} />
 
 ### 在当前目录搜索文件内容
 
@@ -311,7 +311,7 @@ set -g FZF_DEFAULT_COMMAND 'fd --exclude={.git,.idea,target,node_modules,build} 
 
 然后修改 `~/.config/fish/functions/fzf_configure_bindings.fish` 其中的键盘绑定，将 <kbd>Ctrl</kbd>+<kbd>g</kbd> 绑定到 `_fzf_grep_current_dir` 函数上，效果如下：
 
-<AsciinemaComponent prefix="https://asciinema.org/a/588853" />
+<AsciinemaComponent prefix={"https://asciinema.org/a/588853"} />
 
 可以实现以下特征：
 1. 搜索当前目录下的所有文件
@@ -384,7 +384,7 @@ zoxide init fish | source
 
 用的时候，`z` 后面跟一个模糊的名称，然后按 <kbd>Tab</kbd> 选择补全，就可以快速切换目录了，比如我只记得 `crus`，不想输入前缀路径：
 
-<AsciinemaComponent prefix="https://asciinema.org/a/588858" />
+<AsciinemaComponent prefix={"https://asciinema.org/a/588858"} />
 
 ## 参考资料
 
