@@ -79,24 +79,34 @@ const slides = [
   </header>,
   <header
     className={clsx("hero hero--primary", styles.heroBanner, styles.slide)}>
-    <img className={styles.bkgimg} src="/img/test.jpg" />
+    <img className={styles.bkgimg} src="/img/blog/2024_1-2_bg.jpeg" />
     <div className={clsx("container", styles.storycontainer)}>
-      <h1 className="hero__title">满月🌕入网</h1>
-      <p className="hero__subtitle">拍摄于 HZAU-三运</p>
+      <h1 className="hero__title">龙年🐲大吉</h1>
+      <p className="hero__subtitle"></p>
+      <div className={styles.button}>
+        <Link
+          className={clsx(
+            "button button--outline button--secondary button--lg",
+          )}
+          to="/blog/2024_1-2_fun">
+          Read more
+        </Link>
+      </div>
     </div>
   </header>,
   <div
     className={clsx(styles.heroBanner, styles.slide)}
     style={{
-      backgroundImage: "linear-gradient(135deg,#4071BE, #ABCBE3)",
+      backgroundImage: "url(/img/zeamap.svg)",
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "100%, 100%"
     }}>
-    <img src="/img/zeamap.png" className={styles.bkgimg} />
     <div className={clsx(styles.button, styles.readMore)}>
       <Link
         className="button button--outline button--lg"
-        style={{ color: "white" }}
-        href="https://zeamap.com">
-        <h1 className="hero__title">ZEAMAP</h1>
+        style={{ color: "#4071BE" }}
+        href="https://db.cngb.org/zeamap">
+        <h1 className="hero__title">ZEAMAP Database</h1>
       </Link>
     </div>
   </div>
