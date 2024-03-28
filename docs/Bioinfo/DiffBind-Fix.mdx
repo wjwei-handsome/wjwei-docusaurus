@@ -1,0 +1,93 @@
+---
+title: 大型基因组在 DiffBind 使用中的问题和解决方案
+description: 小麦基因组在使用 R 包 DiffBind 时，会出现一些麻烦的问题，网络上并没有给出很好的答案，这里我总结了出现问题的原因和解决方案。
+tags: [bioinfo, code, R]
+sidebar_position: 3
+last_update:
+  date: 03/28/2024
+  author: WenjieWei
+---
+
+import ReferenceList from "@site/src/components/ReferenceList";
+import github from "@site/static/img/icon/github.png";
+
+
+小麦基因组在使用 R 包 DiffBind 时，会出现一些麻烦的问题，网络上并没有给出很好的答案，这里我总结了出现问题的原因和解决方案。
+
+## 背景
+
+[DiffBind](https://bioconductor.org/packages/DiffBind/)是一个用于鉴定不同样本之间 ChIP-Seq 差异结合富集位点的 R 软件包。实验室的一位师姐在使用时，发现在处理小麦基因组比对数据时，会发现这样的问题：
+
+在指定了`bam` 文件之后，发现会提示这样的信息：
+
+```shell
+Indexing XXX.final.bam
+Indexing YYY.final.bam
+Indexing ZZZ.final.bam
+Indexing WWW.final.bam
+[E::hts idx check range] Region 536873027.,536873177 cannot be stored in a bai index. Try using a csi index
+.....
+```
+
+## 问题
+
+看到这样的问题，思路是这样的：
+
+1. 日志提示正在索引，那就说明缺少索引。但是小麦基因组比对文件由于染色体较长，只能生成`csi`格式索引，并且确认了已经存在**名称正确**的`csi`索引文件
+
+2. 那就说明该软件无法识别`csi`索引文件，但是后面的报错信息又提示我们`Try using a csi index`, 也就是说`csi`索引是支持的，而且这个报错提示来自`HTSLib`, 说明这个软件包肯定是调用了对应的库
+
+3. 查看依赖，发现这个包使用了[`RSamtools`](https://bioconductor.org/packages/release/bioc/html/Rsamtools.html)依赖，然后我去细看`RSamtools`这个包，发现实际上只要指定索引文件的路径就行。
+
+4. 我再去看`DiffBind`的源码，找到了其调用`RSamtools`的部分：
+
+```r showLineNumbers {16,17,20}
+pv.BamFile <- function(bamfile,bIndex=TRUE) {
+  bai <- NULL
+  trybai <- paste(substr(bamfile, 1,nchar(bamfile)-4),".bai", sep="")
+  if(file.access(trybai,mode=4) > -1) {
+    bai <- trybai
+  } else {
+    trybai <- paste(bamfile,".bai",sep="")
+    if(file.access(trybai,mode=4) > -1) {
+      bai <- trybai
+    }
+  }
+  if(is.null(bai)) {
+    if(!bIndex) {
+      stop(bamfile, " has no associated .bai.", call.=FALSE)
+    } else {
+      message("Indexing ",bamfile)
+      bai <- Rsamtools::indexBam(bamfile)
+    }
+  }
+  bamfileobj <- Rsamtools::BamFile(bamfile, index=bai)
+
+  return(bamfileobj)
+}
+```
+
+看到这个源代码的时候，我也就明白了，原来作者压根就没想过去支持`csi`索引文件，他只是在代码中写了一个`.bai`的索引文件的自动后缀 (2-11 行)，然后查看是否存在`bai`索引文件，如果不存在，那就告诉你要索引了，然后调用`indexBam`函数去索引 (高亮的 16-17 行); 如果存在，那就将这个索引文件的路径传给`BamFile`函数的第二个参数 (高亮的 20 行)。
+
+5. 所以，不管你是否提前生成了正确的`csi`索引，这个软件只会判断你的`bai`后缀文件。
+
+## 解决方案
+
+既然上诉源码中，只根据文件后缀来判断索引是否存在，并且会将索引文件路径传参，那么就好办了。
+
+只需要将生成的`csi`文件的后缀码改为`.bai`即可。
+
+:::tip
+
+当然最好要在目录里写个说明，不然自己都会忘了。
+
+:::
+
+最后的实践证明，这样的修改是有效的。
+
+
+## 经验
+
+1. 关于问题的解决，抽丝剥茧，也很顺理成章地摸到了错误来源。主要还是看源码吧，R 的源码也比较简单好看。
+
+2. 对于开发者的启示：如果潜在的文件，通常有墨守成规的后缀，那么自动判断后缀也无可厚非。但是最佳实践，肯定是提供一个选项让用户自己指定路径更好
