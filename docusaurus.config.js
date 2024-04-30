@@ -3,6 +3,8 @@
 
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
+const math = require('remark-math');
+const katex = require('rehype-katex');
 
 // const mdxMermaid = require('mdx-mermaid');
 // const mdxMermaid = [
@@ -63,7 +65,8 @@ async function CreateConfig() {
                         // Remove this to remove the "edit this page" links.
                         editUrl: 'https://github.com/wjwei-handsome/wjwei-docusaurus/tree/main/',
                         // docTagsListComponent: '@theme/DocTagsListPage',
-                        remarkPlugins: [mdxMermaid.default],
+                        remarkPlugins: [mdxMermaid.default, math],
+                        rehypePlugins: [katex],
                         showLastUpdateAuthor: true,
                         showLastUpdateTime: true,
 
@@ -264,7 +267,13 @@ async function CreateConfig() {
         ],
         plugins: [
             './plugins/my-loaders',
-        ]
+        ],
+        stylesheets: [{
+            href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
+            type: 'text/css',
+            integrity: 'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
+            crossorigin: 'anonymous',
+        }, ],
     };
     return config;
 }
