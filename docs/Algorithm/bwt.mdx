@@ -2,7 +2,7 @@
 title: BWT-Algorithm
 description: Burrus-Wheeler Transform Algorithm
 tags: [algorithm, code, bioinfo]
-sidebar_position: 1
+sidebar_position: 3
 ---
 
 ## BWT-Algorithm
@@ -147,7 +147,7 @@ def bwt_encode(s: str) -> dict:
         raise ValueError("The parameter s must not be empty.")
 
     rotaions = all_rotations(s)
-    rotaions.sort()  ## 排序, ASICC 码值从小到大
+    rotaions.sort()  ## 排序，ASICC 码值从小到大
 
     bwt_composed_str = "".join([row[-1] for row in rotaions])  ## 取出每个元素的最后一个字符
     original_index = rotaions.index(s)  ## 找到原始字符串的位置

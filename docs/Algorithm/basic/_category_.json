@@ -1,0 +1,9 @@
+{
+    "label": "算法基础知识",
+    "position": 1,
+    "link": {
+        "type": "generated-index",
+        "description": "算法基础知识，概念，评估，复杂度"
+    },
+    "collapsed": true
+}

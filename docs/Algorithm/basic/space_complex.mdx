@@ -1,0 +1,64 @@
+---
+title: 空间复杂度
+description: 算法占用内存空间的增长趋势
+tags: [algorithm,]
+sidebar_position: 3
+last_update:
+  date: 04/26/2024
+  author: WenjieWei
+---
+
+## 概念
+
+空间复杂度（space complexity）用于衡量算法占用内存空间随着数据量变大时的增长趋势。这个概念与[时间复杂度](./time_complex)非常类似，只需将“运行时间”替换为“占用内存空间”。
+
+## 使用的内存空间
+
+算法运行过程中使用的内存空间包括：
+- 输入空间：存储输入数据
+- 暂存空间：存储变量\对象\函数调用等
+- 输出空间：存储输出数据
+
+其中暂存空间进一步划分为：
+
+- 暂存数据：保存常量\变量\对象
+- 栈帧空间：保存调用函数的上下文数据，系统在每次调用函数时都会在栈顶部创建一个栈帧，函数返回后，栈帧空间会被释放
+- 指令空间：用于保存编译后的程序指令，在实际统计中通常忽略不计
+
+示例：
+
+```rust
+use std::rc::Rc;
+use std::cell::RefCell;
+
+/* 结构体 */
+struct Node {
+    val: i32,
+    next: Option<Rc<RefCell<Node>>>,
+}
+
+/* 创建 Node 结构体 */
+impl Node {
+    fn new(val: i32) -> Self {
+        Self { val: val, next: None }
+    }
+}
+
+/* 函数 */
+fn function() -> i32 {
+    // 执行某些操作...
+    return 0;
+}
+
+fn algorithm(n: i32) -> i32 {       // 输入数据
+    const a: i32 = 0;               // 暂存数据（常量）
+    let mut b = 0;                  // 暂存数据（变量）
+    let node = Node::new(0);        // 暂存数据（对象）
+    let c = function();             // 栈帧空间（调用函数）
+    return a + b + c;               // 输出数据
+}
+```
+
+## 推算方法
+
+与时间复杂度类似
