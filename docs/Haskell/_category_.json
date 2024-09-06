@@ -1,0 +1,9 @@
+{
+    "label": "Haskell",
+    "position": 8,
+    "link": {
+        "type": "generated-index",
+        "description": "Haskell language",
+        "image": "/img/icon/haskell.png"
+    }
+}
