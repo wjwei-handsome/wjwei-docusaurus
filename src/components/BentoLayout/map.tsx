@@ -27,8 +27,9 @@ export default function MapChart() {
     useEffect(() => {
         // Fetch the location
         const fetchLocation = async () => {
+
             try {
-                const response = await axios.get(`http://ip-api.com/json/${ip}?fields=lat,lon`);
+                const response = await axios.get(`https://api.ipgeolocation.io/ipgeo?apiKey=3d7070bf4ff443adb464ffd5b4c54092&fields=geo&ip=${ip}`);
                 setLocation({ latitude: response.data.lat, longitude: response.data.lon });
                 console.log(response.data);
             } catch (error) {
