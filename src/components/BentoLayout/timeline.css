@@ -1,0 +1,44 @@
+.timeline-item {
+    display: flex;
+    align-items: center;
+    /* Aligns the year and content along the vertical center */
+    margin: 3cqb 0;
+    position: relative;
+}
+
+.timeline-year {
+    font-size: 18px;
+    font-weight: bold;
+    margin-right: 40px;
+    width: 80px;
+    text-align: right;
+    flex-shrink: 0;
+}
+
+.timeline-content {
+    width: 200px;
+    /* Fixed width for content */
+    height: 100%;
+    /* Fixed height for content */
+    padding: 10px 20px;
+    background: #f4f4f9;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    word-wrap: break-word;
+    /* Break long words into new lines */
+    white-space: normal;
+    /* Allow text to wrap to the next line */
+    overflow: hidden;
+    /* Prevent overflow outside the box */
+}
+
+.timeline {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
