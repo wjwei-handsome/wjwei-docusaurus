@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import clsx from 'clsx';
 import styles from './styles.module.css';
 import ThemedImage from "@theme/ThemedImage";
-import CodeBlock from "@theme/CodeBlock";
-import Tabs from "@theme/Tabs";
-import TabItem from '@theme/TabItem';
+// import CodeBlock from "@theme/CodeBlock";
+// import Tabs from "@theme/Tabs";
+// import TabItem from '@theme/TabItem';
+import { TypeAnimation } from 'react-type-animation';
+import GraphemeSplitter from 'grapheme-splitter';
+
 
 
 // type FeatureItem = {
@@ -212,18 +215,44 @@ function Feature({
   );
 }
 
+const splitter = new GraphemeSplitter();
+
+const TypeText = () => {
+  return (
+    <TypeAnimation
+      sequence={[
+        500,
+        `$ wjwei --help`,
+        500,
+        `$ wjwei --help\n\nName: Wenjie Wei🇨🇳\nVersion: 2024\nUsage: wjwei [OPTIONS] <COMMANDS>\n\nCommands:\n\t🧬bioinfo:\n\t\tPlay biological problems with code. Years of experience in bioinformatics analysis\n\t🛠️coder:\n\t\tGet my hands dirty! Always be a rookie and stay hungry. Enjoy contributing to the community.\n\t🙌life:\n\t\tWork hard, play harder! Enjoy dopamine and endorphins from nature🏞, food🥑, coffee☕️, movies🎥, music🎧 and sports🏋.\n\t👨‍🎓student:\n\t\tMaster of Crop genomics in the National Laboratory of Crop Genetic Improvement, HZAU.\n\t\tPhD student of WestLake University.\n\t\tInterested in: [genomics, genetics, tools, databases].\n\t🎮gamer:\n\t\tHundreds of hours of Zelda/Pokemon/Stardew Valley.\nOptions:\n\t-l, --linux\t💻Unix/Commmand Line/Fish enthusiast\t[default: true]\n\t-r, --rust\t🦀YES! I'm a Rustacean!\t[default: true]\n\t-p, --python\t🐍A cold weapon still in hand with me.\t[default: true]\n\t-v, --visualize\t📊Prefer vega-lite/R for data presentation.\t[default: true]\n\t-f, --frontend\t🌐Stay at the basic stage for Vue/React\t[default: false]\n\t-h, --haskell\t🧸Elegant new toys, not yet familiar\t[default: false]\n$ A ship in a harbour is safe but that is not what ships are built for`
+      ]}
+      wrapper="span"
+      cursor={false}
+      className={styles.type}
+      repeat={0}
+      style={{ fontSize: '16px', display: 'inline-block', whiteSpace: 'pre', minHeight: '500px', fontFamily: 'JetBrains Mono', fontWeight: 'bold', wordWrap: 'break-word', width: '100%', border: '3px solid rgb(103 131 175)', borderRadius: '16px', padding: '10px', overflow: 'auto' }}
+      speed={{ type: 'keyStrokeDelayInMs', value: 10 }}
+      aria-hidden="true"
+      splitter={(str) => splitter.splitGraphemes(str)}
+    />
+  );
+};
+
 export default function HomepageFeatures(): JSX.Element {
   return (
     <section className={styles.features}>
-      <div className="container" style={{ "maxWidth": "100%" }}>
+      {/* <div className="container" style={{ "maxWidth": "100%" }}>
         <div className="row">
           {features.map((props, idx) => (
             <Feature key={idx} index={idx} {...props} />
           ))}
         </div>
-      </div>
+      </div> */}
+      <TypeText />
 
-      <CodeBlock language='text' className={styles.codeblock} showLineNumbers={false}>
+      {/* impl a type annomotion using Typeit  */}
+
+      {/* <CodeBlock language='text' className={styles.codeblock} showLineNumbers={false}>
         $ wjwei --help{'\n'}{'\n'}
         Name: Wenjie Wei🇨🇳{'\n'}{'\n'}
         Version: {new Date().getFullYear()}-{new Date().getMonth() + 1}-{new Date().getDate()}{'\n'}{'\n'}
@@ -250,7 +279,7 @@ export default function HomepageFeatures(): JSX.Element {
         {'    '}-p, --python   {'    '}🐍Use for Django && quickly develop simple scripts.    [default: true]{'\n'}
         {'    '}-v, --visualize{'    '}📊Prefer vega-lite/R for data presentation.    [default: true]{'\n'}
         {'    '}-f, --frontend {'    '}🌐Stay at the basic stage for Vue/React, just google. [default: false]{'\n'}
-      </CodeBlock>
+      </CodeBlock> */}
 
     </section>
   );

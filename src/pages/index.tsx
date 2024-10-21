@@ -120,7 +120,7 @@ export default function Home(): JSX.Element {
       title={`${siteConfig.title}`}
       description="wenjiewei wjwei weiwenjie blog bioinfomatic">
       {/* <HomepageHeader /> */}
-      <CarouselProvider
+      {/* <CarouselProvider
         className={styles.carousel}
         totalSlides={slides.length}
         isPlaying
@@ -169,7 +169,7 @@ export default function Home(): JSX.Element {
             ))}
           </div>
         </div>
-      </CarouselProvider>
+      </CarouselProvider> */}
       <main>
         <HomepageFeatures />
       </main>
