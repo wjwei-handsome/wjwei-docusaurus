@@ -5207,6 +5207,13 @@ invariant@^2.2.4:
   dependencies:
     loose-envify "^1.0.0"
 
+ip-geolocation-api-sdk-typescript@^1.0.7:
+  version "1.0.7"
+  resolved "https://registry.yarnpkg.com/ip-geolocation-api-sdk-typescript/-/ip-geolocation-api-sdk-typescript-1.0.7.tgz#d48bd2c56b4c10d28c764169c89b8ff1e7bd4144"
+  integrity sha512-3111tnFySz0Sc2HLlpt4k1heHLVgpkyHQAej9aHlZngWOUk0Y8HRXV2/c+M6RgG6tayOdzxOzKM1IevJ5SIaag==
+  dependencies:
+    xmlhttprequest "^1.8.0"
+
 ipaddr.js@1.9.1:
   version "1.9.1"
   resolved "https://registry.npmmirror.com/ipaddr.js/-/ipaddr.js-1.9.1.tgz"
@@ -8548,6 +8555,11 @@ xml-js@^1.6.11:
   integrity sha512-7rVi2KMfwfWFl+GpPg6m80IVMWXLRjO+PxTq7V2CDhoGak0wzYzFgUY2m4XJ47OGdXd8eLE8EmwfAmdjw7lC1g==
   dependencies:
     sax "^1.2.4"
+
+xmlhttprequest@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/xmlhttprequest/-/xmlhttprequest-1.8.0.tgz#67fe075c5c24fef39f9d65f5f7b7fe75171968fc"
+  integrity sha512-58Im/U0mlVBLM38NdZjHyhuMtCqa61469k2YP/AaPbvCoV9aQGUpbJBj1QRm2ytRiVQBD/fsw7L2bJGDVQswBA==
 
 xtend@^4.0.0, xtend@^4.0.1:
   version "4.0.2"

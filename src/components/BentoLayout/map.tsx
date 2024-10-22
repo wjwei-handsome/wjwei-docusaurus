@@ -26,11 +26,14 @@ export default function MapChart() {
 
     useEffect(() => {
         // Fetch the location
+
+        // var IPGeolocationAPI = require('ip-geolocation-api-javascript-sdk');
+        // var ipgeolocationApi = new IPGeolocationAPI("3d7070bf4ff443adb464ffd5b4c54092", false);
         const fetchLocation = async () => {
 
             try {
                 const response = await axios.get(`https://api.ipgeolocation.io/ipgeo?apiKey=3d7070bf4ff443adb464ffd5b4c54092&fields=geo&ip=${ip}`);
-                setLocation({ latitude: response.data.lat, longitude: response.data.lon });
+                setLocation({ latitude: response.data.latitude, longitude: response.data.longitude });
                 console.log(response.data);
             } catch (error) {
                 console.error('Error fetching the location:', error);
@@ -59,7 +62,7 @@ export default function MapChart() {
             </Geographies>
             <Line
                 to={[120.153576, 30.287459]}
-                from={[location.latitude, location.longitude]}
+                from={[location.longitude, location.latitude]}
                 stroke="#FF5533"
                 strokeWidth={4}
                 strokeLinecap="round"
