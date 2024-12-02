@@ -15,7 +15,7 @@ const BentoLayout: React.FC = () => {
           {
             rows: 'span 2',
             columns: '1 / -1',
-            content: <div style={{ position: 'relative', alignContent: 'center', padding: '1rem' }}><h1>Hi there!</h1><h1>I'm Wenjie Wei.</h1><h3>A PhD student in biology.</h3><img
+            content: <div style={{ position: 'relative', alignContent: 'center', padding: '1rem' }}><h1>Hi there!</h1><h1>I'm Wenjie Wei.</h1><h3>PhD student in <a href="https://yanglab.westlake.edu.cn">YangLab</a></h3><img
               src={coffeecup}
               alt="Profile"
               style={{
